@@ -1,0 +1,38 @@
+#header-title{
+    background-color:rgb(238, 137, 49) ;  
+}
+#header-title h6,#header-title h3,#fecha-hora{
+    color: white;
+}
+#side{
+    overflow-y: scroll;
+  }
+  
+.fila-roja{
+    background-color: red;
+   
+}
+.main-sidebar{
+    background: linear-gradient(rgb(238, 137, 49),rgb(127,6,11));
+}
+.export-buttons-container button{
+    background-color: rgb(238, 137, 49) ;
+    
+}
+.paginate_button a{
+    background-color: rgb(238, 137, 49) ;
+}
+.pagination li a {
+    color: white;
+}
+td{
+    font-size: 12px;
+}
+
+.larg-text{
+    width: 150px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-align: start;
+    text-overflow: ellipsis;
+}

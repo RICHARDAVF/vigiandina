@@ -1,0 +1,23 @@
+{% extends 'form.html' %}
+{% load static %}
+{% block form %}
+    <h6 id="id_perms_user"></h6>
+    {{form.as_p}}
+{% endblock form %}
+{% block javascript %}
+    <script>
+       $('#id_perms_user').text('Usuario: {{username.first_name}} '+" {{username.last_name}}")
+       $('#id_permissions').css({
+      'display': 'flex',
+      'flex-wrap': 'wrap'
+    });
+
+    // Selecciona los divs internos y aplica el estilo CSS
+    $('#id_permissions > div').css({
+      'width': '25%',
+      'box-sizing': 'border-box',
+      'padding': '10px',
+      'border': '1px solid #ccc'
+    });
+    </script>
+{% endblock javascript %}

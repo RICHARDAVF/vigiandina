@@ -1,0 +1,79 @@
+{% extends 'form.html' %}
+{% load static %}
+{% block form %}
+<div class="row">
+    <div class="card col-md-6">
+        <div class="card-header" id="header-title">
+            <h6>Equipos de Visitante</h6>
+        </div>
+        <div class="card-body">
+            <div class="d-flex flex-row">     
+                <label style="width: 50%;" for="id_caso">{{form.casco.label}}</label>
+                {{form.casco}}
+            </div>
+            <div class="d-flex flex-row">
+                <label style="width: 50%;" for="id_barbiquejo">{{form.barbiquejo.label}}</label>
+                {{form.barbiquejo}}
+            </div>
+            <div class="d-flex flex-row">
+                <label style="width: 50%;" for="id_botas">{{form.botas.label}}</label>
+                {{form.botas}}
+            </div>
+            <div class="d-flex flex-row">
+
+                <label style="width: 50%;" for="id_tapones">{{form.tapones.label}}</label>
+                {{form.tapones}}
+            </div>
+            <div class="d-flex flex-row">
+
+                <label style="width: 50%;" for="id_lentes">{{form.lentes.label}}</label>
+                {{form.lentes}}
+            </div>
+            <div class="d-flex flex-row">
+
+                <label style="width: 50%;" for="id_chaleco">{{form.chaleco.label}}</label>
+                {{form.chaleco}}
+            </div>
+            <div class="d-flex flex-row">
+
+                <label style="width: 50%;" for="id_respirador">{{form.respirador.label}}</label>
+                {{form.respirador}}
+                
+            </div>
+
+        </div>
+    </div>
+    <div class="card col-md-6">
+        <div class="card-header" id="header-title">
+            <h6>Equipos del Vehiculo del Visitante</h6>
+        </div>
+        <div class="card-body">
+            <div class="d-flex flex-row">
+
+                <label style="width: 50%;" for="id_botiquin">{{form.botiquin.label}}</label>
+                {{form.botiquin}}
+            </div>
+            <div class="d-flex flex-row">
+                <label style="width: 50%;" for="id_extintor">{{form.extintor.label}}</label>
+                {{form.extintor}}
+
+            </div>
+            <div class="d-flex flex-row">
+
+                <label style="width: 50%;" for="id_cono_s">{{form.cono_s.label}}</label>
+                {{form.cono_s}}
+            </div>
+            <div class="d-flex flex-row">
+
+                <label style="width: 50%;" for="id_pertiga">{{form.pertiga.label}}</label>
+                {{form.pertiga}}
+            </div>
+            <div class="d-flex flex-row">
+
+                <label style="width: 50%;" for="id_circulina">{{form.circulina.label}}</label>
+                {{form.circulina}}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock form %}

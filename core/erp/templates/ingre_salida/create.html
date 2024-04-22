@@ -1,0 +1,14 @@
+{% extends 'form.html' %}
+{% load static %}
+{% block head_form %}
+    <link href="{% static 'lib/select/css/select2.min.css' %}" rel="stylesheet"/>
+    <link href="{% static 'lib/select/css/select2-bootstrap4.min.css' %}" rel="stylesheet"/>
+    <script src="{% static 'lib/select/js/select2.min.js' %}"></script>
+    <script src="{% static 'lib/select/js/i18n/es.js' %}"></script>
+    <script src="{% static 'ingre_salida/js/form.js' %}"></script>
+{% endblock head_form %}
+{% block form %}
+{{form.as_p}}  
+{% endblock form %}
+{% block javascript %}
+{% endblock javascript %}

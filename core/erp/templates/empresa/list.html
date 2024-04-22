@@ -1,0 +1,32 @@
+{% extends 'list.html' %}
+{% load static %}
+{% block head_list %}
+    <script src="{% static 'empresas/js/list.js' %}"></script>
+{% endblock head_list %}
+{% block columnas %}
+<tr id="header-title">
+    <th>ID</th>
+    <th>RUC</th>
+    <th>EMPRESA</th>
+    <th>DIRECCION</th>
+    <th>OPCIONES</th>
+</tr>
+{% endblock columnas %}
+{% block filas %}
+    {% for empresa in object_list  %}
+    <tr >
+        <td  scope="row">{{empresa.id}}</td>
+        <td>{{empresa.ruc}}</td>
+        <td>{{empresa.razon_social}}</td>
+        <td>{{empresa.direccion}}</td>
+        <td>
+            <div class="d-flex justify-content-center">
+                <a href="{% url 'erp:empresa_update' empresa.id %}" class="btn btn-warning btn-sm btn-flat" ><i class="fas fa-edit"></i></a>
+                <a href="{% url 'erp:empresa_delete' empresa.id %}" class="btn btn-danger btn-sm btn-flat"><i class="fas fa-trash"></i></a>
+            </div>
+        </td>
+    </tr>
+    {% endfor %}
+{% endblock filas %}
+{% block javascript %}
+{% endblock javascript %}

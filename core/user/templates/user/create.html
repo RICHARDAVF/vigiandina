@@ -1,0 +1,154 @@
+{% extends 'form.html' %}
+{% load static %}
+{% block head_form %}
+    <link href="{% static 'lib/select/css/select2.min.css' %}" rel="stylesheet"/>
+    <link href="{% static 'lib/select/css/select2-bootstrap4.min.css' %}" rel="stylesheet"/>
+    <script src="{% static 'lib/select/js/select2.min.js' %}"></script>
+    <script src="{% static 'lib/select/js/i18n/es.js' %}"></script>
+    <script src="{% static 'user/js/form.js' %}"></script>
+{% endblock %}
+{% block form %}
+    <div class="row">
+        <div class="card col-sm-6">
+            <div class="card-header " id="header-title">
+                <h6>Datos del Usuario</h6>
+            </div>
+            <div class="card-body">
+                <label for="">DNI</label>
+                {{form.dni}}
+                <label for="">Nombre</label>
+                {{form.first_name}}
+                <label for="">Apellidos</label>
+                {{form.last_name}}
+                <label for="">Nombre de Usuario</label>
+                {{form.username}}
+                <label for="email">{{form.email.label}}</label>
+                {{form.email}}
+                <div class="d-flex flex-row  mt-2"> 
+                    <label for="">Foto</label>
+                    {{form.image}}
+                    <label class="form-label ml-3" for="">Administrador</label>
+                    {{form.is_superuser}}
+                </div>
+            </div>
+        
+        </div>
+        <div class="card col-sm-6">
+            <div class="card-header " id="header-title">
+                <h6>Mas Datos</h6>
+            </div>
+            <div class="card-body">
+                
+                <label for="password">{{form.password.label}}</label>
+                {{form.password}}
+                <label for="">Confirmar Contraseña</label>
+                <input class="form-control" type="password" name="password1" id="password1" placeholder="Ingrese su contraseña nuevamente">
+                <div id="alerta"></div>
+                <label for="">Grupos</label>
+                {{form.groups}}
+                <label for="empresa">{{form.empresa.label}}</label>
+                {{form.empresa}}
+                <label for="unidad">{{form.unidad.label}}</label>
+                {{form.unidad}}
+                <label for="puesto">{{form.puesto.label}}</label>
+                {{form.puesto}}
+            </div>
+        
+        </div>
+    </div>
+
+{% endblock %}
+{% block javascript %}
+    <script>
+        function validation(password){
+            var regex = /^(?=.*\d)(?=.*[A-Z])(?=.*\W).+$/;
+            return regex.test(password)
+        }
+        function showmsg(pas1,pas2){
+            if(pas2.length==0 || pas1.length==0){
+                return ''
+            }
+            if(pas1==pas2){
+                if(validation(pas1)){
+                    $('#password1').prop('disabled',true)
+                    return '<li class="text-success"> Correcto</li>'
+                }
+                return '<li class="text-danger">La contraseña debe contener al menos un número, una mayúscula y un símbolo</li>';
+            }
+            return '<li class="text-warning">Contraseñas no coinciden</li>'
+        }
+        $('#password1').on('input',function(){
+            var pas1 = $('#id_password').val()
+            var pas2 = $('#password1').val()
+           
+            $('#alerta').html(
+                ` ${showmsg(pas1,pas2)}
+                `
+            )
+        })
+        var unidad = $('select[name="unidad"]');
+        var puesto = $('select[name="puesto"]');
+        $(function(){
+            $('.select2').select2({
+                theme:'bootstrap4',
+                languaje:'es'
+            });
+            $('select[name="empresa"]').on("change",function(){
+                var id = $(this).val();
+                if(id===''){
+                    return -1
+                }
+
+                var  options = "<option value=''>--------------</option>";
+                $.ajax({
+                    type:'POST',
+                    url : window.location.pathname,
+                    data:{
+                        "action":'search_unidad',
+                        "id":id
+                    },
+                    success:function(data){
+                        if(data.error){
+                            return alert(data.error)
+                        }
+                        for(item in data){
+                            options+=`<option value='${data[item].id}'>${data[item].unidad}</option>`
+                        }
+                        unidad.html(options)
+                    },
+                    error:function(error){
+                        alert(error)
+                    }
+                })
+            })
+            $('select[name="unidad"]').on("change",function(){
+                var id = $(this).val();
+                if(id==''){
+                    return -1
+                }
+                var options = "<option value=''>----------</option>"
+                $.ajax({
+                    type:'POST',
+                    url:window.location.pathname,
+                    data:{
+                        "action":'search_puesto',
+                        "id":id
+                    },
+                    success:function(data){
+                        if(data.error){
+                            return alert(data.error)
+                        }
+                        for(item in data){
+                            options+=`<option value='${data[item].id}'>${data[item].puesto}</option>`
+                        }
+                        puesto.html(options)
+                    },
+                    error:function(error){
+                        alert(error)
+                    }
+                });
+            })
+        })
+        
+    </script>
+{% endblock javascript %}

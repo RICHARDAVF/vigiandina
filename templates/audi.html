@@ -1,0 +1,37 @@
+{% extends 'list.html' %}
+{% load static %}
+{% block head_list %}
+    {% block head_list_ind %}
+        
+    {% endblock head_list_ind %}
+
+{% endblock head_list %}
+
+{% block columnas %}
+    <tr id="header-title">
+        <th>ID</th>
+        <th>FECHA Y HORA</th>
+        <th>TIPO</th>
+        <th>USUARIO</th>
+    </tr>
+{% endblock columnas %}
+
+{% block filas %}
+{% for value in object_list %}    
+    <tr>
+        <td>{{value.id}}</td>
+        <td>{{value.history_date}}</td>
+        {% if value.history_type == "~" %}
+            <td>EDITADO</td>  
+        {% elif value.history_type == "-" %}
+            <td>ELIMINADO</td>
+        {% else %}
+            <td>AGREGADO</td>
+        {% endif %}
+        <td>{{value.history_user.username}}</td>
+    </tr>
+{% endfor %}
+{% endblock filas %}
+{% block javascript %}
+
+{% endblock javascript %}

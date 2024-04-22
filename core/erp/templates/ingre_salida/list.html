@@ -1,0 +1,26 @@
+{% extends 'list.html' %}
+{% load static %}
+{% block head_list %}
+    <script src="{% static 'ingre_salida/js/list.js' %}"></script>
+
+{% endblock head_list %}
+{% block columnas %}
+    <tr id="header-title">
+        <th scope="col">#ID</th>
+        <th scope="col">DNI</th>
+        <th scope="col">NOMBRE Y APELLIDOS</th>
+        <th scope="col">FECHA</th>
+        <th scope="col">HORA INGRESO</th>
+        <th scope="col">HORA SALIDA</th>
+        <th scope="col">PLACA AUTO</th>
+        <th scope="col">PARQUEO</th>
+        <th scope="col">MOTIVO</th>
+        <th scope="col">OPCIONES</th>
+    </tr>
+{% endblock %}
+{% block filas %}
+    
+{% endblock filas %}
+{% block javascript %}
+    
+{% endblock javascript %}

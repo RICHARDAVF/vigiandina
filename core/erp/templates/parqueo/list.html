@@ -1,0 +1,23 @@
+{% extends 'list.html' %}
+{% load static %}
+{% block head_list %}
+    <script src="{% static 'parqueo/js/list.js' %}"></script>
+{% endblock %}
+
+{% block columnas %}
+    <tr id="header-title">
+        <th scope="col">#ID</th>
+        <th scope="col">NUMERO</th>
+        <th scope="col">NOMBRE</th>
+        <th scope="col">ESTADO</th>
+        <th scope="col">OPCIONES</th>
+    </tr>
+{% endblock %}
+
+{% block filas %}
+
+{% endblock %}
+
+{% block javascript %}
+
+{% endblock %}

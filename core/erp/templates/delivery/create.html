@@ -1,0 +1,106 @@
+{% extends 'form.html' %}
+{% load static %}
+{% block head_form %}
+    <script src="{% static 'delivery/js/form.js' %}"></script>
+    <link href="{% static 'lib/select/css/select2.min.css' %}" rel="stylesheet"/>
+    <link href="{% static 'lib/select/css/select2-bootstrap4.min.css' %}" rel="stylesheet"/>
+    <script src="{% static 'lib/select/js/select2.min.js' %}"></script>
+    <script src="{% static 'lib/select/js/i18n/es.js' %}"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+{% endblock head_form %}
+{% block form %}
+<div class="row">
+    <div class="card col-sm-6">
+        <div class="card-header" id="header-title">
+            <h6>Datos del Delivery</h6>
+        </div>
+        <div class="card-body">
+            <label for="id_estado">{{form.user.label}}</label>
+            {{form.user}}
+            <label for="id_estado">{{form.estado.label}}</label>
+            {{form.estado}}
+            <label for="id_tipo_documento">{{form.tipo_documento.label}}</label>
+            {{form.tipo_documento}}
+            <label for="id_dni">{{form.dni.label}}</label>
+            {{form.dni}}
+            <label for="id_nombre">{{form.nombre.label}}</label>
+            {{form.nombre}}
+            <label for="id_apellidos">{{form.apellidos.label}}</label>
+            {{form.apellidos}}
+            <label for="id_p_visita">{{form.p_visita.label}}</label>
+            {{form.p_visita}}
+            <label for="id_motivo">{{form.motivo.label}}</label>
+            {{form.motivo}}
+            <label for="id_empresa">{{form.empresa.label}}</label>
+            {{form.empresa}}
+            <label for="id_cargo">{{form.cargo.label}}</label>
+            {{form.cargo}}
+            
+            
+        </div>
+        <div class="card-footer">
+
+        </div>
+    </div>
+    <div class="card col-sm-6">
+        <div class="card-header " id="header-title">
+            <h6>Mas Datos</h6>
+        </div>
+        <div class="card-body">
+            <label for="id_fecha">{{form.fecha.label}}</label>
+            {{form.fecha}}
+            <label for="id_h_inicio">{{form.h_inicio.label}}</label>
+            {{form.h_inicio}}
+            {{form.h_llegada}}
+            <label for="id_h_termino">{{form.h_termino.label}}</label>
+            {{form.h_termino}}
+            <label for="id_guias">{{form.guias.label}}</label>
+            {{form.guias}}
+            <!-- <label for="id_tipo">{{form.tipo.label}}</label> -->
+            {{form.tipo}}
+            <label for="id_documentos">{{form.documentos.label}}</label>
+            {{form.documentos}}
+            <label for="id_cantidad">{{form.cantidad.label}}</label>
+            {{form.cantidad}}
+            <label for="id_observacion">{{form.observacion.label}}</label>
+            {{form.observacion}}
+        </div>
+        <div class="card-footer">
+        </div>
+    </div>
+</div>
+{% endblock form %}
+{% block javascript %}
+    <script>
+
+        $('#id_user').val('{{request.user}}')
+        $('#id_estado').val(2)
+        $('#id_tipo').val(2)
+        $(function(){
+            $('.select2').select2({
+                theme:'bootstrap4',
+                languaje:'es'
+            });
+        });
+        flatpickr("#id_fecha", {
+            minDate:"today",
+            enableTime: false,
+            dateFormat: "Y-m-d", 
+            locale: {
+                firstDayOfWeek: 1, 
+                weekdays: {
+                    shorthand: ['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb'],
+                    longhand: ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'],
+                },
+                months: {
+                    shorthand: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'],
+                    longhand: [
+                        'Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio',
+                        'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre',
+                    ],
+                },
+            }
+        });
+    </script>
+{% endblock javascript %}

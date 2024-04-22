@@ -1,0 +1,12 @@
+{% extends 'form.html' %}
+{% load widget_tweaks %}
+{% block form %}
+   {{form.as_p}}
+{% endblock form %}
+{% block javascript %}
+    <script>
+        $('#id_empresa').val("{{request.user.empresa_id}}")
+        $('#id_unidad').val("{{request.user.unidad_id}}")
+        $('#id_puesto').val("{{request.user.puesto_id}}")
+    </script>
+{% endblock javascript %}

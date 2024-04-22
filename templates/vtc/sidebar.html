@@ -1,0 +1,138 @@
+{% load static %}
+<aside class="main-sidebar sidebar-light-primary elevation-4 " id="side" style="background-color: #e57f2d;">
+    <a class="text-center" href="{% url 'dashboard:dash_report' %}">
+        <img src="{% static 'img/logo.png' %}" alt="Control de visitas" class="brand-image"
+            style="display: block; margin: auto; width: 90%; height: 100px;">
+    </a>
+    
+    <div class="sidebar">
+        <a href="{% url 'dashboard:dash_report' %}" class="" style="margin-left: 40px;font-weight: bold;color: white;">CONTROL DE VISITAS</a>
+        <div class="user-panel mt-3 pb-3 mb-3 d-block">
+            <div>
+                <strong class="text-white">Usuario:</strong>
+                <a class="text-white" href="#">{{request.user.username}}</a>
+            </div>
+            <div>
+                <strong class="text-white">Empresa:</strong>
+                <a class="text-white" href="#">{{request.user.empresa}}</a>
+            </div>
+            <div>
+                <strong class="text-white">Unidad:</strong>
+                <a class="text-white" href="#">{{request.user.unidad}}</a>
+            </div>
+            <div>
+                <strong class="text-white">Puesto:</strong>
+                <a class="text-white" href="#">{{request.user.puesto}}</a>
+            </div>
+        </div>
+        <nav class="mt-2">
+            
+            <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+                <li class="nav-header text-white">Mantenimientos</li>
+                {% if request.user.is_superuser  or request.user.is_staff %}     
+                    <li class="nav-item">
+                        <a href="{% url 'user:user_list' %}" class="nav-link">
+                            <i class="nav-icon fas fa-user text-white"></i>
+                            <p class="text-white">
+                                Usuarios
+                            </p>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{% url 'erp:unidad_trabajo_list' %}" class="nav-link">
+                            <i class="nav-icon fas fa-sitemap text-white"></i>
+                            <p class="text-white">
+                                Unidades de trabajo
+                            </p>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{% url 'erp:cargo_list' %}" class="nav-link">
+                            <i class="nav-icon fas fa-user-tie text-white"></i>
+                            <p class="text-white">
+                                Cargos
+                            </p>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{% url 'erp:empresa_list' %}" class="nav-link">
+                            <i class="nav-icon fas fa-industry text-white"></i>
+                            <p class="text-white">
+                                Empresas
+                            </p>
+                        </a>
+                    </li>
+                {% endif %}
+                <li class="nav-item">
+                    <a href="{% url 'erp:unidad_list' %}" class="nav-link">
+                        <i class="nav-icon fas fa-location-arrow text-white"></i>
+                        <p class="text-white">
+                            Unidades
+                        </p>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="{% url 'erp:puesto_list' %}" class="nav-link">
+                        <i class="nav-icon fas fa-id-card text-white"></i>
+                        <p class="text-white">
+                            Puestos
+                        </p>
+                    </a>
+                </li>
+                
+                <li class="nav-item">
+                    <a href="{% url 'erp:sala_list' %}" class="nav-link">
+                        <i class="nav-icon fas fa-chair text-white"></i>
+                        <p class="text-white">
+                            Salas
+                        </p>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="{% url 'erp:parqueo_list' %}" class="nav-link">
+                        <i class="nav-icon fas fa-parking text-white"></i>
+                        <p class="text-white">
+                            Parqueos
+                        </p>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="{% url 'erp:trabajador_list' %}" class="nav-link">
+                        <i class="nav-icon fas fa-hard-hat text-white"></i>
+                        <p class="text-white">
+                            Trabajadores
+                        </p>
+                    </a>
+                </li>
+                <li class="nav-item">
+                  
+                    <a href="{% url 'erp:visita_list' %}" class="nav-link" id="visitas-toggle" style="text-align: left;">
+                        <i class="nav-icon fas fa-user-friends text-white"></i>
+                        <p class="text-white">
+                           Visitas
+                        </p>
+                    </a>
+                 
+                </li>
+                <li class="nav-item">
+                    <a href="{% url 'erp:ingsal_list' %}" class="nav-link">
+                        <i class="nav-icon fas fa-clock text-white"></i>
+                        <p class="text-white">
+                            Control de Personal
+                        </p>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="{% url 'dashboard:dash_report' %}" class="nav-link">
+                        <i class="nav-icon fas fa-chart-bar text-white"></i>
+                        <p class="text-white">
+                            Reportes
+                        </p>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+</aside>
+
+

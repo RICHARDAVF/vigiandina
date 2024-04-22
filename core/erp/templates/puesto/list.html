@@ -1,0 +1,39 @@
+{% extends 'list.html' %}
+{% load static %}
+{% block head_list %}
+    <script src="{% static 'puesto/js/list.js' %}"></script>
+{% endblock head_list %}
+
+{% block columnas %}
+    <tr id="header-title">
+        <th>ID</th>
+        <th>PUESTO</th>
+        <th>DIRECCION</th>
+        <th>UNIDAD</th>
+        <th>EMPRESA</th>
+        <th>OPCIONES</th>
+
+    </tr>
+{% endblock columnas %}
+
+{% block filas %}
+    {% for puesto in object_list %}
+        <tr>
+            <td>{{puesto.id}}</td>
+            <td>{{puesto.puesto}}</td>
+            <td>{{puesto.direccion}}</td>
+            <td>{{puesto.unidad}}</td>
+            <td>{{puesto.unidad.empresa}}</td>
+            <td>
+                <div class="d-flex justify-content-center" >
+                    <a href="{% url 'erp:puesto_update' puesto.id %}" class="btn btn-warning btn-sm btn-flat" ><i class="fas fa-edit"></i></a>
+                    <a href="{% url 'erp:puesto_delete' puesto.id %}" class="btn btn-danger btn-sm btn-flat"><i class="fas fa-trash"></i></a>
+                </div>
+            </td>
+        </tr>
+    {% endfor %}
+{% endblock filas %}
+
+{% block javascript %}
+    
+{% endblock javascript %}

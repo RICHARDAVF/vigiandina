@@ -1,0 +1,44 @@
+{% extends 'form.html' %}
+{% load static %}
+{% block head_form %}
+    <link href="{% static 'lib/select/css/select2.min.css' %}" rel="stylesheet"/>
+    <link href="{% static 'lib/select/css/select2-bootstrap4.min.css' %}" rel="stylesheet"/>
+    <script src="{% static 'lib/select/js/select2.min.js' %}"></script>
+    <script src="{% static 'lib/select/js/i18n/es.js' %}"></script>
+    <script src="{% static 'parqueo/js/form_admin.js' %}"></script>
+{% endblock head_form %}
+{% block form %}
+<div class="row">
+    <div class="card col-sm-6">
+        <div class="card-header" id="header-title">
+            <h6>Datos Obligatorios</h6>
+        </div>
+        <div class="card-body">
+            <label class="form-label" id="empresa">{{form.empresa.label}}</label>
+            {{form.empresa}}
+            <label class="form-label" id="unidad">{{form.unidad.label}}</label>
+            {{form.unidad}}
+            <label class="form-label" id="puesto">{{form.puesto.label}}</label>
+            {{form.puesto}}
+        </div>
+    </div>
+    <div class="card col-sm-6">
+        <div class="card-header" id="header-title">
+            <h6>Datos del Parqueo</h6>
+        </div>
+        <div class="card-body">     
+            <div class="d-flex justify-content-around">
+                <label class="form-label mr-1" id="desde">{{form.desde.label}}</label>
+                {{form.desde}}
+                <label class="form-label ml-2 mr-1" id="hasta">{{form.hasta.label}}</label>
+                {{form.hasta}}
+            </div>
+            <label class="form-label" id="nombre">{{form.nombre.label}}</label>
+            {{form.nombre}}
+        </div>
+    </div>
+</div>
+{% endblock form %}
+{% block javascript %}
+
+{% endblock javascript %}

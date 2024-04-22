@@ -1,0 +1,17 @@
+{% extends 'list.html' %}
+{% load static %}
+{% block head_list %}
+    <script src="{% static 'cargos/js/list.js' %}"></script>
+{% endblock head_list %}
+{% block columnas %}
+    <tr id="header-title">
+        <th scope="col">#ID</th>
+        <th scope="col">CARGO</th>
+        <!-- <th scope="col">UNIDAD DE TRABAJO</th> -->
+        <th scope="col">OPCIONES</th>
+
+    </tr>
+{% endblock columnas %}
+{% block filas %}
+    
+{% endblock filas %}

@@ -1,0 +1,29 @@
+{% extends 'form.html' %}
+{% load widget_tweaks %}
+{% block form %}
+    <label for="id_nombre">{{ form.nombre.label }}:</label>
+    {{form.nombre}}
+    <label for="id_numero">{{ form.numero.label }}:</label>
+    {{form.numero}}
+    <label for="id_estado">{{ form.estado.label }}:</label>
+    {{form.estado}}
+    {{form.empresa}}
+    {{form.unidad}}
+    {{form.puesto}}
+        <!-- <div class="d-flex">
+            <label class="form-label" for="desde">Desde</label>
+            <input class="form-control  ml-2" type="number" style="width: 100px;" name="desde">
+            <label class="form-label ml-3" for="hasta">Hasta</label>
+            <input class="form-control ml-2" type="number" style="width: 100px;" name="hasta">
+        </div>
+        <label class="form-label" for="nombre">Nombre del Parqueo</label>
+        <input class="form-control" type="text" name="nombre"> -->
+     
+{% endblock form %}
+{% block javascript %}
+<!-- <script>
+    $('#id_empresa').val("{{request.user.empresa_id}}")
+    $('#id_unidad').val("{{request.user.unidad_id}}")
+    $('#id_puesto').val("{{request.user.puesto_id}}")
+</script> -->
+{% endblock javascript %}

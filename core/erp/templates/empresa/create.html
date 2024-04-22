@@ -1,0 +1,8 @@
+{% extends 'form.html' %}
+{% load static %}
+{% block head_form %}
+    <script src="{% static 'empresas/js/form.js' %}"></script>
+{% endblock head_form %}
+{% block form %}
+    {{form.as_p}}
+{% endblock form %}
