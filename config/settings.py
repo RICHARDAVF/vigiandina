@@ -28,13 +28,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.getenv('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 
-def get_debug_setting():
-    django_env = os.environ.get('DJANGO_ENV')
-    if django_env == 'produccion':
-        return False
-    return True
 
-DEBUG = True# get_debug_setting()
+
+DEBUG = os.getenv("DEBUG_MODE")=='True'
 
 ALLOWED_HOSTS = ["*"]
 
@@ -101,33 +97,14 @@ WSGI_APPLICATION = 'config.wsgi.application'
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
 # settings.py
+
 DATABASES = {
     'default': {
-        'ENGINE': os.getenv('DATABASES_DEFAULT_ENGINE'),
-        'NAME': os.getenv('DATABASES_DEFAULT_NAME'),
-        'USER': os.getenv('DATABASES_DEFAULT_USER'),
-        'PASSWORD': os.getenv('DATABASES_DEFAULT_PASSWORD'),
-        'HOST': os.getenv('DATABASES_DEFAULT_HOST'),
-        'PORT': os.getenv('DATABASES_DEFAULT_PORT'),
-        'OPTIONS': {
-            'driver': os.getenv('DATABASES_DEFAULT_OPTIONS_DRIVER'),
-        },
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'sqlite3.db'
     }
 }
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': os.getenv('DATABASES_MYSQL_ENGINE'),
-#         'NAME': os.getenv('DATABASES_MYSQL_NAME'),
-#         'USER': os.getenv('DATABASES_MYSQL_USER'),
-#         'PASSWORD': os.getenv('DATABASES_MYSQL_PASSWORD'),
-#         'HOST': os.getenv('DATABASES_MYSQL_HOST'),  
-#         'PORT': os.getenv('DATABASES_MYSQL_PORT'),    
-#         'OPTIONS': {
-#             'sql_mode':os.getenv('DATABASES_MYSQL_OPTIONS'),
-#         },       
-#     }
-# }
 
 
 # Password validation
