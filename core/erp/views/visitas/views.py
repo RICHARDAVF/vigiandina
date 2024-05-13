@@ -107,7 +107,7 @@ class ListViewVisita(LoginRequiredMixin,PermisosMixins,ListView):
                                 item['p_visita'] = f"{value.p_visita.nombre} {value.p_visita.apellidos}"
                             data.append(item)
                     else:
-                        for value in Visitas.objects.select_related("p_visita").filter(user_id=self.request.user.id):
+                        for value in Visitas.objects.select_related("p_visita").filter(user__empresa_id=self.request.user.empresa_id):
                             item = value.toJSON()
                             item['p_visita'] = f"{value.p_visita.nombre} {value.p_visita.apellidos}"
                             data.append(item)

@@ -58,7 +58,7 @@ class ListViewIngSal(LoginRequiredMixin,PermisosMixins,ListView):
                 if request.user.is_superuser:
                     instance = IngresoSalida.objects.all()
                 else:
-                    instance = IngresoSalida.objects.filter(usuario_id=request.user.id)
+                    instance = IngresoSalida.objects.filter(usuario__empresa_id=request.user.empresa_id)
 
                 for value in instance:
                     item = value.toJSON()
