@@ -1,3 +1,7 @@
+:root{
+    --header-color:rgb(238, 137, 49);
+}
+
 #header-title{
     background-color:rgb(238, 137, 49) ;  
 }
@@ -35,4 +39,13 @@ td{
     overflow: hidden;
     text-align: start;
     text-overflow: ellipsis;
+}
+#personal-dentro{
+    width: 100%;
+    border-radius: 10px;
+}
+#personal-dentro-title{
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+    background-color: var(--header-color);
 }

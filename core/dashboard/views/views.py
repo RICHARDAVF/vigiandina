@@ -1,7 +1,7 @@
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render
 from django.views.generic import TemplateView
-from core.erp.models import Visitas
+from core.erp.models import IngresoSalida, Visitas
 from django.db.models import Count
 from django.db.models.functions import ExtractHour,ExtractMonth
 from datetime import date,datetime
@@ -12,7 +12,7 @@ from django.views import View
 from django.shortcuts import render
 from django.views.decorators.csrf import csrf_exempt
 from django.utils.decorators import method_decorator
-from django.db.models import F, ExpressionWrapper, DateTimeField
+from django.db.models import F, ExpressionWrapper, DateTimeField,Q
 
 # Create your views here.
 
@@ -39,7 +39,7 @@ class Dashboard(LoginRequiredMixin,TemplateView):
                 
                 data = []
                
-                for value in Visitas.objects.select_related('sala').filter(estado=1):
+                for value in Visitas.objects.select_related('sala').filter(estado=1 & Q(user__empresa=request.user.empresa_id)):
                     item = value.toJSON()
                     if value.sala_id is not None:
                         item['sala'] = value.sala.sala
@@ -51,15 +51,13 @@ class Dashboard(LoginRequiredMixin,TemplateView):
                         data.append(value.toJSON())
                    
         except Exception as e:
-            print(str(e))
-            # data['error'] = 'Ocurrio un error'
+            data['error'] = 'Ocurrio un error'
         return JsonResponse(data,safe=False)
     def get_context_data(self, **kwargs):
         
         context = super().get_context_data(**kwargs)
         context['title'] = 'Dashboard'
         context['entidad'] = 'Dashboard'
-        # context['visitas'] = Visitas.objects.filter(estado=1,).values('id','nombre','apellidos','sala',"fecha","h_inicio")
         horas = Visitas.objects.filter(estado=3).annotate(hora=ExtractHour('h_inicio')).values('hora').annotate(total=Count('id')).order_by()
         datos = {"hora":[],"cantidad":[] }
         for item in horas:
@@ -68,11 +66,40 @@ class Dashboard(LoginRequiredMixin,TemplateView):
         context['horas'] = json.dumps(datos)
         mes = Visitas.objects.filter(estado=3).annotate(mes=ExtractMonth('fecha')).values('mes').annotate(total=Count('id')).order_by()
 
-        m={"1":'ENERO',"2":"FEBRERO","3":"MARZO","4":"ABRIL","5":"MAYO","6":"JUNIO","7":"JULIO","8":"AGOSTO","9":"SEPTIEMBRE","10":"OCTUBRE","11":"NOVIEMBRE","12":"DICIEMBRE"}
+        m = {"1":'ENERO',"2":"FEBRERO","3":"MARZO","4":"ABRIL","5":"MAYO","6":"JUNIO","7":"JULIO","8":"AGOSTO","9":"SEPTIEMBRE","10":"OCTUBRE","11":"NOVIEMBRE","12":"DICIEMBRE"}
         datos = {'mes':[],'cantidad':[]}
         for item in mes:
             datos['mes'].append(m[str(item['mes'])])
             datos['cantidad'].append(item["total"])
         context['mes'] = json.dumps(datos)
         context['datetime_actual'] = datetime.now()
+        visitas:Visitas = Visitas.objects.filter(
+                Q(h_llegada__isnull=False) &
+                Q(h_salida__isnull=True))
+        total_personas = []
+        context['cantidad_visitas'] = len(visitas)
+        for value in visitas:
+            
+            item = {}
+            item['nombres'] = f"{value.nombre} {value.apellidos}"
+            item['documento'] = value.dni
+            item['empresa'] = value.p_visita.empresa
+            item['tipo'] = "VISITA"
+            total_personas.append(item)
+        trabajadores:IngresoSalida = IngresoSalida.objects.filter(
+                Q(hora_ingreso__isnull=False) &
+                Q(hora_salida__isnull=True)).select_related('trabajador__empresa')
+        for value in trabajadores:
+       
+            item = {}
+            item['empresa'] = value.trabajador.empresa
+            item['nombres'] = f"{value.trabajador.nombre} {value.trabajador.apellidos}"
+            item['documento'] = value.trabajador.documento
+            item['tipo'] = "TRABAJADOR"
+            total_personas.append(item)
+        
+        context['lista_personas'] = total_personas
+        context['total_personas'] = len(total_personas)
+        context['cantidad_personal'] = len(trabajadores)
+  
         return context

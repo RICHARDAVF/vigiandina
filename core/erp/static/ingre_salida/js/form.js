@@ -39,7 +39,7 @@ $(function () {
     });
 
     function formatRepo(repo) {
-        console.log(repo)
+        
         if (repo.loading) {
             return repo.text;
         }

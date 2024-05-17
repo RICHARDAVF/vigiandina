@@ -1,5 +1,4 @@
 function pet_ajax(fecha_hora){
-    
     $.ajax({
         type: 'POST',
         url: window.location.pathname,

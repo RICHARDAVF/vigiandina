@@ -5,14 +5,36 @@
     <!-- CDN de Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="{% static 'dashboard/js/dash.js' %}"></script>
+    <script src="{% static 'dashboard/js/load_data.js' %}"></script>
+
 {% endblock head %}
 {% block content %}
     <div class="row">
-        <div class="col ms-6">
+        <div class="col ms-4">
            <canvas id="hora"></canvas>
         </div>
-        <div class="col ms-6" id="">
+        <div class="col ms-4" id="">
             <canvas id="mes"></canvas>
+        </div>
+        <div class="col ms-4">
+            <div class="container d-flex flex-column align-items-center mt-1">
+               
+                <div class="text-center" id="personal-dentro" >
+                    <div  id="personal-dentro-title">
+                        <h4>Visitas dentro de la instalacion</h4>
+                    </div>
+                    <p>{{cantidad_visitas}}</p>
+                </div>
+                <div class="text-center mt-1" id="personal-dentro">
+                    <div  id="personal-dentro-title" >
+                        <h4>Trabajadores dentro de la instalacion </h4>
+                    </div>
+                    <p>{{cantidad_personal}}</p>
+                </div>
+                <div class="text-center mt-1" id="personal-dentro">
+                    <input  type="button" id="header-title" style="width: 100%;justify-content: center;border-color: white;" value="Total : {{total_personas}}" class="btn-show-personas"/>
+                </div>
+            </div>
         </div>
     </div>
     
@@ -44,6 +66,56 @@
         </div>
         
     </div>
+    <div class="modal fade" id="modalPersons" tabindex="-1" role="dialog" aria-labelledby="modalPersonsLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="modalPersonsLabel">Listado de Personas dentro de la coorporacion</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+                <div
+                    class="table-responsive"
+                >
+                    <table
+                        class="table table-striped table-hover table-borderless align-middle"
+                    >
+                        <thead id="header-title">
+                            <tr>
+                                <th>Nombres y Apellidos</th>
+                                <th>Documento</th>
+                                <th>Empresa</th>
+                                <th>Tipo</th>
+
+                            </tr>
+                        </thead>
+                        <tbody class="table-group-divider">
+                            
+                                {% for item in lista_personas  %}
+                                <tr>
+                                <td scope="row">{{item.nombres}}</td>
+                                <td>{{item.documento}}</td>
+                                <td>{{item.empresa}}</td>
+                                <td>{{item.tipo}}</td>
+                            </tr>
+                                {% endfor %}
+                            
+                        
+                        </tbody>
+                        
+                    </table>
+                </div>
+                
+            </div>
+            <div class="modal-footer">
+                
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+          </div>
+        </div>
+      </div>
     <script>
        
         function grafica(datos,tipo,title,titlex){
@@ -98,8 +170,8 @@
         grafica(datos,'hora',"GRAFICA DE VISITAS POR HORAS","HORAS")
         var datos = JSON.parse('{{ mes|escapejs }}');
         grafica(datos,'mes',"GRAFICA DE VISITAS POR MES","MESES")
-        
-      
-       
+        var total_personas ='{{total_personal|escapejs}}'
+        var cantidad_visitas ='{{cantidad_visitas|escapejs}}'
+        var cantidad_personal ='{{cantidad_personal|escapejs}}'        
     </script>
 {% endblock %}
