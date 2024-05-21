@@ -21,7 +21,7 @@ class Notification:
                 if trabajadores_sin_marcar>0:
                     noti_message = {
                         "message":f"Hay {trabajadores_sin_marcar} trabajadores que no marcaron hora de salida el dia de ayer",
-                        "empresa":self.request.user.empresa.razon_social
+                        
                     }
                     self.notify.append(noti_message)
             else:
@@ -38,7 +38,7 @@ class Notification:
                 if trabajadores_sin_marcar>0:
                     noti_message = {
                         "message":f"Hay {trabajadores_sin_marcar} trabajadores que no marcaron hora de salida el dia de ayer",
-                        "empresa":self.request.user.empresa.razon_social
+                        
                     }
                     self.notify.append(noti_message)
 
