@@ -137,6 +137,6 @@ class Dashboard(LoginRequiredMixin,TemplateView):
         context['lista_personas'] = total_personas
         context['total_personas'] = len(total_personas)
         context['cantidad_personal'] = len(trabajadores)
-        # context["notify"] = json.dumps(list(Notification(self.request)))
-        
+        context["notify"] = json.dumps(list(iter(Notification(self.request))))
+
         return context

@@ -49,17 +49,24 @@ class ListViewIngSal(LoginRequiredMixin,PermisosMixins,ListView):
     @method_decorator(csrf_exempt)
     def dispatch(self, request, *args, **kwargs) :
         return super().dispatch(request, *args, **kwargs)
+
     def post(self,request,*args,**kwargs):
         data = {}
+        fecha = timezone.now()
         try:
             action = request.POST['action']
             if action =="searchdata":
                 data = []
+                filter_superuser =  Q(fecha=fecha.strftime("%Y-%m-%d")) | Q(hora_salida__isnull=True)
+                filter_user = Q(usuario__empresa_id=request.user.empresa_id) & (Q(fecha=fecha.strftime("%Y-%m-%d"))| Q(hora_salida__isnull=True))
+                if request.user.is_superuser and (("desde" in request.POST and request.POST["desde"]!="") and ("hasta" in request.POST and request.POST["hasta"]!="")):
+                    filter_superuser = Q(fecha__gte=request.POST["desde"]) & Q(fecha__lte=request.POST["hasta"])
+                elif request.user.is_superuser==False and (("desde" in request.POST and request.POST["desde"]!="") and ("hasta" in request.POST and request.POST["hasta"]!="")):
+                    filter_user = Q(usuario__empresa_id=request.user.empresa_id) & Q(fecha__gte=request.POST["desde"]) & Q(fecha__lte=request.POST["hasta"])
                 if request.user.is_superuser:
-                    instance = IngresoSalida.objects.all()
+                    instance = IngresoSalida.objects.filter(filter_superuser)
                 else:
-                    instance = IngresoSalida.objects.filter(usuario__empresa_id=request.user.empresa_id)
-
+                    instance = IngresoSalida.objects.filter(filter_user)
                 for value in instance:
                     item = value.toJSON()
                     item['documento'] = value.trabajador.documento
@@ -68,7 +75,7 @@ class ListViewIngSal(LoginRequiredMixin,PermisosMixins,ListView):
                     item['hora_ingreso'] = value.hora_ingreso.strftime('%H:%M:%S')
                     data.append(item)
             elif action == 'confirm_hora_salida':
-                instance = IngresoSalida.objects.get(id=request.POST['id'])
+                instance = IngresoSalida.objects.get(Q(id=request.POST['id']) & Q(hora_salida__isnull=True))
                 if instance.n_parqueo != None :
                     Parqueo.objects.filter(id=instance.n_parqueo_id).update(estado=True)
                 instance.hora_salida = timezone.now().strftime('%H:%M:%S')
@@ -97,6 +104,8 @@ class ListViewIngSal(LoginRequiredMixin,PermisosMixins,ListView):
                     Parqueo.objects.filter(numero=request.POST['parqueo'],unidad_id=request.user.unidad_id,puesto_id=request.user.puesto_id).update(estado=False)
                 except Parqueo.DoesNotExist  as e:
                     data['error'] = 'Parqueo no encontrado o esta ocupado'
+            elif action == "search_for_date":
+                pass
             else:
                 data['error'] = 'No se envio ninguna opcion'
         except Exception as e:
@@ -150,7 +159,6 @@ class DeleteViewIngSal(LoginRequiredMixin,PermisosMixins,DeleteView):
     template_name = 'ingre_salida/delete.html'
     success_url = reverse_lazy('erp:ingsal_list')
     url_redirect = success_url
-
 
     def dispatch(self, request, *args, **kwargs):
         self.object = self.get_object()

@@ -1,5 +1,7 @@
 
 $(function(){
+    var desde = $('#desde').val();
+    var hasta = $('#hasta').val();
     var table = new DataTable('#data',{
         language: {
             url: '//cdn.datatables.net/plug-ins/1.13.6/i18n/es-ES.json',
@@ -41,8 +43,10 @@ $(function(){
         ajax:{
             url:window.location.pathname,
             type:'POST',
-            data:{
-                "action":"searchdata",
+            data:(d)=>{
+                d.action = "searchdata",
+                d.desde = $('#desde').val();
+                d.hasta = $('#hasta').val();
             },
             dataSrc:''
         },
@@ -189,7 +193,7 @@ $(function(){
         })
     })
     $(document).on('change','#hasta', function() {
-        aplicarFiltro();
+        table.ajax.reload();
     });
 
     function aplicarFiltro() {
