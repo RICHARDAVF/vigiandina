@@ -172,6 +172,27 @@
         grafica(datos,'mes',"GRAFICA DE VISITAS POR MES","MESES")
         var total_personas ='{{total_personal|escapejs}}'
         var cantidad_visitas ='{{cantidad_visitas|escapejs}}'
-        var cantidad_personal ='{{cantidad_personal|escapejs}}'        
+        var cantidad_personal ='{{cantidad_personal|escapejs}}'      
+        var notify = JSON.parse('{{notify|escapejs}}')
+    
+        if (notify.length>0){
+            $('#canti').text(notify.length)
+            var component = $('#dropdownSubMenu2')
+            component.attr('data-toggle','dropdown')
+            component.attr('aria-haspopup','true')
+            component.attr('aria-expanded','false')
+            component.attr('class','nav-link dropdown-toggle')
+            var add_comp = `<ul aria-labelledby="dropdownSubMenu2" class="dropdown-menu border-0 shadow"
+                        style="right: 0px; left: inherit;">`
+            for(item of notify){
+
+                add_comp+=`<li>
+                    <p class="dropdown-item">${item.message}</p>
+                    </li>`
+            }
+            add_comp+=`</ul>`
+            component.append(add_comp)
+        }
+
     </script>
 {% endblock %}

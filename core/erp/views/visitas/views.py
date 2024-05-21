@@ -11,7 +11,8 @@ from django.views.decorators.csrf import csrf_exempt
 from django.urls import reverse_lazy
 from django.db.models import Q
 from django.contrib.auth.mixins import LoginRequiredMixin
-from datetime import date,datetime,time
+from datetime import date,time
+from django.utils import timezone
 # Create your views here.
 class CreateViewVisita(LoginRequiredMixin,PermisosMixins,CreateView):
     login_url = reverse_lazy('login')
@@ -134,12 +135,12 @@ class ListViewVisita(LoginRequiredMixin,PermisosMixins,ListView):
                     data['error'] = f"Ocurrio un erro {str(e)}"
             elif action =='confirm':
                 instance = Visitas.objects.get(id=request.POST['id'])
-                instance.h_llegada=datetime.now().strftime('%H:%M:%S')
+                instance.h_llegada=timezone.now().strftime('%H:%M:%S')
                 instance.estado=2
                 instance.save()
             elif action =='h_final':
                 instance = Visitas.objects.get(id=request.POST['id'])
-                instance.h_salida = datetime.now().strftime('%H:%M:%S')
+                instance.h_salida = timezone.now().strftime('%H:%M:%S')
                 sala = instance.sala_id
                 if sala is not None:
                     self.habilitar_sala(sala)
@@ -161,7 +162,7 @@ class ListViewVisita(LoginRequiredMixin,PermisosMixins,ListView):
             elif action=="h_salida":
                 instance = Visitas.objects.get(id=request.POST['id'])
             
-                hora = datetime.now().strftime("%H:%M:%S")
+                hora = timezone.now().strftime("%H:%M:%S")
                 instance.h_salida = hora
             
                 if instance.h_termino is None:

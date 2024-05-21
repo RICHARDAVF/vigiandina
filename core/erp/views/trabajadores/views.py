@@ -1,9 +1,8 @@
 from django.http import JsonResponse
 from django.views.generic import CreateView,ListView,DeleteView,UpdateView,View
-from core.upload import Cargo
 from core.mixins import PermisosMixins
 from core.validation import Validation
-from ...models import Trabajadores,AsignacionEPPS,AsignacionEV,Vehiculos
+from ...models import Trabajadores,AsignacionEPPS,AsignacionEV,Vehiculos,Empresa
 from ...forms import FormTrabajador
 from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt
@@ -36,6 +35,13 @@ class CreateViewTrabajador(LoginRequiredMixin,PermisosMixins,CreateView):
         except Exception as e:
             data['error'] = str(e)
         return JsonResponse(data)
+    def get_form(self,form_class=None):
+        form = super().get_form(form_class)
+        if not self.request.user.is_superuser:
+            form.fields["empresa"].queryset = Empresa.objects.filter(id=self.request.user.empresa_id)
+        else:
+            form.fields["empresa"].queryset = Empresa.objects.filter(id=self.request.user.empresa_id)
+        return form
     def get_context_data(self, **kwargs):
         context= super().get_context_data(**kwargs)
         context['title'] = 'Creacion de Trabajadores'
@@ -70,7 +76,7 @@ class ListViewTrabajador(LoginRequiredMixin,PermisosMixins,ListView):
         return data
     def post(self, request, *args, **kwargs):
         data = {}
-        # Cargo().trabajadores()
+
         try:
             action = request.POST['action']
             if action == 'searchdata':

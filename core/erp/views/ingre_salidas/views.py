@@ -9,7 +9,7 @@ from core.erp.forms import FormIngSal
 from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt
 from django.db.models import Q
-from datetime import datetime
+from django.utils import timezone
 class CreateViewIngSal(LoginRequiredMixin,PermisosMixins,CreateView):
     permission_required = 'erp.add_ingresosalida'
     model = IngresoSalida
@@ -71,7 +71,7 @@ class ListViewIngSal(LoginRequiredMixin,PermisosMixins,ListView):
                 instance = IngresoSalida.objects.get(id=request.POST['id'])
                 if instance.n_parqueo != None :
                     Parqueo.objects.filter(id=instance.n_parqueo_id).update(estado=True)
-                instance.hora_salida = datetime.now().strftime('%H:%M:%S')
+                instance.hora_salida = timezone.now().strftime('%H:%M:%S')
                 instance.save()
             elif action == "search_trabajador":
                 trabajadores = Trabajadores.objects.filter(

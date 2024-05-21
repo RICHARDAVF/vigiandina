@@ -2,7 +2,7 @@ from django.urls import reverse_lazy
 from django.http import JsonResponse
 from django.views.generic import CreateView,ListView,UpdateView,DeleteView
 from django.contrib.auth.mixins import LoginRequiredMixin
-from core.upload import CargarUnidadesTrabajo, cargarUnidades1
+
 from core.erp.form.unidad_trabajo.forms import FormUnidadTrabajo
 from core.mixins import PermisosMixins
 from ...models import UnidadTrabajo

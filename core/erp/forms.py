@@ -2,8 +2,8 @@ from django.forms import ModelForm,TextInput,DateInput,TimeInput,Select,FileInpu
 from django import forms
 from .models import (Visitas,Salas,Parqueo,Trabajadores,AsignacionEPPS,Vehiculos,AsignacionEV,
                      Asistentes,IngresoSalida,EquiposProteccionVisitante,CargoTrabajador)
-from datetime import datetime
 from core.user.models import Empresa,Unidad,Puesto
+from django.utils import timezone
 class FormVisitas(ModelForm):
     p_visita=forms.ModelChoiceField(queryset=Trabajadores.objects.all(),widget=forms.Select(attrs={
                 "class":"form-control select2"
@@ -70,12 +70,12 @@ class FormVisitas(ModelForm):
                 attrs={
                 'class':'form-control',
                 'type':'date',
-                'value':datetime.now().date
+                'value':timezone.now().date
             }),
             'h_inicio':TimeInput(attrs={
                 'type':'time',
                 'class':'form-control',
-                'value':datetime.now().strftime('%H:%M')
+                'value':timezone.now().strftime("%H:%M:%S")
                
             }),
             'h_termino':TimeInput(attrs={
@@ -216,16 +216,16 @@ class FormDelivery(ModelForm):
             'fecha':DateInput(format='%Y-%m-%d',attrs={
                 'class':'form-control',
                 'type':'date',
-                'value':datetime.now().date
+                'value':timezone.now().date
             }),
             'h_inicio':TimeInput(attrs={
                 'type':'time',
                 'class':'form-control',
-                'value':datetime.now().strftime('%H:%M')
+                'value':timezone.now().strftime('%H:%M')
                
             }),
             'h_llegada':HiddenInput(attrs={
-                'value':datetime.now().strftime('%H:%M:%S')
+                'value':timezone.now().strftime('%H:%M:%S')
             }),
             'h_termino':TimeInput(attrs={
                 'type':'time',
@@ -393,6 +393,7 @@ class FormTrabajador(ModelForm):
             }),
             'cargo':Select(attrs={
                 'class':'form-control select2',
+                'required':True
              
             }),
 
