@@ -1,14 +1,13 @@
 
 $(function(){
-    var desde = $('#desde').val();
-    var hasta = $('#hasta').val();
+
     var table = new DataTable('#data',{
         language: {
             url: '//cdn.datatables.net/plug-ins/1.13.6/i18n/es-ES.json',
         },
-        responsive:true,
+        responsive:false,
         autoWidth:false,
-        destroy:true,
+       
         deferRender:true,
         dom:'Qfrtip',
         "order": [[0, 'desc']],

@@ -1,4 +1,12 @@
 $(function(){
+    const options = {
+        hour:"2-digit",
+        minute:"2-digit",
+        second:"2-digit",
+        hour12:false
+    }
+    const date = (new Date()).toLocaleTimeString("es-Es",options)
+    $('#id_h_inicio').val(date)
     function searchDNI(dni){
         const url = window.location.pathname,
         data = {dni:dni,action:'searchdni'};

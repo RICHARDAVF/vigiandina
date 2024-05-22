@@ -1,17 +1,29 @@
 $(function(){
     var table = new DataTable('#data',{
-        responsive:true,
+        responsive:false,
         language: {
             url: '//cdn.datatables.net/plug-ins/1.13.6/i18n/es-ES.json',
         },
+        paging:true,
+        lengthChange: true, 
         autoWidth: false,
         destroy: true,
+        searching: true, 
         deferRender: true,
+        pageLength: 10, 
         dom:'Qfrtip',
         "order": [[0, 'desc']],
         lengthMenu: [
             [ 10, 25, 50, -1 ],
             [ '10 filas', '25 filas', '50 filas', 'Todo' ]
+        ],
+        columnDefs: [
+            { "width": "5%", "targets": 0 }, 
+            { "width": "10%", "targets": 1 },
+            { "width": "35%", "targets": 2 },
+            { "width": "35%", "targets": 3 },
+            { "width": "15%", "targets": 4 },
+            
         ],
         initComplete: function (settings, json) {
            

@@ -470,7 +470,7 @@ $(function () {
             processData: false, 
             contentType: false,
             success: function (data) {
-                console.log(data)
+          
                if(data.error){
                 return alert(data.error)
                }

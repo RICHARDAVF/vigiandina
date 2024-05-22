@@ -38,3 +38,21 @@ $(document).on('change','#fecha_hora',function(){
     var fecha_hora = $(this).val()
     pet_ajax(fecha_hora)
 })
+$(document).on("click","#btn-report",function(){
+
+    // var parameters = new FormData($("form"))
+    console.log(1212)
+    // $.ajax({
+    //     method:"POST",
+    //     url:"/dashboard/pdf/report-1/",
+    //     dataType:"json",
+    //     data:function(d){
+    //         d.action = "report"
+    //         d.desde = $("desde").val()
+    //         d.hasta = $("hasta").val()
+    //     },
+    //     success:function(data){
+    //         console.log("suce")
+    //     }
+    // })
+})
