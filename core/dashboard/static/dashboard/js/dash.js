@@ -41,7 +41,7 @@ $(document).on('change','#fecha_hora',function(){
 $(document).on("click","#btn-report",function(){
 
     // var parameters = new FormData($("form"))
-    console.log(1212)
+    alert("Mensaje:Funcion en desarrollo, espere la siguiente actualizacion")
     // $.ajax({
     //     method:"POST",
     //     url:"/dashboard/pdf/report-1/",

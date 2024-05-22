@@ -311,7 +311,15 @@ class DeleteViewVisita(LoginRequiredMixin,PermisosMixins,DeleteView):
     def post(self, request, *args, **kwargs):
         data = {}
         try:
-            self.object.delete()
+            if request.user.is_superuser:
+                related_objects = self.object._meta.related_objects
+                for related in related_objects:
+                    related_name = related.get_accessor_name()
+                    related_manager = getattr(self.object,related_name)
+                    related_manager.all().delete()
+                self.object.delete()
+            else:
+                data["error"] = "No tienes los permisos suficientes para realizar esta accion"
         except Exception as e:
             data['error'] = str(e)
         return JsonResponse(data)
