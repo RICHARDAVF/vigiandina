@@ -57,7 +57,7 @@ class ReporteControlAccesos(LoginRequiredMixin,View):
         repo.wrap(nombre.width,nombre.topMargin)
         repo.drawOn(canvas,0,750)
         hora = ParagraphStyle(name="aline",alignment=TA_RIGHT,parent=style["Normal"])
-        hora = Paragraph(f"<b>Fecha y Hora</b>: {timezone.now().strftime("%Y-%m-%d %H:%M:%S")}",style=hora)
+        hora = Paragraph(f"<b>Fecha y Hora</b>: {timezone.now().strftime('%Y-%m-%d %H:%M:%S')}",style=hora)
         hora.wrap(nombre.width,nombre.topMargin)
         hora.drawOn(canvas,nombre.leftMargin,780)
         canvas.restoreState()
