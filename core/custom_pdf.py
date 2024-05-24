@@ -29,12 +29,17 @@ class PDFControlAccesos:
         self.request = request
         self.story = []
     def generate(self):
-        style = TableStyle([
-                            ('BACKGROUND', (0, 0), (-1, 0), colors.grey),
-                    ("FONTSIZE",(0,0),(-1,-1),10),
-                    ('SPLITBYROWSPAN', (0, 0), (-1, -1), 1)
-        ])
-        table = Table(data=self.data,repeatRows=1,style=style)
-        self.story.append(table)
-        file = SimpleDocTemplate(filename=self.filename,pagesize=letter,title="Reporte",author={self.request.user.username})
-        file.build(flowables=self.story,onFirstPage=self.custom,onLaterPages=self.custom)
+        try:
+            style = TableStyle([
+                                ('BACKGROUND', (0, 0), (-1, 0), colors.grey),
+                        ("FONTSIZE",(0,0),(-1,-1),10),
+                        ('SPLITBYROWSPAN', (0, 0), (-1, -1), 1)
+            ])
+            table = Table(data=self.data,repeatRows=1,style=style)
+            self.story.append(table)
+            print(self.request)
+            file = SimpleDocTemplate(filename=self.filename,pagesize=letter)
+            file.build(self.story,onFirstPage=self.custom,onLaterPages=self.custom,canvasmaker=Numeracion)
+        except Exception as e:
+            print(str(e))
+            raise Exception(str(e))

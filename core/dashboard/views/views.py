@@ -1,4 +1,5 @@
-from django.http import JsonResponse
+from django.http import HttpRequest, JsonResponse
+from django.http.response import HttpResponse as HttpResponse
 from django.shortcuts import render
 from django.views.generic import TemplateView
 from core.erp.models import IngresoSalida, Visitas
@@ -15,6 +16,10 @@ from django.utils.decorators import method_decorator
 from django.db.models import Q
 from django.utils import timezone
 from .notification import Notification
+from django.conf import settings
+import os
+from pandas import read_csv,to_datetime,ExcelWriter,DataFrame
+import io
 # Create your views here.
 
 class PageNotFoundView(View):
@@ -138,5 +143,46 @@ class Dashboard(LoginRequiredMixin,TemplateView):
         context['total_personas'] = len(total_personas)
         context['cantidad_personal'] = len(trabajadores)
         context["notify"] = json.dumps(list(iter(Notification(self.request))))
+
+        return context
+class ShowAppMovil(LoginRequiredMixin,TemplateView):
+    template_name = "dashboard/list_data_app_movil.html"
+    login_url = reverse_lazy("login")
+    cantidad = 100
+    @method_decorator(csrf_exempt)
+    def dispatch(self, request, *args, **kwargs):
+        return super().dispatch(request, *args, **kwargs)
+    def proccess_date(self,date:str):
+        return date.split("/")[::-1]
+    def post(self,request,*args,**kwagrs):
+        data = {}
+        
+        try:
+        
+            filepath = os.path.join(settings.BASE_DIR,'static/files/asistencias_inma.csv')
+            data_asistencia = read_csv(filepath_or_buffer=filepath,delimiter=";",header=None,names=["placa","nro_documento","nombres","empresa","fecha","hora_ingreso","tipo","id","hora_salida","motivo","numero_parkin","tipo_documento"],dtype=str)
+            data_asistencia.fillna("",inplace=True)
+            action = request.POST["action"]
+            if action=="searchdata":
+                self.cantidad = int(request.POST['cantidad'])
+                if ("desde" in request.POST and request.POST["desde"]!='') and ("hasta" in request.POST and request.POST["hasta"]!=""):
+                    data_init = to_datetime(request.POST["desde"])
+                    data_finish = to_datetime(request.POST["hasta"])
+                    data_asistencia["fecha"] = to_datetime(data_asistencia["fecha"])
+                    data_filter:DataFrame = data_asistencia[(data_asistencia["fecha"]>=data_init) & (data_asistencia["fecha"]<=data_finish)]
+                    data_filter["fecha"] = to_datetime(data_filter["fecha"]).dt.date
+                    data = data_filter.to_dict(orient="records")
+                else:
+                    data = data_asistencia[:self.cantidad].to_dict(orient="records") 
+            else:
+                data["error"] = "No se ingreso una opcion"
+        except Exception as e:
+        
+            data["error"] = f"ocurrio un error: {str(e)}"
+        return JsonResponse(data,safe=False)
+
+    def get_context_data(self, **kwargs):
+        context =  super().get_context_data(**kwargs)
+        context["title"] = "Listado registros de la aplicacion movil, cantidad maxima 44748"
 
         return context

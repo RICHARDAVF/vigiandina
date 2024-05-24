@@ -45,7 +45,8 @@ $(function () {
             data: {
                 'action': 'searchdata'
             },
-            dataSrc: ""
+            dataSrc: "",
+
         },
         columns: [
             {"data": "id"},

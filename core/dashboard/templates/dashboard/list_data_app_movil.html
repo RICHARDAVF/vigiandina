@@ -1,0 +1,27 @@
+{% extends 'list.html' %}
+{% load static %}
+{% block head_list %}
+<script src="{% static 'dashboard/js/list.js' %}"></script>
+{% endblock head_list %}
+{% block columnas %}    
+<tr>
+    <th style="width: 5%;">Placa</th>
+    <th style="width: 5%;">Tipo doc</th>
+    <th style="width: 5%;">Nº Documento</th>
+    <th style="width: 15%;">Nombres y Apellidos</th>
+    <th style="width: 10%;">Empresa</th>
+    <th style="width: 5%;">Fecha</th>
+    <th style="width: 5%;">H. Ingreso</th>
+    <th style="width: 5%;">H. Salida</th>
+    <th style="width: 10%;">Motivo</th>
+    <th style="width: 5%;">Parqueo</th>
+    <th style="width: 5%;">Tipo</th>
+</tr>
+{% endblock columnas %}
+{% block filas %}
+    
+{% endblock filas %}
+{% block javascript %}
+
+{% endblock javascript %}
+

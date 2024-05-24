@@ -15,7 +15,7 @@ $(function(){
             [ 10, 25, 50, -1 ],
             [ '10 filas', '25 filas', '50 filas', 'Todo' ]
         ],
-        dom:"Qfrtip",
+       
         conditions:{
             num:{
                 'MultipleOf':{
@@ -195,28 +195,7 @@ $(function(){
         table.ajax.reload();
     });
 
-    function aplicarFiltro() {
-        var fechaInicio = $('#desde').val();
-        var fechaFin = $('#hasta').val();
-        if (fechaInicio !== '' && fechaFin !== '') {
-            $.fn.dataTable.ext.search.push(
-                function(settings, data, dataIndex) {
-              
-                    var fechaRegistro = data[3]; 
-                    var fechaInicio = $('#desde').val();
-                    var fechaFin = $('#hasta').val();
-                    
-                    if (fechaInicio !== '' && fechaFin !== '') {
-                        return (fechaRegistro >= fechaInicio && fechaRegistro <= fechaFin);
-                    }
-                    return true
-                }
-            );
-            table.draw();
-        }else{
-            table.search('').columns().search('').draw();
-        }
-    }
+
     const contenidoModal = ()=>{
         return (`
                 <div class="modal fade" id="miModal" tabindex="-1" role="dialog" aria-labelledby="miModalLabel" aria-hidden="true">

@@ -40,14 +40,12 @@
                     </div>
                 </div>
                 <div class="col ms-4 align-items-center mt-1 justify-content">
-                        
-                        {% csrf_token %}
-                        <label for="desde">Desde</label>
-                        <input type="date" name="desde" id="desde" class="form-control">
-                        <label for="desde">Hasta</label>
-                        <input type="date" name="hasta" id="hasta" class="form-control">
-                        <button  class="btn btn-danger  mt-2" id="btn-report">GENERAR REPORTE </button>
-                
+                    <label for="desde">Desde</label>
+                    <input type="date" name="desde" id="desde" class="form-control">
+                    <label for="desde">Hasta</label>
+                    <input type="date" name="hasta" id="hasta" class="form-control">
+                    <button  class="btn btn-danger  mt-2" id="btn-report" style="width: 100%;">GENERAR REPORTE </button>
+                    <a class="link mt-1" href="{% url 'dashboard:list_data_movil' %}" >Datos de la app movil</a>
                 </div>
             </div>
         </div>
@@ -208,8 +206,8 @@
             }
             add_comp+=`</ul>`
             component.append(add_comp)
-            var table = new DataTable("#data-1", {
-                        export:["pdf"],
+           $("#data-1").DataTable({
+                        
                         responsive: false, 
                         paging: true, 
                         lengthChange: true, 
@@ -218,7 +216,7 @@
                         ordering: true, 
                         autoWidth: false,
                         language: {
-                            url: '//cdn.datatables.net/plug-ins/1.13.6/i18n/es-ES.json' 
+                            url: "{% static '/lib/datatables/spain.json' %}" 
                         },
                         columnDefs: [
                             { "width": "40%", "targets": 0 }, 
