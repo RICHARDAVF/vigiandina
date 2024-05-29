@@ -35,6 +35,7 @@ class CreateViewVisita(LoginRequiredMixin,PermisosMixins,CreateView):
                     return JsonResponse(data)
                 form = self.get_form()
                 data = form.save()
+        
                 sala = request.POST['sala']
                 if sala!='':
                     state_sale = Salas.objects.get(id=sala)
@@ -45,7 +46,20 @@ class CreateViewVisita(LoginRequiredMixin,PermisosMixins,CreateView):
                     parking = Parqueo.objects.get(id=parqueo)
                     parking.estado = parqueo==''
                     parking.save()
-               
+            elif action=="search_doc_empresa":
+                documento = request.POST["documento"]
+                try:
+                    value = Visitas.objects.get(documento_empresa=documento)
+                    data = {"empresa":value.empresa}
+                except Visitas.DoesNotExist:
+                    tipo = "dni" if len(documento)==8 else "ruc"
+                    value = Validation(documento,tipo).valid()
+                   
+                    if "error" in value:
+                        data = value
+                    else:
+                        data = {"empresa":self.proccess_data(value["data"],tipo)}
+           
             elif action =='searchdni':
                 data = Validation(request.POST['dni'],'dni').valid()
                 
@@ -78,6 +92,8 @@ class CreateViewVisita(LoginRequiredMixin,PermisosMixins,CreateView):
             if self.request.POST['estado'] =='1' and self.request.POST['h_termino'].strip()=='':
                 return False,'Hora de finalizacion incorrecta'
             return True,''
+    def proccess_data(self,data,tipo):
+        return data["nombre_completo"] if tipo=="dni" else data["nombre_o_razon_social"]
 
 class ListViewVisita(LoginRequiredMixin,PermisosMixins,ListView):
     permission_required = 'erp.view_visitas'
@@ -108,7 +124,7 @@ class ListViewVisita(LoginRequiredMixin,PermisosMixins,ListView):
                                 item['p_visita'] = f"{value.p_visita.nombre} {value.p_visita.apellidos}"
                             data.append(item)
                     else:
-                        for value in Visitas.objects.select_related("p_visita").filter(user__empresa_id=self.request.user.empresa_id):
+                        for value in Visitas.objects.select_related("p_visita").filter(user_id=self.request.user.id):
                             item = value.toJSON()
                             item['p_visita'] = f"{value.p_visita.nombre} {value.p_visita.apellidos}"
                             data.append(item)

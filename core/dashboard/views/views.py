@@ -1,4 +1,4 @@
-from django.http import HttpRequest, JsonResponse
+from django.http import  JsonResponse
 from django.http.response import HttpResponse as HttpResponse
 from django.shortcuts import render
 from django.views.generic import TemplateView
@@ -18,8 +18,8 @@ from django.utils import timezone
 from .notification import Notification
 from django.conf import settings
 import os
-from pandas import read_csv,to_datetime,ExcelWriter,DataFrame
-import io
+from pandas import read_csv,to_datetime,DataFrame
+
 # Create your views here.
 
 class PageNotFoundView(View):
@@ -49,7 +49,7 @@ class Dashboard(LoginRequiredMixin,TemplateView):
                 else:
                     visitas_pro = Visitas.objects.select_related('sala').filter(
                     Q(estado=1) & 
-                    Q(user__empresa_id=self.request.user.empresa_id)
+                    Q(user_id=self.request.user.id)
                     )
                 for value in visitas_pro:
                     item = value.toJSON()
@@ -78,7 +78,7 @@ class Dashboard(LoginRequiredMixin,TemplateView):
             horas = Visitas.objects.filter(estado=3).annotate(hora=ExtractHour('h_inicio')).values('hora').annotate(total=Count('id')).order_by()
         else:
             horas = Visitas.objects.filter(Q(estado=3) &
-                                       Q(user__empresa_id=self.request.user.empresa_id)).annotate(hora=ExtractHour('h_inicio')).values('hora').annotate(total=Count('id')).order_by()
+                                       Q(user_id=self.request.user.id)).annotate(hora=ExtractHour('h_inicio')).values('hora').annotate(total=Count('id')).order_by()
         datos = {"hora":[],"cantidad":[] }
         for item in horas:
             datos['hora'].append(f"{item['hora']}H")
@@ -88,7 +88,7 @@ class Dashboard(LoginRequiredMixin,TemplateView):
             mes = Visitas.objects.filter(estado=3).annotate(mes=ExtractMonth('fecha')).values('mes').annotate(total=Count('id')).order_by()
         else:
             mes = Visitas.objects.filter(Q(estado=3) &
-                                       Q(user__empresa_id=self.request.user.empresa_id)).annotate(mes=ExtractMonth('fecha')).values('mes').annotate(total=Count('id')).order_by()
+                                       Q(user_id=self.request.user.id)).annotate(mes=ExtractMonth('fecha')).values('mes').annotate(total=Count('id')).order_by()
 
         m = {"1":'ENERO',"2":"FEBRERO","3":"MARZO","4":"ABRIL","5":"MAYO","6":"JUNIO","7":"JULIO","8":"AGOSTO","9":"SEPTIEMBRE","10":"OCTUBRE","11":"NOVIEMBRE","12":"DICIEMBRE"}
         datos = {'mes':[],'cantidad':[]}
@@ -107,7 +107,7 @@ class Dashboard(LoginRequiredMixin,TemplateView):
             visitas:Visitas = Visitas.objects.filter(
                 Q(h_llegada__isnull=False) &
                 Q(h_salida__isnull=True) &
-                Q(user__empresa_id=self.request.user.empresa_id)
+                Q(user_id=self.request.user.id)
                 )
         total_personas = []
         context['cantidad_visitas'] = len(visitas)
@@ -128,7 +128,7 @@ class Dashboard(LoginRequiredMixin,TemplateView):
             trabajadores:IngresoSalida = IngresoSalida.objects.filter(
                 Q(hora_ingreso__isnull=False) &
                 Q(hora_salida__isnull=True) &
-                Q(usuario__empresa_id=self.request.user.empresa_id)
+                Q(usuario_id=self.request.user.id)
                 )
         for value in trabajadores:
        
@@ -156,9 +156,7 @@ class ShowAppMovil(LoginRequiredMixin,TemplateView):
         return date.split("/")[::-1]
     def post(self,request,*args,**kwagrs):
         data = {}
-        
         try:
-        
             filepath = os.path.join(settings.BASE_DIR,'static/files/asistencias_inma.csv')
             data_asistencia = read_csv(filepath_or_buffer=filepath,delimiter=";",header=None,names=["placa","nro_documento","nombres","empresa","fecha","hora_ingreso","tipo","id","hora_salida","motivo","numero_parkin","tipo_documento"],dtype=str)
             data_asistencia.fillna("",inplace=True)

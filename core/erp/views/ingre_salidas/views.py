@@ -58,11 +58,11 @@ class ListViewIngSal(LoginRequiredMixin,PermisosMixins,ListView):
             if action =="searchdata":
                 data = []
                 filter_superuser =  Q(fecha=fecha.strftime("%Y-%m-%d")) | Q(hora_salida__isnull=True)
-                filter_user = Q(usuario__empresa_id=request.user.empresa_id) & (Q(fecha=fecha.strftime("%Y-%m-%d"))| Q(hora_salida__isnull=True))
+                filter_user = Q(usuario_id=request.user.id) & (Q(fecha=fecha.strftime("%Y-%m-%d"))| Q(hora_salida__isnull=True))
                 if request.user.is_superuser and (("desde" in request.POST and request.POST["desde"]!="") and ("hasta" in request.POST and request.POST["hasta"]!="")):
                     filter_superuser = Q(fecha__gte=request.POST["desde"]) & Q(fecha__lte=request.POST["hasta"])
                 elif request.user.is_superuser==False and (("desde" in request.POST and request.POST["desde"]!="") and ("hasta" in request.POST and request.POST["hasta"]!="")):
-                    filter_user = Q(usuario__empresa_id=request.user.empresa_id) & Q(fecha__gte=request.POST["desde"]) & Q(fecha__lte=request.POST["hasta"])
+                    filter_user = Q(usuario_id=request.user.id) & Q(fecha__gte=request.POST["desde"]) & Q(fecha__lte=request.POST["hasta"])
                 if request.user.is_superuser:
                     instance = IngresoSalida.objects.filter(filter_superuser)
                 else:

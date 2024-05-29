@@ -12,3 +12,4 @@ admin.site.register(CargoTrabajador, AdminCargoView)
 class AdminUnidadTrabajo(admin.ModelAdmin):
     list_display = ('id','unidad')
 admin.site.register(UnidadTrabajo,AdminUnidadTrabajo)
+

@@ -53,10 +53,14 @@ class FormVisitas(ModelForm):
                
                 
             }),
-            'empresa':TextInput(attrs={
-                'placeholder':'Empresa de Procedencia',
+            'documento_empresa':TextInput(attrs={
+                'placeholder':'Nº documento',
                 'class':'form-control',
                 
+            }),
+            'empresa':TextInput(attrs={
+                'placeholder':'Empresa de Procedencia',
+                'class':'form-control'   
             }),
             'motivo':TextInput(attrs={
                 'placeholder':'Motivo de la vista',

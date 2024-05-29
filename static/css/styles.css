@@ -5,6 +5,7 @@
 #header-title{
     background-color:rgb(238, 137, 49) ;  
 }
+
 #header-title h6,#header-title h3,#fecha-hora{
     color: white;
 }
@@ -23,16 +24,20 @@
     background-color: rgb(238, 137, 49) ;
     
 }
-.paginate_button a{
+.paginate_button,.dt-paging-button  a{
     background-color: rgb(238, 137, 49) ;
 }
+
+
 .pagination li a {
     color: white;
 }
 td{
     font-size: 12px;
 }
-
+a {
+    text-decoration-line: none;
+}
 .larg-text{
     width: 150px;
     white-space: nowrap;

@@ -37,8 +37,8 @@ class CreateViewTrabajador(LoginRequiredMixin,PermisosMixins,CreateView):
         return JsonResponse(data)
     def get_form(self,form_class=None):
         form = super().get_form(form_class)
-        if not self.request.user.is_superuser:
-            form.fields["empresa"].queryset = Empresa.objects.filter(id=self.request.user.empresa_id)
+        if  self.request.user.is_superuser:
+            form.fields["empresa"].queryset = Empresa.objects.all()
         else:
             form.fields["empresa"].queryset = Empresa.objects.filter(id=self.request.user.empresa_id)
         return form

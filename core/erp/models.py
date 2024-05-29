@@ -175,6 +175,7 @@ class Visitas(models.Model):
     dni = models.CharField(max_length=10,verbose_name="N° Documento")
     nombre = models.CharField(max_length=50,verbose_name="Nombres")
     apellidos = models.CharField(max_length=50,verbose_name="Apellidos")
+    documento_empresa = models.CharField(max_length=15,verbose_name="Nº RUC/DNI/CE/PP",null=True,blank=True)
     empresa = models.CharField(max_length=150,verbose_name="Empresa",null=True,blank=True)
     cargo = models.CharField(max_length=50,verbose_name="Cargo",null=True,blank=True)
     fecha = models.DateField(auto_now=False,verbose_name="Fecha")
