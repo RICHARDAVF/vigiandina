@@ -1,4 +1,12 @@
 $(function(){
+    const options = {
+        hour:"2-digit",
+        minute:"2-digit",
+       
+        hour12:false
+    }
+    const date = (new Date()).toLocaleTimeString("es-Es",options)
+    $('#id_h_inicio').val(date)
     function searchDNI(dni){
         const url = window.location.pathname,
         data = {dni:dni,action:'searchdni'};
@@ -45,5 +53,29 @@ $(function(){
         }
         
     })
-    
+    $("#id_documento_empresa").on("keydown",function(e){
+        if(e.key=='Enter'){
+            e.preventDefault()
+            var value  = $("#id_documento_empresa").val()
+            $.ajax({
+                url:window.location.pathname,
+                type:"POST",
+                dataType:"json",
+                data:{
+                    "action":"search_doc_empresa",
+                    "documento":value
+                },
+                success:function(data){
+                    if(data.error){
+                        return alert(data.error)
+                    }
+       
+                    $("#id_empresa").val(data.empresa)
+                },
+                error:function(xhr,status,error){
+                    alert(`${status}:${error}`)
+                }
+            })
+        }
+    })
 })

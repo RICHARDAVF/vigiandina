@@ -95,3 +95,15 @@ class TokenBearer(models.Model):
         item = model_to_dict(self)
         return item
     
+class UserEmpresas(models.Model):
+    usuario = models.ForeignKey(User,on_delete=models.DO_NOTHING,verbose_name="Usuario")
+    empresa = models.ForeignKey(Empresa,on_delete=models.DO_NOTHING,verbose_name="Empresas")
+    class Meta:
+        verbose_name = "Empresa asignada"
+        verbose_name_plural = "Empresas asignadas"
+        db_table = "user_empresas"
+    def toJSON(self):
+        item = model_to_dict(self)
+        return item
+    def __str__(self) -> str:
+        return f"{self.usuario.username}"

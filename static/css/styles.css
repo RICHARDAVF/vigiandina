@@ -24,14 +24,16 @@
     background-color: rgb(238, 137, 49) ;
     
 }
-.paginate_button,.dt-paging-button  a{
+
+.paginate_button a{
     background-color: rgb(238, 137, 49) ;
-}
-
-
-.pagination li a {
     color: white;
 }
+.dt-buttons button{
+    background-color: rgb(238, 137, 49);
+}
+
+
 td{
     font-size: 12px;
 }

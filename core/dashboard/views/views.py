@@ -2,6 +2,7 @@ from django.http import  JsonResponse
 from django.http.response import HttpResponse as HttpResponse
 from django.shortcuts import render
 from django.views.generic import TemplateView
+from core.mixins import PermisosMixins
 from core.erp.models import IngresoSalida, Visitas
 from django.db.models import Count
 from django.db.models.functions import ExtractHour,ExtractMonth
@@ -24,7 +25,6 @@ from pandas import read_csv,to_datetime,DataFrame
 
 class PageNotFoundView(View):
     template_name = 'dashboard/404.html'
-
     def get(self, request, *args, **kwargs):
         return render(request, self.template_name, status=404)
 
@@ -145,7 +145,7 @@ class Dashboard(LoginRequiredMixin,TemplateView):
         context["notify"] = json.dumps(list(iter(Notification(self.request))))
 
         return context
-class ShowAppMovil(LoginRequiredMixin,TemplateView):
+class ShowAppMovil(LoginRequiredMixin,PermisosMixins,TemplateView):
     template_name = "dashboard/list_data_app_movil.html"
     login_url = reverse_lazy("login")
     cantidad = 100
@@ -157,6 +157,8 @@ class ShowAppMovil(LoginRequiredMixin,TemplateView):
     def post(self,request,*args,**kwagrs):
         data = {}
         try:
+            if not self.request.user.is_superuser or request.user.empresa_id!=2:
+                raise Exception("NO tienes permisos para acceder a estos datos")
             filepath = os.path.join(settings.BASE_DIR,'static/files/asistencias_inma.csv')
             data_asistencia = read_csv(filepath_or_buffer=filepath,delimiter=";",header=None,names=["placa","nro_documento","nombres","empresa","fecha","hora_ingreso","tipo","id","hora_salida","motivo","numero_parkin","tipo_documento"],dtype=str)
             data_asistencia.fillna("",inplace=True)

@@ -1,5 +1,4 @@
 function pet_ajax(fecha_hora){
-    
     $.ajax({
         type: 'POST',
         url: window.location.pathname,
@@ -39,3 +38,42 @@ $(document).on('change','#fecha_hora',function(){
     var fecha_hora = $(this).val()
     pet_ajax(fecha_hora)
 })
+$(document).on("click", "#btn-report", function () {
+    var desde = $("#desde").val();
+    var hasta = $("#hasta").val();
+    if(desde=="" && hasta==""){
+      return
+    }
+    fetch("/dashboard/pdf/reporte-1/", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        action: "report",
+        desde: desde,
+        hasta: hasta,
+      }),
+    })
+      .then(response => {
+        if (response.ok) {
+          // Check for response content type (ensure it's PDF)
+          if (response.headers.get("Content-Type")?.includes("application/pdf")) {
+            return response.blob(); // Get the PDF blob
+          } else {
+            throw new Error("Unexpected response content type");
+          }
+        } else {
+          throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+      })
+      .then(blob => {
+        const url = window.URL.createObjectURL(blob); // Create a temporary URL
+        const link = document.createElement("a");
+        link.href = url;
+        window.open(link.href, '_blank');
+      })
+      .catch(error => {
+        alert("An error occurred: " + error.message);
+      });
+  });

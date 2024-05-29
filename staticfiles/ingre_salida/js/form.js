@@ -7,7 +7,10 @@ $(function () {
     $('#id_motivo').val('LABORAR')
     $('.select2').select2({
         theme: 'bootstrap4',
+        tags:true,
+        allowClear:true,
 
+        placeholder: 'Buscar Trabajador',
         ajax: {
             method: 'POST',
             url: '/erp/ingsal/list/',
@@ -32,14 +35,14 @@ $(function () {
             
         },
         minimumInputLength: 1,
-        placeholder: 'Buscar Trabajador',
         language: 'es',
         templateResult: formatRepo,
         templateSelection: formatRepoSelection
     });
-
+    const barcodeInput = $('<input type="text" id="hiddenBarcodeInput" style="position:absolute; left:-9999px;">');
+    $('body').append(barcodeInput);
     function formatRepo(repo) {
-        console.log(repo)
+        
         if (repo.loading) {
             return repo.text;
         }

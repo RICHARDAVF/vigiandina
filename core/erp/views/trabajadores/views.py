@@ -3,6 +3,7 @@ from django.views.generic import CreateView,ListView,DeleteView,UpdateView,View
 from core.mixins import PermisosMixins
 from core.validation import Validation
 from ...models import Trabajadores,AsignacionEPPS,AsignacionEV,Vehiculos,Empresa
+from core.user.models import UserEmpresas
 from ...forms import FormTrabajador
 from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt
@@ -59,19 +60,19 @@ class ListViewTrabajador(LoginRequiredMixin,PermisosMixins,ListView):
         return super().dispatch(request, *args, **kwargs)
     def listar(self):
         data = []
+        values = UserEmpresas.objects.filter(usuario=self.request.user).values_list("empresa")
+        print(values)
         if self.request.user.is_superuser:
-
-            for value in Trabajadores.objects.all():
-                item = value.toJSON()
-                item['cargo'] = value.cargo.cargo
-                item['empresa'] = value.empresa.razon_social
-                data.append(item)
+            trabajadores:Trabajadores = Trabajadores.objects.all()
+        elif values is not None:
+            trabajadores:Trabajadores = Trabajadores.objects.filter(empresa_id__in=values)
         else:
-            for value in Trabajadores.objects.filter(empresa_id=self.request.user.empresa_id):
-                item = value.toJSON()
-                item['cargo'] = value.cargo.cargo
-                item['empresa'] = value.empresa.razon_social
-                data.append(item)
+            trabajadores:Trabajadores = Trabajadores.objects.filter(empresa_id=self.request.user.empresa_id)
+        for value in trabajadores:
+            item = value.toJSON()
+            item['cargo'] = value.cargo.cargo
+            item['empresa'] = value.empresa.razon_social
+            data.append(item)
        
         return data
     def post(self, request, *args, **kwargs):

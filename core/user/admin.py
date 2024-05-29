@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import User,Empresa,Puesto,Unidad
+from .models import User,Empresa,Puesto,Unidad,UserEmpresas
 
 from django.contrib.auth.models import Permission
 
@@ -23,4 +23,6 @@ class AdminPermission(admin.ModelAdmin):
     list_filter = ('content_type',)
     search_fields = ('name', 'content_type__app_label', 'codename')
 admin.site.register(Permission, AdminPermission)
-
+class AdminUserEmpresa(admin.ModelAdmin):
+    list_display = ('usuario','empresa')
+admin.site.register(UserEmpresas,AdminUserEmpresa)

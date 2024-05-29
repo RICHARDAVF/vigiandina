@@ -1,6 +1,11 @@
+:root{
+    --header-color:rgb(238, 137, 49);
+}
+
 #header-title{
     background-color:rgb(238, 137, 49) ;  
 }
+
 #header-title h6,#header-title h3,#fecha-hora{
     color: white;
 }
@@ -19,20 +24,35 @@
     background-color: rgb(238, 137, 49) ;
     
 }
+
 .paginate_button a{
     background-color: rgb(238, 137, 49) ;
-}
-.pagination li a {
     color: white;
 }
+.dt-buttons button{
+    background-color: rgb(238, 137, 49);
+}
+
+
 td{
     font-size: 12px;
 }
-
+a {
+    text-decoration-line: none;
+}
 .larg-text{
     width: 150px;
     white-space: nowrap;
     overflow: hidden;
     text-align: start;
     text-overflow: ellipsis;
+}
+#personal-dentro{
+    width: 100%;
+    border-radius: 10px;
+}
+#personal-dentro-title{
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+    background-color: var(--header-color);
 }

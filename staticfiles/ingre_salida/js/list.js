@@ -1,12 +1,13 @@
 
 $(function(){
+
     var table = new DataTable('#data',{
         language: {
             url: '//cdn.datatables.net/plug-ins/1.13.6/i18n/es-ES.json',
         },
-        responsive:true,
+        responsive:false,
         autoWidth:false,
-        destroy:true,
+       
         deferRender:true,
         dom:'Qfrtip',
         "order": [[0, 'desc']],
@@ -14,7 +15,7 @@ $(function(){
             [ 10, 25, 50, -1 ],
             [ '10 filas', '25 filas', '50 filas', 'Todo' ]
         ],
-        dom:"Qfrtip",
+       
         conditions:{
             num:{
                 'MultipleOf':{
@@ -41,8 +42,10 @@ $(function(){
         ajax:{
             url:window.location.pathname,
             type:'POST',
-            data:{
-                "action":"searchdata",
+            data:(d)=>{
+                d.action = "searchdata",
+                d.desde = $('#desde').val();
+                d.hasta = $('#hasta').val();
             },
             dataSrc:''
         },
@@ -189,31 +192,10 @@ $(function(){
         })
     })
     $(document).on('change','#hasta', function() {
-        aplicarFiltro();
+        table.ajax.reload();
     });
 
-    function aplicarFiltro() {
-        var fechaInicio = $('#desde').val();
-        var fechaFin = $('#hasta').val();
-        if (fechaInicio !== '' && fechaFin !== '') {
-            $.fn.dataTable.ext.search.push(
-                function(settings, data, dataIndex) {
-              
-                    var fechaRegistro = data[3]; 
-                    var fechaInicio = $('#desde').val();
-                    var fechaFin = $('#hasta').val();
-                    
-                    if (fechaInicio !== '' && fechaFin !== '') {
-                        return (fechaRegistro >= fechaInicio && fechaRegistro <= fechaFin);
-                    }
-                    return true
-                }
-            );
-            table.draw();
-        }else{
-            table.search('').columns().search('').draw();
-        }
-    }
+
     const contenidoModal = ()=>{
         return (`
                 <div class="modal fade" id="miModal" tabindex="-1" role="dialog" aria-labelledby="miModalLabel" aria-hidden="true">
