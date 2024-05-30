@@ -61,7 +61,6 @@ class ListViewTrabajador(LoginRequiredMixin,PermisosMixins,ListView):
     def listar(self):
         data = []
         values = UserEmpresas.objects.filter(usuario=self.request.user).values_list("empresa")
-        print(values)
         if self.request.user.is_superuser:
             trabajadores:Trabajadores = Trabajadores.objects.all()
         elif values is not None:

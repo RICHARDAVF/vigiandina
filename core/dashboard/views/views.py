@@ -49,7 +49,7 @@ class Dashboard(LoginRequiredMixin,TemplateView):
                 else:
                     visitas_pro = Visitas.objects.select_related('sala').filter(
                     Q(estado=1) & 
-                    Q(user_id=self.request.user.id)
+                    Q(user__empresa_id=self.request.user.empresa_id)
                     )
                 for value in visitas_pro:
                     item = value.toJSON()
@@ -78,7 +78,7 @@ class Dashboard(LoginRequiredMixin,TemplateView):
             horas = Visitas.objects.filter(estado=3).annotate(hora=ExtractHour('h_inicio')).values('hora').annotate(total=Count('id')).order_by()
         else:
             horas = Visitas.objects.filter(Q(estado=3) &
-                                       Q(user_id=self.request.user.id)).annotate(hora=ExtractHour('h_inicio')).values('hora').annotate(total=Count('id')).order_by()
+                                       Q(user__empresa_id=self.request.user.empresa_id)).annotate(hora=ExtractHour('h_inicio')).values('hora').annotate(total=Count('id')).order_by()
         datos = {"hora":[],"cantidad":[] }
         for item in horas:
             datos['hora'].append(f"{item['hora']}H")
@@ -88,7 +88,7 @@ class Dashboard(LoginRequiredMixin,TemplateView):
             mes = Visitas.objects.filter(estado=3).annotate(mes=ExtractMonth('fecha')).values('mes').annotate(total=Count('id')).order_by()
         else:
             mes = Visitas.objects.filter(Q(estado=3) &
-                                       Q(user_id=self.request.user.id)).annotate(mes=ExtractMonth('fecha')).values('mes').annotate(total=Count('id')).order_by()
+                                       Q(user__empresa_id=self.request.user.empresa_id)).annotate(mes=ExtractMonth('fecha')).values('mes').annotate(total=Count('id')).order_by()
 
         m = {"1":'ENERO',"2":"FEBRERO","3":"MARZO","4":"ABRIL","5":"MAYO","6":"JUNIO","7":"JULIO","8":"AGOSTO","9":"SEPTIEMBRE","10":"OCTUBRE","11":"NOVIEMBRE","12":"DICIEMBRE"}
         datos = {'mes':[],'cantidad':[]}
@@ -107,7 +107,7 @@ class Dashboard(LoginRequiredMixin,TemplateView):
             visitas:Visitas = Visitas.objects.filter(
                 Q(h_llegada__isnull=False) &
                 Q(h_salida__isnull=True) &
-                Q(user_id=self.request.user.id)
+                Q(user__empresa_id=self.request.user.empresa_id)
                 )
         total_personas = []
         context['cantidad_visitas'] = len(visitas)
@@ -128,7 +128,7 @@ class Dashboard(LoginRequiredMixin,TemplateView):
             trabajadores:IngresoSalida = IngresoSalida.objects.filter(
                 Q(hora_ingreso__isnull=False) &
                 Q(hora_salida__isnull=True) &
-                Q(usuario_id=self.request.user.id)
+                Q(usuario__empresa_id=self.request.user.empresa_id)
                 )
         for value in trabajadores:
        
