@@ -9,14 +9,14 @@ class Notification:
         self.verify()
     def verify(self):
         try:
-            fecha_actual = timezone.now()
-            fecha_anterior = (fecha_actual-timedelta(days=1)).strftime("%Y-%m-%d")
+            fecha_actual = timezone.now().strftime("%Y-%m-%d")
+            # fecha_anterior = (fecha_actual-timedelta(days=1)).strftime("%Y-%m-%d")
             if self.request.user.is_superuser:
                 
                 trabajadores_sin_marcar = IngresoSalida.objects.filter(
                     Q(hora_ingreso__isnull=False) &
                     Q(hora_salida__isnull=True) &
-                    Q(fecha__lt=fecha_anterior)
+                    Q(fecha__lt=fecha_actual)
                         ).count()
                 if trabajadores_sin_marcar>0:
                     noti_message = {
@@ -30,7 +30,7 @@ class Notification:
                     Q(hora_ingreso__isnull=False) &
                     Q(hora_salida__isnull=True) &
                     Q(usuario__empresa_id=self.request.user.empresa_id) &
-                    Q(fecha__lt=fecha_anterior)
+                    Q(fecha__lt=fecha_actual)
                         ).count()
              
 
