@@ -4,7 +4,7 @@ from django.shortcuts import render
 from django.views.generic import TemplateView
 from core.mixins import PermisosMixins
 from core.erp.models import IngresoSalida, Visitas
-from django.db.models import Count
+from django.db.models import Count,F
 from django.db.models.functions import ExtractHour,ExtractMonth
 from datetime import datetime
 import json
@@ -75,14 +75,25 @@ class Dashboard(LoginRequiredMixin,TemplateView):
         context['title'] = 'Dashboard'
         context['entidad'] = 'Dashboard'
         if self.request.user.is_superuser:
-            horas = Visitas.objects.filter(estado=3).annotate(hora=ExtractHour('h_inicio')).values('hora').annotate(total=Count('id')).order_by()
+            horas = Visitas.objects.filter(estado=3).annotate(hora=ExtractHour('h_inicio'),empresa_nombre=F('p_visita__empresa__razon_social')).values('hora','empresa_nombre').annotate(total=Count('id')).order_by()
         else:
             horas = Visitas.objects.filter(Q(estado=3) &
-                                       Q(user__empresa_id=self.request.user.empresa_id)).annotate(hora=ExtractHour('h_inicio')).values('hora').annotate(total=Count('id')).order_by()
-        datos = {"hora":[],"cantidad":[] }
-        for item in horas:
-            datos['hora'].append(f"{item['hora']}H")
-            datos['cantidad'].append(item['total'])
+                                       Q(user__empresa_id=self.request.user.empresa_id)).annotate(hora=ExtractHour('h_inicio')).values('hora','p_visita').annotate(total=Count('id')).order_by()
+        datos = {}
+        valores = [0]*24
+        hours = list(range(24))
+        for values in horas:
+            if values["empresa_nombre"] in datos:
+                total = datos[values["empresa_nombre"]]["total"]
+                total[values["hora"]+1]= values["total"]
+                datos[values["empresa_nombre"]]["total"]= total
+            else:
+                total = valores
+                hor = hours
+                total[values["hora"]+1] = values["total"]
+                datos[values["empresa_nombre"]] = {"total":total,"hora":hor}
+       
+
         context['horas'] = json.dumps(datos)
         if self.request.user.is_superuser:
             mes = Visitas.objects.filter(estado=3).annotate(mes=ExtractMonth('fecha')).values('mes').annotate(total=Count('id')).order_by()
