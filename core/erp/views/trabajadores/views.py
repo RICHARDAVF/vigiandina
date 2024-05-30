@@ -63,7 +63,7 @@ class ListViewTrabajador(LoginRequiredMixin,PermisosMixins,ListView):
         values = UserEmpresas.objects.filter(usuario=self.request.user).values_list("empresa")
         if self.request.user.is_superuser:
             trabajadores:Trabajadores = Trabajadores.objects.all()
-        elif values is not None:
+        elif values.exists():
             trabajadores:Trabajadores = Trabajadores.objects.filter(empresa_id__in=values)
         else:
             trabajadores:Trabajadores = Trabajadores.objects.filter(empresa_id=self.request.user.empresa_id)
