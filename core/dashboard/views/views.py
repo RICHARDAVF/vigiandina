@@ -145,7 +145,7 @@ class Dashboard(LoginRequiredMixin,TemplateView):
         context["notify"] = json.dumps(list(iter(Notification(self.request))))
 
         return context
-class ShowAppMovil(LoginRequiredMixin,PermisosMixins,TemplateView):
+class ShowAppMovil(LoginRequiredMixin,TemplateView):
     template_name = "dashboard/list_data_app_movil.html"
     login_url = reverse_lazy("login")
     cantidad = 100
@@ -157,8 +157,9 @@ class ShowAppMovil(LoginRequiredMixin,PermisosMixins,TemplateView):
     def post(self,request,*args,**kwagrs):
         data = {}
         try:
-            if not self.request.user.is_superuser or request.user.empresa_id!=2:
-                raise Exception("NO tienes permisos para acceder a estos datos")
+     
+            if (self.request.user.is_superuser!=False or request.user.empresa_id!=2):
+                raise Exception("No tienes permisos para acceder a estos datos")
             filepath = os.path.join(settings.BASE_DIR,'static/files/asistencias_inma.csv')
             data_asistencia = read_csv(filepath_or_buffer=filepath,delimiter=";",header=None,names=["placa","nro_documento","nombres","empresa","fecha","hora_ingreso","tipo","id","hora_salida","motivo","numero_parkin","tipo_documento"],dtype=str)
             data_asistencia.fillna("",inplace=True)
@@ -184,5 +185,4 @@ class ShowAppMovil(LoginRequiredMixin,PermisosMixins,TemplateView):
     def get_context_data(self, **kwargs):
         context =  super().get_context_data(**kwargs)
         context["title"] = "Listado registros de la aplicacion movil, cantidad maxima 44748"
-
         return context
