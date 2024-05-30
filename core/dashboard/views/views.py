@@ -78,9 +78,9 @@ class Dashboard(LoginRequiredMixin,TemplateView):
             horas = Visitas.objects.filter(estado=3).annotate(hora=ExtractHour('h_inicio'),empresa_nombre=F('p_visita__empresa__razon_social')).values('hora','empresa_nombre').annotate(total=Count('id')).order_by()
         else:
             horas = Visitas.objects.filter(Q(estado=3) &
-                                       Q(user__empresa_id=self.request.user.empresa_id)).annotate(hora=ExtractHour('h_inicio')).values('hora','p_visita').annotate(total=Count('id')).order_by()
+                                       Q(user__empresa_id=self.request.user.empresa_id)).annotate(hora=ExtractHour('h_inicio'),empresa_nombre=F('p_visita__empresa__razon_social')).values('hora','empresa_nombre').annotate(total=Count('id')).order_by()
         datos = {}
-        valores = [0]*24
+       
         hours = list(range(24))
         for values in horas:
             if values["empresa_nombre"] in datos:
@@ -88,11 +88,11 @@ class Dashboard(LoginRequiredMixin,TemplateView):
                 total[values["hora"]+1]= values["total"]
                 datos[values["empresa_nombre"]]["total"]= total
             else:
-                total = valores
-                hor = hours
+                total = [0]*24
+                hor_ = hours
                 total[values["hora"]+1] = values["total"]
-                datos[values["empresa_nombre"]] = {"total":total,"hora":hor}
-       
+                datos[values["empresa_nombre"]] = {"total":total,"hora":hor_}
+
 
         context['horas'] = json.dumps(datos)
         if self.request.user.is_superuser:
