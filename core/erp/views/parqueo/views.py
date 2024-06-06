@@ -57,7 +57,6 @@ class CreateViewParqueo(LoginRequiredMixin,PermisosMixins,CreateView):
                 data['error'] = 'No se a ingresado ninguna opcion'
         except Exception as e:
             data['error'] = str(e)
-
         return JsonResponse(data,safe=False)
     def get_context_data(self, **kwargs):
         context= super().get_context_data(**kwargs)
@@ -83,7 +82,7 @@ class ListViewParqueo(LoginRequiredMixin,PermisosMixins,ListView):
             if action == 'searchdata':
                 data = []
                 if not request.user.is_superuser:
-                    for value in Parqueo.objects.filter(empresa_id=request.user.empresa_id,unidad_id=request.user.unidad_id,puesto_id=request.user.puesto_id):
+                    for value in Parqueo.objects.filter(empresa_id=request.user.empresa_id):
                         item = value.toJSON()
                         data.append(item)
                 else:

@@ -54,7 +54,7 @@ class ListViewSala(LoginRequiredMixin,PermisosMixins,ListView):
             if action == 'searchdata':
                 data = []
                 if not request.user.is_superuser:
-                    for value in Salas.objects.filter(empresa_id=request.user.empresa_id,unidad_id=request.user.unidad_id,puesto_id=request.user.puesto_id):
+                    for value in Salas.objects.filter(empresa_id=request.user.empresa_id):
                         item = value.toJSON()
                         data.append(item)
                 else:

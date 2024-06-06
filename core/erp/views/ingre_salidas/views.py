@@ -10,6 +10,8 @@ from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt
 from django.db.models import Q
 from django.utils import timezone
+
+from core.user.models import UserEmpresas
 class CreateViewIngSal(LoginRequiredMixin,PermisosMixins,CreateView):
     permission_required = 'erp.add_ingresosalida'
     model = IngresoSalida
@@ -33,7 +35,15 @@ class CreateViewIngSal(LoginRequiredMixin,PermisosMixins,CreateView):
     def get_form(self, form_class= None):
         form =  super().get_form(form_class)
         form.fields['usuario'].initial = self.request.user
+        values = UserEmpresas.objects.filter(usuario=self.request.user).values_list("empresa")
+        if self.request.user.is_superuser:
+            pass
+        elif values.exists():
+            form.fields["trabajador"].queryset = Trabajadores.objects.filter(empresa_id__in=values)
+        else:
+            form.fields['trabajador'].queryset = Trabajadores.objects.filter(empresa_id=self.request.user.empresa_id)
         return form
+
     def get_context_data(self, **kwargs):
         context =  super().get_context_data(**kwargs)
         context['title'] = 'Creacion de un Ingreso'

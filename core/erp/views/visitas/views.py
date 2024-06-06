@@ -3,6 +3,7 @@ from django.http import JsonResponse
 from django.shortcuts import redirect, render
 from django.views.generic import CreateView,ListView,DeleteView,UpdateView,View
 from core.mixins import PermisosMixins
+from core.user.models import UserEmpresas
 from core.validation import Validation
 from ...forms import FormVisitas,FormDelivery
 from ...models import Salas,Parqueo, Trabajadores,Visitas,Asistentes
@@ -77,7 +78,12 @@ class CreateViewVisita(LoginRequiredMixin,PermisosMixins,CreateView):
         form.fields['sala'].queryset=Salas.objects.filter(estado=0,empresa_id=self.request.user.empresa_id,
                                                         unidad_id=self.request.user.unidad_id,
                                                     puesto_id=self.request.user.puesto_id)
-        if not self.request.user.is_superuser:
+        values = UserEmpresas.objects.filter(usuario=self.request.user).values_list("empresa")
+        if self.request.user.is_superuser:
+            pass
+        elif values.exists():
+            form.fields["p_visita"].queryset = Trabajadores.objects.filter(empresa_id__in=values)
+        else:
             form.fields['p_visita'].queryset = Trabajadores.objects.filter(empresa_id=self.request.user.empresa_id)
         return form
     def get_context_data(self, **kwargs):
