@@ -38,8 +38,11 @@ class CreateViewTrabajador(LoginRequiredMixin,PermisosMixins,CreateView):
         return JsonResponse(data)
     def get_form(self,form_class=None):
         form = super().get_form(form_class)
+        values = UserEmpresas.objects.filter(usuario=self.request.user)
         if  self.request.user.is_superuser:
             form.fields["empresa"].queryset = Empresa.objects.all()
+        elif values.exists():
+            form.fields["empresa"].queryset = Empresa.objects.filter(id__in=values)
         else:
             form.fields["empresa"].queryset = Empresa.objects.filter(id=self.request.user.empresa_id)
         return form
@@ -158,6 +161,16 @@ class UpdateViewTrabajador(LoginRequiredMixin,PermisosMixins,UpdateView):
         context['list_url'] = self.success_url
         context['action'] = 'edit'
         return context
+    def get_form(self,form_class=None):
+        form = super().get_form(form_class)
+        values = UserEmpresas.objects.filter(usuario=self.request.user)
+        if  self.request.user.is_superuser:
+            form.fields["empresa"].queryset = Empresa.objects.all()
+        elif values.exists():
+            form.fields["empresa"].queryset = Empresa.objects.filter(id__in=values)
+        else:
+            form.fields["empresa"].queryset = Empresa.objects.filter(id=self.request.user.empresa_id)
+        return form
 class DeleteViewTrabajador(LoginRequiredMixin,PermisosMixins,DeleteView):
     login_url = reverse_lazy('login')
     permission_required = 'erp.delete_trabajadores'
