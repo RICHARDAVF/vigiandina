@@ -163,7 +163,7 @@ class FormDelivery(ModelForm):
     class Meta:
         model = Visitas
         fields = ['estado','dni',"nombre","tipo_documento","apellidos","guias","cantidad","tipo","observacion",
-                  "empresa","user","fecha","h_inicio","h_termino","p_visita","documentos","h_llegada"]
+                  "empresa","user","fecha","h_inicio","h_termino","p_visita","documentos","h_llegada","documento_empresa"]
         widgets= {
             'estado':Select(attrs={
                 "class":"form-control",
@@ -200,6 +200,10 @@ class FormDelivery(ModelForm):
                 "class":"form-control",
                 "placeholder":"Observaciones"
             }),
+            "documento_empresa":TextInput({
+                "class":"form-control",
+                "placeholder":"RUC o DNI"
+            }),
             "empresa":TextInput({
                 "class":"form-control",
                 "placeholder":"Empresa de procedencia"
@@ -210,7 +214,7 @@ class FormDelivery(ModelForm):
             }),
             "user":TextInput(attrs={
                 "class":'form-control',
-                'readonly':True
+                'type':'hidden'
             }),
             "documentos":Textarea(attrs={
                 "class":'form-control',

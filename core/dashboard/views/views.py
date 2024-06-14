@@ -169,25 +169,26 @@ class ShowAppMovil(LoginRequiredMixin,TemplateView):
         data = {}
         try:
      
-            if (self.request.user.is_superuser!=False or request.user.empresa_id!=2):
-                raise Exception("No tienes permisos para acceder a estos datos")
-            filepath = os.path.join(settings.BASE_DIR,'static/files/asistencias_inma.csv')
-            data_asistencia = read_csv(filepath_or_buffer=filepath,delimiter=";",header=None,names=["placa","nro_documento","nombres","empresa","fecha","hora_ingreso","tipo","id","hora_salida","motivo","numero_parkin","tipo_documento"],dtype=str)
-            data_asistencia.fillna("",inplace=True)
-            action = request.POST["action"]
-            if action=="searchdata":
-                self.cantidad = int(request.POST['cantidad'])
-                if ("desde" in request.POST and request.POST["desde"]!='') and ("hasta" in request.POST and request.POST["hasta"]!=""):
-                    data_init = to_datetime(request.POST["desde"])
-                    data_finish = to_datetime(request.POST["hasta"])
-                    data_asistencia["fecha"] = to_datetime(data_asistencia["fecha"])
-                    data_filter:DataFrame = data_asistencia[(data_asistencia["fecha"]>=data_init) & (data_asistencia["fecha"]<=data_finish)]
-                    data_filter["fecha"] = to_datetime(data_filter["fecha"]).dt.date
-                    data = data_filter.to_dict(orient="records")
+            if self.request.user.is_superuser or request.user.empresa_id==2:    
+                filepath = os.path.join(settings.BASE_DIR,'static/files/asistencias_inma.csv')
+                data_asistencia = read_csv(filepath_or_buffer=filepath,delimiter=";",header=None,names=["placa","nro_documento","nombres","empresa","fecha","hora_ingreso","tipo","id","hora_salida","motivo","numero_parkin","tipo_documento"],dtype=str)
+                data_asistencia.fillna("",inplace=True)
+                action = request.POST["action"]
+                if action=="searchdata":
+                    self.cantidad = int(request.POST['cantidad'])
+                    if ("desde" in request.POST and request.POST["desde"]!='') and ("hasta" in request.POST and request.POST["hasta"]!=""):
+                        data_init = to_datetime(request.POST["desde"])
+                        data_finish = to_datetime(request.POST["hasta"])
+                        data_asistencia["fecha"] = to_datetime(data_asistencia["fecha"])
+                        data_filter:DataFrame = data_asistencia[(data_asistencia["fecha"]>=data_init) & (data_asistencia["fecha"]<=data_finish)]
+                        data_filter["fecha"] = to_datetime(data_filter["fecha"]).dt.date
+                        data = data_filter.to_dict(orient="records")
+                    else:
+                        data = data_asistencia[:self.cantidad].to_dict(orient="records") 
                 else:
-                    data = data_asistencia[:self.cantidad].to_dict(orient="records") 
+                    data["error"] = "No se ingreso una opcion"
             else:
-                data["error"] = "No se ingreso una opcion"
+                data['error'] = " No tienes permisos para acceder a este modulo"
         except Exception as e:
         
             data["error"] = f"ocurrio un error: {str(e)}"

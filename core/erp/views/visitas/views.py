@@ -373,6 +373,20 @@ class CreateViewDelivery(LoginRequiredMixin,PermisosMixins,CreateView):
                     return JsonResponse(data)
                 form = self.get_form()
                 data = form.save()
+            elif action=="search_doc_empresa":
+                documento = request.POST["documento"]
+                try:
+                    value = Visitas.objects.get(documento_empresa=documento)
+                    data = {"empresa":value.empresa}
+                except Visitas.DoesNotExist:
+                    tipo = "dni" if len(documento)==8 else "ruc"
+                    value = Validation(documento,tipo).valid()
+                   
+                    if "error" in value:
+                        data = value
+                    else:
+                        data = {"empresa":self.proccess_data(value["data"],tipo)}
+           
             elif action =='searchdni':
                 data = Validation(request.POST['dni'],'dni').valid()
                
@@ -384,6 +398,13 @@ class CreateViewDelivery(LoginRequiredMixin,PermisosMixins,CreateView):
         return JsonResponse(data)
     def get_form(self,form_class=None):
         form = super().get_form(form_class)
+        values = UserEmpresas.objects.filter(usuario=self.request.user).values_list("empresa")
+        if self.request.user.is_superuser:
+            pass
+        elif values.exists():
+            form.fields["p_visita"].queryset = Trabajadores.objects.filter(empresa_id__in=values)
+        else:
+            form.fields['p_visita'].queryset = Trabajadores.objects.filter(empresa_id=self.request.user.empresa_id)
         return form
     def get_context_data(self, **kwargs):
         context= super().get_context_data(**kwargs)
@@ -394,10 +415,13 @@ class CreateViewDelivery(LoginRequiredMixin,PermisosMixins,CreateView):
         context['action'] = 'add'
         return context
     def validacion(self):
-        if self.request.method == 'POST':
-            if self.request.POST['estado'] =='1' and self.request.POST['h_termino'].strip()=='':
-                return False,'Hora de finalizacion incorrecta'
-            return True,''
+       
+        if self.request.POST['estado'] =='1' and self.request.POST['h_termino'].strip()=='':
+            return False,'Hora de finalizacion incorrecta'
+        return True,''
+    def proccess_data(self,data,tipo):
+        return data["nombre_completo"] if tipo=="dni" else data["nombre_o_razon_social"]
+
 class UpdateViewDelivery(LoginRequiredMixin,PermisosMixins,UpdateView):
     permission_required = 'erp.change_visitas'
 

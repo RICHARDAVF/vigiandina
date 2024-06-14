@@ -32,7 +32,7 @@ $(function(){
     const dni = $('#id_dni');
     dni.on('input',function(event){
         const value = event.target.value.trim();
-        // var tipo_documento = $("#id_tipo_documento").val();
+
         if(value.length==8){
             searchDNI(value)
         }else{
@@ -48,5 +48,28 @@ $(function(){
             $('#id_h_llegada').val(hora_inicio)
         }
     })
-    
+    $("#id_documento_empresa").on("keydown",function(e){
+        if(e.key=="Enter"){
+            e.preventDefault()
+            var value = $("#id_documento_empresa").val()
+            $.ajax({
+                url:window.location.pathname,
+                type:"POST",
+                dataType:"json",
+                data:{
+                    "action":"search_doc_empresa",
+                    "documento":value,
+                },
+                success:function(data){
+                    if(data.error){
+                        return alert(data.error)
+                    }
+                    $("#id_empresa").val(data.empresa)
+                },
+                error:function(xhr,status,error){
+                    alert(`${status}:${error}`)
+                }
+            })
+        }
+    })
 })

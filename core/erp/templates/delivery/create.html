@@ -16,7 +16,7 @@
             <h6>Datos del Delivery</h6>
         </div>
         <div class="card-body">
-            <label for="id_estado">{{form.user.label}}</label>
+            <label for="id_user">{{form.user.label}}</label>
             {{form.user}}
             <label for="id_estado">{{form.estado.label}}</label>
             {{form.estado}}
@@ -32,8 +32,16 @@
             {{form.p_visita}}
             <label for="id_motivo">{{form.motivo.label}}</label>
             {{form.motivo}}
-            <label for="id_empresa">{{form.empresa.label}}</label>
-            {{form.empresa}}
+            <div class=" d-flex w-100">
+                <label for="id_documento_empresa" class="flex-grow-1 mr-1">
+                    {{form.documento_empresa.label}}
+                    {{form.documento_empresa}}
+                </label>
+                <label for="id_empresa" class="flex-grow-1 ml-1">
+                    {{form.empresa.label}}
+                    {{form.empresa}}
+                </label>
+            </div>
             <label for="id_cargo">{{form.cargo.label}}</label>
             {{form.cargo}}
             
