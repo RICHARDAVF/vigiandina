@@ -78,4 +78,28 @@ $(function(){
             })
         }
     })
+    $("#search_documento_empresa").on("click",function(){
+       
+        var value  = $("#id_documento_empresa").val()
+        $.ajax({
+            url:window.location.pathname,
+            type:"POST",
+            dataType:"json",
+            data:{
+                "action":"search_doc_empresa",
+                "documento":value
+            },
+            success:function(data){
+                if(data.error){
+                    return alert(data.error)
+                }
+    
+                $("#id_empresa").val(data.empresa)
+            },
+            error:function(xhr,status,error){
+                alert(`${status}:${error}`)
+            }
+        })
+        
+    })
 })

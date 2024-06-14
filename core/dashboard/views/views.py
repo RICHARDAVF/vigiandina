@@ -190,7 +190,6 @@ class ShowAppMovil(LoginRequiredMixin,TemplateView):
             else:
                 data['error'] = " No tienes permisos para acceder a este modulo"
         except Exception as e:
-        
             data["error"] = f"ocurrio un error: {str(e)}"
         return JsonResponse(data,safe=False)
 

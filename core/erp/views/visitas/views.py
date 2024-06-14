@@ -50,7 +50,7 @@ class CreateViewVisita(LoginRequiredMixin,PermisosMixins,CreateView):
             elif action=="search_doc_empresa":
                 documento = request.POST["documento"]
                 try:
-                    value = Visitas.objects.get(documento_empresa=documento)
+                    value = Visitas.objects.filter(documento_empresa=documento)
                     data = {"empresa":value.empresa}
                 except Visitas.DoesNotExist:
                     tipo = "dni" if len(documento)==8 else "ruc"
@@ -122,7 +122,6 @@ class ListViewVisita(LoginRequiredMixin,PermisosMixins,ListView):
                 data = []
                 try:
                     if request.user.is_superuser:
-                        
                         for value in Visitas.objects.select_related("p_visita").all():
                             
                             item = value.toJSON()
@@ -134,7 +133,6 @@ class ListViewVisita(LoginRequiredMixin,PermisosMixins,ListView):
                             item = value.toJSON()
                             item['p_visita'] = f"{value.p_visita.nombre} {value.p_visita.apellidos}"
                             data.append(item)
-                    
                 except Exception as e:
                     data = {}
                     data['error'] = str(e)
@@ -145,7 +143,6 @@ class ListViewVisita(LoginRequiredMixin,PermisosMixins,ListView):
                         item = value.toJSON()
                         item['n_parqueo'] = value.n_parqueo.numero
                         data['asis'].append(item)
-                   
                     for value in Parqueo.objects.filter(estado=True,
                                                         empresa_id=request.user.empresa_id,
                                                         unidad_id=request.user.unidad_id,
@@ -186,7 +183,6 @@ class ListViewVisita(LoginRequiredMixin,PermisosMixins,ListView):
             
                 hora = timezone.now().strftime("%H:%M:%S")
                 instance.h_salida = hora
-            
                 if instance.h_termino is None:
                     instance.h_termino = hora
                 sala = instance.sala_id
@@ -205,7 +201,6 @@ class ListViewVisita(LoginRequiredMixin,PermisosMixins,ListView):
                 instance.save()
             elif action == "formvh":
                 try:
-                   
                     instance_park = Parqueo.objects.get(id=int(request.POST['n_parqueo']))
                     instance = Visitas.objects.get(id=request.POST['id'])
                     instance.v_marca=request.POST['v_marca']
@@ -243,6 +238,7 @@ class UpdateViewVisita(LoginRequiredMixin,PermisosMixins,UpdateView):
     template_name = 'visitas/create.html'
     success_url = reverse_lazy('erp:visita_list')
     url_redirect = success_url
+    @method_decorator(csrf_exempt)
 
     def dispatch(self, request, *args, **kwargs):
         self.object = self.get_object()
@@ -274,6 +270,23 @@ class UpdateViewVisita(LoginRequiredMixin,PermisosMixins,UpdateView):
                     instance.save()
                 except :
                     pass
+            elif action=="search_doc_empresa":
+                documento = request.POST["documento"]
+                print(documento)
+                value = Visitas.objects.filter(documento_empresa=documento)
+             
+                if value.exists():
+                    data = {"empresa":value[0].empresa}
+                else:
+                    tipo = "dni" if len(documento)==8 else "ruc"
+                    value = Validation(documento,tipo).valid()
+                
+                if "error" in value:
+                    data = value
+                else:
+                    data = {"empresa":self.proccess_data(value["data"],tipo)}
+            elif action =='searchdni':
+                data = Validation(request.POST['dni'],'dni').valid()
             else:
                 data['error'] = 'No ha ingresado a ninguna opción'
         except Exception as e:
@@ -317,6 +330,8 @@ class UpdateViewVisita(LoginRequiredMixin,PermisosMixins,UpdateView):
         context['list_url'] = self.success_url
         context['action'] = 'edit'
         return context
+    def proccess_data(self,data,tipo):
+        return data["nombre_completo"] if tipo=="dni" else data["nombre_o_razon_social"]
 class DeleteViewVisita(LoginRequiredMixin,PermisosMixins,DeleteView):
     permission_required = 'erp.delete_visitas'
     login_url = reverse_lazy('login')
@@ -376,7 +391,8 @@ class CreateViewDelivery(LoginRequiredMixin,PermisosMixins,CreateView):
             elif action=="search_doc_empresa":
                 documento = request.POST["documento"]
                 try:
-                    value = Visitas.objects.get(documento_empresa=documento)
+                    value = Visitas.objects.filter(documento_empresa=documento).first()
+                    print(value)
                     data = {"empresa":value.empresa}
                 except Visitas.DoesNotExist:
                     tipo = "dni" if len(documento)==8 else "ruc"
