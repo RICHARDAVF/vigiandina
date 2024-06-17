@@ -140,10 +140,15 @@ class ListViewTrabajador(LoginRequiredMixin,PermisosMixins,ListView):
         try:
             filepath = os.path.join(settings.BASE_DIR,'static/files/asistencias_inma.csv')
             df = read_csv(filepath,delimiter=";",names=["placa","nro_documento","nombres","empresa","fecha","hora_ingreso","tipo","id","hora_salida","motivo","numero_parkin","tipo_documento"],dtype=str)
+            
             filter_iconstain = df[df[fields].str.contains(value.upper())].head(10)
+            datos = filter_iconstain[["nombres","nro_documento"]]
+       
+            dates = datos.drop_duplicates(subset=["nro_documento"])
 
-            for item in filter_iconstain.itertuples():
-                values = item[3].split(",")
+            for item in dates.itertuples():
+       
+                values = item[1].split(",")
                 try:
                     nombre = values[1]
                     apellidos = values[0]
