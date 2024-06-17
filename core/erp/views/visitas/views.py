@@ -135,15 +135,15 @@ class ListViewVisita(LoginRequiredMixin,PermisosMixins,ListView):
                 data = []
                 try:
                     
-                    if request.user.is_superuser and state:
-                        visitas = Visitas.objects.select_related("p_visita").filter(fecha__gte=desde,fecha__lte=hasta)
-                    elif not request.user.is_superuser and state:
-                        visitas = Visitas.objects.select_related(user__empresa_id=self.request.empresa_id,fecha__gte=desde,fecha__lte=hasta)
+                    # if request.user.is_superuser and state:
+                    #     visitas = Visitas.objects.select_related("p_visita").filter(fecha__gte=desde,fecha__lte=hasta)
+                    # elif not request.user.is_superuser and state:
+                    #     visitas = Visitas.objects.select_related(user__empresa_id=self.request.empresa_id,fecha__gte=desde,fecha__lte=hasta)
+                    # else:
+                    if request.user.is_superuser:
+                        visitas = Visitas.objects.all()
                     else:
-                        if request.user.is_superuser:
-                            visitas = Visitas.objects.filter(h_salida__isnull=True)
-                        else:
-                            visitas = Visitas.objects.filter(h_salida__isnull=True,user__empresa_id=self.request.empresa_id)
+                        visitas = Visitas.objects.filter(user__empresa_id=self.request.empresa_id)
                     for value in visitas:
                         item = value.toJSON()
                         item['p_visita'] = f"{value.p_visita.nombre} {value.p_visita.apellidos}"
