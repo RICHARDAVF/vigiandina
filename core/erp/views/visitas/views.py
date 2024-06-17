@@ -85,6 +85,9 @@ class CreateViewVisita(LoginRequiredMixin,PermisosMixins,CreateView):
             form.fields["p_visita"].queryset = Trabajadores.objects.filter(empresa_id__in=values)
         else:
             form.fields['p_visita'].queryset = Trabajadores.objects.filter(empresa_id=self.request.user.empresa_id)
+        initial_value = Trabajadores.objects.filter(nombre="PARA",apellidos="VISITAS DE SERVICIO").first()
+        if initial_value:
+            form.initial["p_visita"] = initial_value
         return form
     def get_context_data(self, **kwargs):
         context= super().get_context_data(**kwargs)
@@ -239,7 +242,6 @@ class UpdateViewVisita(LoginRequiredMixin,PermisosMixins,UpdateView):
     success_url = reverse_lazy('erp:visita_list')
     url_redirect = success_url
     @method_decorator(csrf_exempt)
-
     def dispatch(self, request, *args, **kwargs):
         self.object = self.get_object()
         return super().dispatch(request, *args, **kwargs)
@@ -272,19 +274,19 @@ class UpdateViewVisita(LoginRequiredMixin,PermisosMixins,UpdateView):
                     pass
             elif action=="search_doc_empresa":
                 documento = request.POST["documento"]
-                print(documento)
+                
                 value = Visitas.objects.filter(documento_empresa=documento)
-             
+                
                 if value.exists():
-                    data = {"empresa":value[0].empresa}
+                    value = value.first()   
+                    data = {"empresa":value.empresa}
                 else:
                     tipo = "dni" if len(documento)==8 else "ruc"
                     value = Validation(documento,tipo).valid()
-                
-                if "error" in value:
-                    data = value
-                else:
-                    data = {"empresa":self.proccess_data(value["data"],tipo)}
+                    if "error" in value:
+                        data = value
+                    else:
+                        data = {"empresa":self.proccess_data(value["data"],tipo)}
             elif action =='searchdni':
                 data = Validation(request.POST['dni'],'dni').valid()
             else:

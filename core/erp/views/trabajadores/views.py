@@ -1,3 +1,4 @@
+import os
 from django.http import JsonResponse
 from django.views.generic import CreateView,ListView,DeleteView,UpdateView,View
 from core.mixins import PermisosMixins
@@ -9,8 +10,8 @@ from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt
 from django.urls import reverse_lazy
 from django.contrib.auth.mixins import LoginRequiredMixin
-
-
+from pandas import read_csv
+from django.conf import settings
 class CreateViewTrabajador(LoginRequiredMixin,PermisosMixins,CreateView):
     login_url = reverse_lazy('login')
     permission_required = 'erp.add_trabajadores'
@@ -114,6 +115,11 @@ class ListViewTrabajador(LoginRequiredMixin,PermisosMixins,ListView):
                 instance.circulina = request.POST['circulina']
                 instance.save()
                 data = self.listar()
+            elif action == "search_trabajador":
+
+                fields = request.POST["key"]
+                value = request.POST["value"]
+                data = self.search_history(fields,value)
             else:
                 data['error'] = 'Ha ocurrido un error'
            
@@ -128,6 +134,28 @@ class ListViewTrabajador(LoginRequiredMixin,PermisosMixins,ListView):
         context['list_url'] = reverse_lazy('erp:trabajador_list')
         context['entidad'] = 'Trabajadores'
         return context
+    def search_history(self,fields,value):
+        data = []
+       
+        try:
+            filepath = os.path.join(settings.BASE_DIR,'static/files/asistencias_inma.csv')
+            df = read_csv(filepath,delimiter=";",names=["placa","nro_documento","nombres","empresa","fecha","hora_ingreso","tipo","id","hora_salida","motivo","numero_parkin","tipo_documento"],dtype=str)
+            filter_iconstain = df[df[fields].str.contains(value.upper())].head(10)
+
+            for item in filter_iconstain.itertuples():
+                values = item[3].split(",")
+                try:
+                    nombre = values[1]
+                    apellidos = values[0]
+                except:
+                    nombre = ''
+                    apellidos = values[0]
+                    
+                d = {"documento":item[2].strip(),"nombre":nombre,"apellidos":apellidos}
+                data.append(d)
+        except Exception as e:
+            data["error"] = f"Ocurrio un erro {str(e)}"
+        return data
 class UpdateViewTrabajador(LoginRequiredMixin,PermisosMixins,UpdateView):
     login_url = reverse_lazy('login')
     permission_required = 'erp.change_trabajadores'
