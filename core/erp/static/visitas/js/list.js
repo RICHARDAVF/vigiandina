@@ -44,8 +44,11 @@ $(function () {
         ajax: {
             url: window.location.pathname,
             type: 'POST',
-            data: {
-                'action': 'searchdata'
+            data:(d)=>{
+                d.action = 'searchdata'
+                d.desde = $("#desde").val()
+                d.hasta = $("#hasta").val()
+
             },
             dataSrc: ""
         },
@@ -286,9 +289,16 @@ $(function () {
 
            
             $exportButtonsContainer.insertBefore($('#data_wrapper .dataTables_filter'));
+
+            var desde = $(`<label for="desde" class="ml-1">Desde </label><input id="desde" name="desde" type="date"  class="form-control form-control-sm" style="height:30px;" />`)
+            var hasta = $(`<label for="desde" class="ml-1">Hasta </label><input id="hasta" name="hasta" type="date"  class="form-control form-control-sm" style="height:30px;" />`)
+            $('#data_filter').append(desde)
+            $('#data_filter').append(hasta)
         }
     });
-   
+   $(document).on("change","#hasta",function(){
+    miTabla.ajax.reload()
+   })
     $('.btnTest').css('display','none')
     const contenidoModal = ()=>{
         return (`

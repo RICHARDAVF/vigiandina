@@ -119,26 +119,35 @@ class ListViewVisita(LoginRequiredMixin,PermisosMixins,ListView):
         instace_sala = Salas.objects.get(id=object)
         instace_sala.estado = 0
         instace_sala.save()
+    def validate_date(self):
+        if not "desde" in self.request.POST or not "hasta" in self.request.POST:
+            return [timezone.now().strftime("%Y-%m-%d"),timezone.now().strftime("%Y-%m-%d"),False]
+        return [self.request.POST["desde"],self.request.POST["hasta"],True]
     def post(self, request, *args, **kwargs):
         data = {}
+        fecha = timezone.now()
+
         try:
             action = request.POST['action']
            
             if action == 'searchdata':
+                desde,hasta,state = self.validate_date()
                 data = []
                 try:
-                    if request.user.is_superuser:
-                        for value in Visitas.objects.select_related("p_visita").all():
-                            
-                            item = value.toJSON()
-                            if  value.p_visita is not None:
-                                item['p_visita'] = f"{value.p_visita.nombre} {value.p_visita.apellidos}"
-                            data.append(item)
+                    
+                    if request.user.is_superuser and state:
+                        visitas = Visitas.objects.select_related("p_visita").filter(fecha__gte=desde,fecha__lte=hasta)
+                    elif not request.user.is_superuser and state:
+                        visitas = Visitas.objects.select_related(user__empresa_id=self.request.empresa_id,fecha__gte=desde,fecha__lte=hasta)
                     else:
-                        for value in Visitas.objects.select_related("p_visita").filter(user__empresa_id=self.request.user.empresa_id):
-                            item = value.toJSON()
-                            item['p_visita'] = f"{value.p_visita.nombre} {value.p_visita.apellidos}"
-                            data.append(item)
+                        if request.user.is_superuser:
+                            visitas = Visitas.objects.filter(h_salida__isnull=True)
+                        else:
+                            visitas = Visitas.objects.filter(h_salida__isnull=True,user__empresa_id=self.request.empresa_id)
+                    for value in visitas:
+                        item = value.toJSON()
+                        item['p_visita'] = f"{value.p_visita.nombre} {value.p_visita.apellidos}"
+                        data.append(item)
                 except Exception as e:
                     data = {}
                     data['error'] = str(e)
