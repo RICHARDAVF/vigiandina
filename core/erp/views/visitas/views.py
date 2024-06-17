@@ -49,13 +49,16 @@ class CreateViewVisita(LoginRequiredMixin,PermisosMixins,CreateView):
                     parking.save()
             elif action=="search_doc_empresa":
                 documento = request.POST["documento"]
-                try:
-                    value = Visitas.objects.filter(documento_empresa=documento)
+                value = Visitas.objects.filter(documento_empresa=documento)
+                
+                if value.exists():
+                    value = value.first()
+           
                     data = {"empresa":value.empresa}
-                except Visitas.DoesNotExist:
+                else:
                     tipo = "dni" if len(documento)==8 else "ruc"
                     value = Validation(documento,tipo).valid()
-                   
+             
                     if "error" in value:
                         data = value
                     else:
@@ -176,7 +179,7 @@ class ListViewVisita(LoginRequiredMixin,PermisosMixins,ListView):
                     except:
                         parqueo = None
                     data['vh']={"v_marca":value[0],"v_modelo":value[1],"v_placa":value[2],"fv_soat":value[3],"n_parqueo":parqueo,'observacion':value[4]}
-                    print(data['vh'])
+                   
                 parqueos = []
                 for value in Parqueo.objects.filter(estado=1,puesto_id=request.user.puesto_id).values_list("id","numero"):
                     parqueos.append({"id":value[0],"numero":value[1]})
@@ -248,6 +251,7 @@ class UpdateViewVisita(LoginRequiredMixin,PermisosMixins,UpdateView):
     def post(self, request, *args, **kwargs):
         data = {}
         try:
+         
             action = request.POST['action']
             if action == 'edit':
                 form = self.get_form()
@@ -274,15 +278,17 @@ class UpdateViewVisita(LoginRequiredMixin,PermisosMixins,UpdateView):
                     pass
             elif action=="search_doc_empresa":
                 documento = request.POST["documento"]
-                
+               
                 value = Visitas.objects.filter(documento_empresa=documento)
                 
                 if value.exists():
-                    value = value.first()   
+                    value = value.first()
+           
                     data = {"empresa":value.empresa}
                 else:
                     tipo = "dni" if len(documento)==8 else "ruc"
                     value = Validation(documento,tipo).valid()
+             
                     if "error" in value:
                         data = value
                     else:
