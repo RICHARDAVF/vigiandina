@@ -131,7 +131,7 @@ class ListViewVisita(LoginRequiredMixin,PermisosMixins,ListView):
             action = request.POST['action']
            
             if action == 'searchdata':
-                desde,hasta,state = self.validate_date()
+                # desde,hasta,state = self.validate_date()
                 data = []
                 try:
                     
@@ -143,7 +143,7 @@ class ListViewVisita(LoginRequiredMixin,PermisosMixins,ListView):
                     if request.user.is_superuser:
                         visitas = Visitas.objects.all()
                     else:
-                        visitas = Visitas.objects.filter(user__empresa_id=self.request.empresa_id)
+                        visitas = Visitas.objects.filter(user__empresa_id=self.request.user.empresa_id)
                     for value in visitas:
                         item = value.toJSON()
                         item['p_visita'] = f"{value.p_visita.nombre} {value.p_visita.apellidos}"
