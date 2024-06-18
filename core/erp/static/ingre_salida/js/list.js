@@ -71,14 +71,7 @@ $(function(){
                     return `<div style="width:250px;">${date}</div>`;
                 }
             },
-            {
-                targets:[3],
-                class:'rext-center',
-                render:function(date,type,row){
-                    
-                    return `<div style="width:100px;">${date}</div>`;
-                }
-            },
+ 
             {
                 targets:[5],
                 class:'rext-center',

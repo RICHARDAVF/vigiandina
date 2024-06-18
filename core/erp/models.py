@@ -214,6 +214,7 @@ class Visitas(models.Model):
         item['guias'] = self.get_file(self.guias)
         item['sctr_salud'] = self.get_file(self.sctr_salud)
         item['names'] = f"{self.nombre} {self.apellidos}"
+        item["fecha"] = self.fecha.strftime("%Y-%m-%d")
         return item
 class EquiposProteccionVisitante(models.Model):
     visitante = models.ForeignKey(Visitas,on_delete=models.DO_NOTHING,verbose_name="Visitante",editable=False)

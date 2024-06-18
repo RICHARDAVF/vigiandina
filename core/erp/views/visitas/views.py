@@ -14,6 +14,7 @@ from django.db.models import Q
 from django.contrib.auth.mixins import LoginRequiredMixin
 from datetime import date,time
 from django.utils import timezone
+from datetime import datetime
 # Create your views here.
 class CreateViewVisita(LoginRequiredMixin,PermisosMixins,CreateView):
     login_url = reverse_lazy('login')
@@ -125,30 +126,32 @@ class ListViewVisita(LoginRequiredMixin,PermisosMixins,ListView):
         return [self.request.POST["desde"],self.request.POST["hasta"],True]
     def post(self, request, *args, **kwargs):
         data = {}
-        fecha = timezone.now()
+
 
         try:
             action = request.POST['action']
            
             if action == 'searchdata':
-                # desde,hasta,state = self.validate_date()
+                desde,hasta,state = self.validate_date()
                 data = []
                 try:
                     
-                    # if request.user.is_superuser and state:
-                    #     visitas = Visitas.objects.select_related("p_visita").filter(fecha__gte=desde,fecha__lte=hasta)
-                    # elif not request.user.is_superuser and state:
-                    #     visitas = Visitas.objects.select_related(user__empresa_id=self.request.empresa_id,fecha__gte=desde,fecha__lte=hasta)
-                    # else:
-                    if request.user.is_superuser:
-                        visitas = Visitas.objects.all()
+                    if request.user.is_superuser and state:
+                        visitas = Visitas.objects.select_related("p_visita").filter(fecha__gte=desde,fecha__lte=hasta)
+                    elif not request.user.is_superuser and state:
+                        visitas = Visitas.objects.select_related(user__empresa_id=self.request.user.empresa_id,fecha__gte=desde,fecha__lte=hasta)
                     else:
-                        visitas = Visitas.objects.filter(user__empresa_id=self.request.user.empresa_id)
+                        if request.user.is_superuser:
+                            visitas = Visitas.objects.filter(h_salida__isnull=True)
+                        else:
+                            visitas = Visitas.objects.filter(user__empresa_id=self.request.user.empresa_id,h_salida__isnull=True)
                     for value in visitas:
-                        item = value.toJSON()
+                        item = value.toJSON()   
+                        
                         item['p_visita'] = f"{value.p_visita.nombre} {value.p_visita.apellidos}"
                         data.append(item)
                 except Exception as e:
+                  
                     data = {}
                     data['error'] = str(e)
             elif action =="addperson":

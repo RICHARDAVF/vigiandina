@@ -112,13 +112,6 @@ $(function () {
                 }
             },
             {
-                targets:[3],
-                class:'text-center',
-                render:function(data,type,row){
-                    return `<div style="width:110px;">${row.fecha}</div>`
-                }
-            },
-            {
                 targets:[6],
                 class:'text-center',
                 render:function(data,type,row){

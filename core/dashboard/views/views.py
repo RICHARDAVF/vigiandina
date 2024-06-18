@@ -183,8 +183,10 @@ class ShowAppMovil(LoginRequiredMixin,TemplateView):
                         data_filter:DataFrame = data_asistencia[(data_asistencia["fecha"]>=data_init) & (data_asistencia["fecha"]<=data_finish)]
                         data_filter["fecha"] = to_datetime(data_filter["fecha"]).dt.date
                         data = data_filter.to_dict(orient="records")
+
                     else:
                         data = data_asistencia[:self.cantidad].to_dict(orient="records") 
+                    
                 else:
                     data["error"] = "No se ingreso una opcion"
             else:
