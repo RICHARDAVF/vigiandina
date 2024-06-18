@@ -137,9 +137,9 @@ class ListViewVisita(LoginRequiredMixin,PermisosMixins,ListView):
                 try:
                     
                     if request.user.is_superuser and state:
-                        visitas = Visitas.objects.select_related("p_visita").filter(fecha__gte=desde,fecha__lte=hasta)
+                        visitas = Visitas.objects.filter(fecha__gte=desde,fecha__lte=hasta)
                     elif not request.user.is_superuser and state:
-                        visitas = Visitas.objects.select_related(user__empresa_id=self.request.user.empresa_id,fecha__gte=desde,fecha__lte=hasta)
+                        visitas = Visitas.objects.filter(user__empresa_id=self.request.user.empresa_id,fecha__gte=desde,fecha__lte=hasta)
                     else:
                         if request.user.is_superuser:
                             visitas = Visitas.objects.filter(h_salida__isnull=True)
