@@ -79,6 +79,8 @@ class ListViewIngSal(LoginRequiredMixin,PermisosMixins,ListView):
                     instance = IngresoSalida.objects.filter(filter_user)
                 for value in instance:
                     item = value.toJSON()
+                    if value.n_parqueo is not None:
+                        item["n_parqueo"] = value.n_parqueo.numero
                     item['documento'] = value.trabajador.documento
                     item['nombres'] = f"{value.trabajador.nombre}   {value.trabajador.apellidos}"
                     item['fecha'] = value.fecha.strftime('%Y-%m-%d')
