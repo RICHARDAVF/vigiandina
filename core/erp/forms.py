@@ -74,7 +74,7 @@ class FormVisitas(ModelForm):
                 attrs={
                 'class':'form-control',
                 'type':'date',
-                'value':timezone.now().date
+                # 'value':timezone.now().date
             }),
             'h_inicio':TimeInput(attrs={
                 'type':'time',
