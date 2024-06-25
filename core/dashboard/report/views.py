@@ -6,7 +6,7 @@ from django.http import HttpResponse
 from core.custom_pdf import PDFControlAccesos
 from reportlab.pdfgen.canvas import Canvas
 from reportlab.lib.styles import getSampleStyleSheet,ParagraphStyle
-from reportlab.lib.enums import TA_RIGHT,TA_CENTER,TA_LEFT
+from reportlab.lib.enums import TA_RIGHT,TA_CENTER
 from django.utils import timezone
 from reportlab.platypus import  Paragraph
 from core.erp.models import Visitas,IngresoSalida

@@ -102,6 +102,9 @@ class UserEmpresas(models.Model):
         verbose_name = "Empresa asignada"
         verbose_name_plural = "Empresas asignadas"
         db_table = "user_empresas"
+        constraints = [
+            models.UniqueConstraint(fields=['usuario', 'empresa'], name='unique_usuario_empresa')
+        ]
     def toJSON(self):
         item = model_to_dict(self)
         return item
