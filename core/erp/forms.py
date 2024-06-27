@@ -506,6 +506,10 @@ class FormEmpresa(ModelForm):
                 "class":'form-control',
                 "type":"number",
             }),
+            "abreviacion":TextInput(attrs={
+                "class":'form-control',
+               
+            }),
             "razon_social":TextInput(attrs={
                 "class":"form-control",
             }),

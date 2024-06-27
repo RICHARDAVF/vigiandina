@@ -29,12 +29,12 @@ class ReporteControlAccesos(LoginRequiredMixin,View):
                 desde = res.get("desde")
                 hasta = res.get("hasta")
             
-                data = Visitas.objects.filter(fecha__range=(desde,hasta))
+                data = Visitas.objects.filter(fecha__range=(desde,hasta), user__empresa_id=self.request.user.empresa_id)
                 values = [["Documento","Nombre","Apellidos","Fecha","Tipo"]]
                 for value in data:
                     a = [value.dni,value.nombre,value.apellidos,value.fecha,"VISITA"]
                     values.append(a)
-                data = IngresoSalida.objects.filter(fecha__range=(desde,hasta))
+                data = IngresoSalida.objects.filter(fecha__range=(desde,hasta),usuario__empresa_id=self.request.user.empresa_id)
                 for value in data:
                     a = [value.trabajador.documento,value.trabajador.nombre,value.trabajador.apellidos,value.fecha,"TRABAJADOR"]
                     values.append(a)

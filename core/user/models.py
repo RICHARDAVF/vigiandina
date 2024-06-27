@@ -8,6 +8,7 @@ class Empresa(models.Model):
     ruc = models.CharField(max_length=11,verbose_name="RUC",unique=True)
     razon_social = models.CharField(max_length=150,verbose_name="Razon social")
     direccion = models.CharField(max_length=150,verbose_name="Direccion",null=True,blank=True)
+    abreviacion = models.CharField(max_length=10,verbose_name="Abreviacion",null=True,blank=True)
     # history = HistoricalRecords()
     class Meta:
         verbose_name = 'empresa'

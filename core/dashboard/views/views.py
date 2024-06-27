@@ -75,10 +75,10 @@ class Dashboard(LoginRequiredMixin,TemplateView):
         context['title'] = 'Dashboard'
         context['entidad'] = 'Dashboard'
         if self.request.user.is_superuser:
-            horas = Visitas.objects.filter(estado=3).annotate(hora=ExtractHour('h_inicio'),empresa_nombre=F('p_visita__empresa__razon_social')).values('hora','empresa_nombre').annotate(total=Count('id')).order_by()
+            horas = Visitas.objects.filter(estado=3).annotate(hora=ExtractHour('h_inicio'),empresa_nombre=F('p_visita__empresa__abreviacion')).values('hora','empresa_nombre').annotate(total=Count('id')).order_by()
         else:
             horas = Visitas.objects.filter(Q(estado=3) &
-                                       Q(user__empresa_id=self.request.user.empresa_id)).annotate(hora=ExtractHour('h_inicio'),empresa_nombre=F('p_visita__empresa__razon_social')).values('hora','empresa_nombre').annotate(total=Count('id')).order_by()
+                                       Q(user__empresa_id=self.request.user.empresa_id)).annotate(hora=ExtractHour('h_inicio'),empresa_nombre=F('p_visita__empresa__abreviacion')).values('hora','empresa_nombre').annotate(total=Count('id')).order_by()
         datos = {}
        
         hours = list(range(24))
