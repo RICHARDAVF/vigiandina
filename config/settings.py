@@ -107,7 +107,7 @@ DATABASES = {
         'HOST': os.getenv('DATABASES_DEFAULT_HOST'),
         'PORT': os.getenv('DATABASES_DEFAULT_PORT'),
         'OPTIONS': {
-            'init_command': "SET sql_mode='STRICT_TRANS_TABLES'",
+            'driver': os.getenv('DATABASES_DEFAULT_OPTIONS_DRIVER'),
         },
     }
 }
