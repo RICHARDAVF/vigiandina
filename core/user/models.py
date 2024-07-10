@@ -1,5 +1,5 @@
 from django.db import models
-from django.contrib.auth.models import AbstractUser
+from django.contrib.auth.models import AbstractUser,BaseUserManager
 from django.forms import model_to_dict
 from crum import get_current_request
 from simple_history.models import HistoricalRecords
@@ -48,18 +48,38 @@ class Puesto(models.Model):
         return item
     def __str__(self) -> str:
         return str(self.puesto)
+class UserManager(BaseUserManager):
+    def create_user(self, email, password=None, **extra_fields):
+        if not email:
+            raise ValueError('The Email field must be set')
+        email = self.normalize_email(email)
+        user = self.model(email=email, **extra_fields)
+        user.set_password(password)
+        user.save(using=self._db)
+        return user
+
+    def create_superuser(self, email, password=None, **extra_fields):
+        extra_fields.setdefault('is_staff', True)
+        extra_fields.setdefault('is_superuser', True)
+
+        if extra_fields.get('is_staff') is not True:
+            raise ValueError('Superuser must have is_staff=True.')
+        if extra_fields.get('is_superuser') is not True:
+            raise ValueError('Superuser must have is_superuser=True.')
+
+        return self.create_user(email, password, **extra_fields)
+
 class User(AbstractUser):
     dni = models.CharField(max_length=10,verbose_name="Documento",null=True,blank=True)
     tipo = models.CharField(max_length=255,null=True,blank=True,verbose_name="Tipo de Usuario")
     image = models.ImageField(upload_to='users/',null=True,blank=True,verbose_name="Imagen")
-    token = models.UUIDField(primary_key=False, editable=False, null=True, blank=True,verbose_name="Token")
     last_name = models.CharField(max_length=150, blank=False,verbose_name='Nombre')
     first_name = models.CharField(max_length=30, blank=False,verbose_name="Apellidos")
     empresa = models.ForeignKey(Empresa,on_delete=models.DO_NOTHING,verbose_name="Empresa",null=True,blank=True)
     unidad = models.ForeignKey(Unidad,on_delete=models.DO_NOTHING,verbose_name='Unidad',null=True,blank=True)
     puesto = models.ForeignKey(Puesto,on_delete=models.DO_NOTHING,verbose_name='Puesto',null=True,blank=True)
     # history = HistoricalRecords()
-
+    objects = UserManager()
     def toJSON(self):
         item = model_to_dict(self, exclude=['password', 'user_permissions', 'last_login'])
         if self.last_login:
@@ -84,17 +104,7 @@ class User(AbstractUser):
             pass
     def __str__(self):
         return str(self.id)
-class TokenBearer(models.Model):
-    token = models.CharField(max_length=250,verbose_name="Token")
-    nombre = models.CharField(max_length=50,verbose_name="Nombre del proveedor")
-    descripcion = models.CharField(max_length=150,verbose_name="Descripcion")
-    class Meta:
-        verbose_name = 'token'
-        verbose_name_plural = 'tokens'
-        db_table = 'tokens'
-    def toJSON(self):
-        item = model_to_dict(self)
-        return item
+
     
 class UserEmpresas(models.Model):
     usuario = models.ForeignKey(User,on_delete=models.DO_NOTHING,verbose_name="Usuario")

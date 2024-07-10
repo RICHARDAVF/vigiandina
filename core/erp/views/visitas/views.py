@@ -26,11 +26,16 @@ class CreateViewVisita(LoginRequiredMixin,PermisosMixins,CreateView):
     @method_decorator(csrf_exempt)
     def dispatch(self, request, *args, **kwargs):
         return super().dispatch(request, *args, **kwargs)
+    def valid_register(self):
+        res = Visitas.objects.filter(dni=self.request.POST["dni"],h_salida__isnull=True)
+        return res.exists() 
     def post(self, request, *args, **kwargs) :
         data = {}
         try:
             action =request.POST['action']
             if action == "add":
+                if self.valid_register():
+                    raise ValueError("No se marco hora de salida para esta visita")
                 state,msg = self.validacion()
                 if not state:
                     data['error'] = msg

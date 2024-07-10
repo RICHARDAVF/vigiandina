@@ -24,6 +24,8 @@ class CreateViewIngSal(LoginRequiredMixin,PermisosMixins,CreateView):
             action = request.POST['action']
             
             if action =='add':
+                if self.valid_register():
+                    raise ValueError("EL trabajador no marco hora de salida")
                 form = self.get_form()
                 data = form.save()
             else:
@@ -31,6 +33,9 @@ class CreateViewIngSal(LoginRequiredMixin,PermisosMixins,CreateView):
         except Exception as e:
             data['error'] = f"Ocurrio un error:{str(e)} "
         return JsonResponse(data)
+    def valid_register(self):
+        res = IngresoSalida.objects.filter(trabajador_id=self.request.POST["trabajador"],hora_salida__isnull=True)
+        return res.exists() 
     def get_form(self, form_class= None):
         form =  super().get_form(form_class)
         form.fields['usuario'].initial = self.request.user

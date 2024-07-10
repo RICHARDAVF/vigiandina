@@ -2,10 +2,15 @@ from django.contrib import admin
 from .models import User,Empresa,Puesto,Unidad,UserEmpresas
 
 from django.contrib.auth.models import Permission
-
-class AdminUser(admin.ModelAdmin):
-    list_display = ('username','last_name', 'first_name', 'dni', 'email')
-admin.site.register(User, AdminUser)
+from django.contrib.auth.admin import UserAdmin
+from .forms import FormUser,UserCreationForm
+class UserAdminModel(UserAdmin):
+    fomr = FormUser
+    add_form = UserCreationForm
+admin.site.register(User,UserAdminModel)
+# class AdminUser(admin.ModelAdmin):
+#     list_display = ('username','last_name', 'first_name', 'dni', 'email')
+# admin.site.register(User, AdminUser)
 
 class AdminEmpresa(admin.ModelAdmin):
     list_display = ('ruc',"razon_social")

@@ -2,7 +2,6 @@ from django.http import  JsonResponse
 from django.http.response import HttpResponse as HttpResponse
 from django.shortcuts import render
 from django.views.generic import TemplateView
-from core.mixins import PermisosMixins
 from core.erp.models import IngresoSalida, Visitas
 from django.db.models import Count,F
 from django.db.models.functions import ExtractHour,ExtractMonth
@@ -20,7 +19,7 @@ from .notification import Notification
 from django.conf import settings
 import os
 from pandas import read_csv,to_datetime,DataFrame
-
+from core.user.models import UserEmpresas,Empresa
 # Create your views here.
 
 class PageNotFoundView(View):
@@ -58,7 +57,6 @@ class Dashboard(LoginRequiredMixin,TemplateView):
                     fecha_registro = value.fecha
                     hora_registro = value.h_inicio
                     fecha_hora_registro = datetime.combine(fecha_registro, hora_registro)
-
                     if fecha_hora_registro >= datetime.strptime(request.POST['fecha_hora'], "%Y-%m-%dT%H:%M"):
                         data.append(value.toJSON())
     
@@ -154,8 +152,29 @@ class Dashboard(LoginRequiredMixin,TemplateView):
         context['total_personas'] = len(total_personas)
         context['cantidad_personal'] = len(trabajadores)
         context["notify"] = json.dumps(list(iter(Notification(self.request))))
-
+        context["user_empresas"] = self.get_empresas()
         return context
+    def get_empresas(self):
+        user_empresas = UserEmpresas.objects.filter(usuario_id=self.request.user.id)
+        if self.request.user.is_superuser:
+            data = [
+                {
+                    "value":value.id,
+                    "name":value.razon_social
+                } for value in  Empresa.objects.all()
+            ]
+          
+            return data
+        elif user_empresas.exists():
+            data = [
+                {
+                    "value":value.id,
+                    "name":value.razon_social
+                } for value in  Empresa.objects.filter(id__in=[i.empresa.id for i in user_empresas])
+            ]
+            return data
+        return []
+        
 class ShowAppMovil(LoginRequiredMixin,TemplateView):
     template_name = "dashboard/list_data_app_movil.html"
     login_url = reverse_lazy("login")

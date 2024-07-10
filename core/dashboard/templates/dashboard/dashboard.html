@@ -27,7 +27,7 @@
     <div class="col-md-4">
         <canvas id="mes"></canvas>
         <div class="container d-flex flex-row">
-            <div class="col-md-8 d-flex flex-column align-items-center mt-1">
+            <div class="col-md-12 d-flex flex-column align-items-center mt-1">
                 <h6>Personas dentro de la instalación</h6>
                 <div class="text-center" id="personal-dentro">
                     <div id="personal-dentro-title">
@@ -44,15 +44,17 @@
                 <div class="text-center mt-1" id="personal-dentro">
                     <input type="button" id="header-title" style="width: 100%; justify-content: center; border-color: white;" value="Total: {{total_personas}}" class="btn-show-personas" />
                 </div>
+                
+                <a class="link mt-1" href="{% url 'dashboard:list_data_movil' %}">Datos de la app móvil</a>
+                <input type="button" value="GENERAR REPORTE" class="btn btn-danger btn-sm" id="show-report">
             </div>
-            <div class="col-md-4 d-flex flex-column align-items-center mt-1">
+            <!-- <div class="col-md-4 d-flex flex-column align-items-center mt-1">
                 <label for="desde">Desde</label>
                 <input type="date" name="desde" id="desde" class="form-control">
                 <label for="hasta">Hasta</label>
                 <input type="date" name="hasta" id="hasta" class="form-control">
                 <button class="btn btn-danger mt-2" id="btn-report" style="width: 100%;">GENERAR REPORTE</button>
-                <a class="link mt-1" href="{% url 'dashboard:list_data_movil' %}">Datos de la app móvil</a>
-            </div>
+            </div> -->
         </div>
     </div>
     <!-- <div class="col-md-2">
@@ -138,7 +140,48 @@
             </div>
           </div>
         </div>
-      </div>
+    </div>
+    <div class="modal fade" id="modalReport" tabindex="-1" role="dialog" aria-labelledby="modalPersonsLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="modalPersonsLabel">Configuracion para reporte de ingresos y salidas</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+               <div class="input-group">
+                <label>
+                    DESDE:
+                    <input type="date" id="desde" name="desde" class="form-control">
+                </label>
+               </div>
+               <div class="input-group">
+                <label>
+                    DESDE:
+                    <input type="date" id="hasta" name="hasta" class="form-control">
+                </label>
+               </div>
+               <div class="input-group">
+                <label>
+                    EMPRESA:
+                    <select class="form-control" id="empresa">
+                    {% for item in user_empresas %}
+                        <option value="{{item.value}}">{{item.name}}</option>
+                    {% endfor %}
+                </select>
+                </label>
+               </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" id="btn-report"> <i class="fas fa-file-pdf"></i></button>
+                
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+          </div>
+        </div>
+    </div>
     <script>
         function por_horas(data){
            var labels = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23]

@@ -1,7 +1,8 @@
 $(function(){
     function searchDNI(dni){
-        const url = window.location.pathname,
-        data = {dni:dni,action:'searchdni'};
+        const url = window.location.pathname
+        const token = $("input[name='csrfmiddlewaretoken']").val()
+        data = {dni:dni,action:'searchdni','csrfmiddlewaretoken':token};
         
         $.ajax({
             url:url,
@@ -25,6 +26,7 @@ $(function(){
         });
        }
     const dni = $('#id_documento');
+
     dni.on('input',function(event){
     const value = event.target.value.trim();
    

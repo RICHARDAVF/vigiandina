@@ -181,6 +181,9 @@ class UpdateViewTrabajador(LoginRequiredMixin,PermisosMixins,UpdateView):
             if action == 'edit':
                 form = self.get_form()
                 data = form.save()
+
+            elif action =="searchdni":
+                data = Validation(request.POST['dni'],'dni').valid()
             else:
                 data['error'] = 'No ha ingresado a ninguna opción'
         except Exception as e:

@@ -28,13 +28,13 @@ class ReporteControlAccesos(LoginRequiredMixin,View):
             if action == "report":
                 desde = res.get("desde")
                 hasta = res.get("hasta")
-            
-                data = Visitas.objects.filter(fecha__range=(desde,hasta), user__empresa_id=self.request.user.empresa_id)
+                empresa = res.get("empresa")
+                data = Visitas.objects.filter(fecha__range=(desde,hasta), p_visita__empresa_id=int(empresa))
                 values = [["Documento","Nombre","Apellidos","Fecha","Tipo"]]
                 for value in data:
                     a = [value.dni,value.nombre,value.apellidos,value.fecha,"VISITA"]
                     values.append(a)
-                data = IngresoSalida.objects.filter(fecha__range=(desde,hasta),usuario__empresa_id=self.request.user.empresa_id)
+                data = IngresoSalida.objects.filter(fecha__range=(desde,hasta),trabajador__empresa_id=int(empresa))
                 for value in data:
                     a = [value.trabajador.documento,value.trabajador.nombre,value.trabajador.apellidos,value.fecha,"TRABAJADOR"]
                     values.append(a)
@@ -49,7 +49,7 @@ class ReporteControlAccesos(LoginRequiredMixin,View):
                 date["error"] = "Opcion invalida"
                 
         except Exception as e:
-        
+            print(str(e))
             date["error"] = str(e)
         return JsonResponse(date,safe=False)
     def custom_cabecera(self,canvas:Canvas,nombre):
