@@ -163,7 +163,7 @@ class Dashboard(LoginRequiredMixin,TemplateView):
                     "name":value.razon_social
                 } for value in  Empresa.objects.all()
             ]
-          
+           
             return data
         elif user_empresas.exists():
             data = [

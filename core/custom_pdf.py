@@ -37,9 +37,9 @@ class PDFControlAccesos:
             ])
             table = Table(data=self.data,repeatRows=1,style=style)
             self.story.append(table)
-            print(self.request)
+            
             file = SimpleDocTemplate(filename=self.filename,pagesize=letter)
             file.build(self.story,onFirstPage=self.custom,onLaterPages=self.custom,canvasmaker=Numeracion)
         except Exception as e:
-            print(str(e))
+       
             raise Exception(str(e))

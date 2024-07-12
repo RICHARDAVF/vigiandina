@@ -29,15 +29,18 @@ class ReporteControlAccesos(LoginRequiredMixin,View):
                 desde = res.get("desde")
                 hasta = res.get("hasta")
                 empresa = res.get("empresa")
-                data = Visitas.objects.filter(fecha__range=(desde,hasta), p_visita__empresa_id=int(empresa))
+                tipo = res.get("tipo")
                 values = [["Documento","Nombre","Apellidos","Fecha","Tipo"]]
-                for value in data:
-                    a = [value.dni,value.nombre,value.apellidos,value.fecha,"VISITA"]
-                    values.append(a)
-                data = IngresoSalida.objects.filter(fecha__range=(desde,hasta),trabajador__empresa_id=int(empresa))
-                for value in data:
-                    a = [value.trabajador.documento,value.trabajador.nombre,value.trabajador.apellidos,value.fecha,"TRABAJADOR"]
-                    values.append(a)
+                if int(tipo)==1:
+                    data = Visitas.objects.filter(fecha__range=(desde,hasta), p_visita__empresa_id=int(empresa))
+                    for value in data:
+                        a = [value.dni,value.nombre,value.apellidos,value.fecha,"VISITA"]
+                        values.append(a)
+                else:
+                    data = IngresoSalida.objects.filter(fecha__range=(desde,hasta),trabajador__empresa_id=int(empresa))
+                    for value in data:
+                        a = [value.trabajador.documento,value.trabajador.nombre,value.trabajador.apellidos,value.fecha,"TRABAJADOR"]
+                        values.append(a)
                 response = HttpResponse(content_type="application/pdf")
                 filename = f"{self.request.user.username}-reporte-control-accesos.pdf"
                 response['Content-Disposition'] = f'attachment; filename="{filename}" '
@@ -49,7 +52,7 @@ class ReporteControlAccesos(LoginRequiredMixin,View):
                 date["error"] = "Opcion invalida"
                 
         except Exception as e:
-            print(str(e))
+        
             date["error"] = str(e)
         return JsonResponse(date,safe=False)
     def custom_cabecera(self,canvas:Canvas,nombre):

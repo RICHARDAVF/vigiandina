@@ -42,7 +42,8 @@ $(document).on("click", "#btn-report", function () {
     var desde = $("#desde").val();
     var hasta = $("#hasta").val();
     var empresa = $("#empresa").val()
-    if(desde=="" || hasta=="" || empresa==''){
+    var tipo = $('#tipo-report').val()
+    if(desde=="" || hasta=="" || empresa=='' || tipo==''){
       return alert("Complete los todos los campos")
     }
     fetch("/dashboard/pdf/reporte-1/", {
@@ -54,7 +55,8 @@ $(document).on("click", "#btn-report", function () {
         action: "report",
         desde: desde,
         hasta: hasta,
-        empresa:empresa
+        empresa:empresa,
+        tipo:tipo
       }),
     })
       .then(response => {
