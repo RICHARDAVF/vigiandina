@@ -109,10 +109,11 @@
                     >
                         <thead  >
                             <tr id="header-title" style="background-color: rgb(238, 137, 49);" >
-                                <th style="width: 40%;">Nombres y Apellidos</th>
-                                <th style="width: 20%;">Documento</th>
-                                <th style="width: 30%;">Empresa</th>
-                                <th style="width: 10%;">Tipo</th>
+                                <th style="width: 200px">Nombres y Apellidos</th>
+                                <th style="width: 100px;">Documento</th>
+                                <th style="width: 200px;">De la Empresa</th>
+                                <th style="width: 200px;">Dentro de la Empresa</th>
+                                <th style="width: 100px;">Tipo</th>
 
                             </tr>
                         </thead>
@@ -122,7 +123,8 @@
                                 <tr>
                                     <td scope="row">{{item.nombres}}</td>
                                     <td>{{item.documento}}</td>
-                                    <td>{{item.empresa}}</td>
+                                    <td>{{item.empresa_of}}</td>
+                                    <td>{{item.empresa_in}}</td>
                                     <td>{{item.tipo}}</td>
                                 </tr>
                                 {% endfor %}
@@ -311,6 +313,7 @@
         }
         new DataTable('#data-1', {
             autoWidth:false,
+            // scrollX:true,
             language:{
                 url:"{% static '/lib/datatables/spain.json' %}"
             },

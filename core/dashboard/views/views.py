@@ -125,7 +125,8 @@ class Dashboard(LoginRequiredMixin,TemplateView):
             item = {}
             item['nombres'] = f"{value.nombre} {value.apellidos}"
             item['documento'] = value.dni
-            item['empresa'] = value.p_visita.empresa
+            item['empresa_in'] = value.p_visita.empresa
+            item['empresa_off'] = value.empresa
             item['tipo'] = "VISITA"
             total_personas.append(item)
         if self.request.user.is_superuser:
@@ -140,11 +141,12 @@ class Dashboard(LoginRequiredMixin,TemplateView):
                 Q(usuario__empresa_id=self.request.user.empresa_id)
                 )
         for value in trabajadores:
-       
+           
             item = {}
-            item['empresa'] = value.trabajador.empresa
+            item['empresa_in'] = value.trabajador.empresa
             item['nombres'] = f"{value.trabajador.nombre} {value.trabajador.apellidos}"
             item['documento'] = value.trabajador.documento
+            item['empresa_off'] = value.trabajador.empresa
             item['tipo'] = "TRABAJADOR"
             total_personas.append(item)
         
