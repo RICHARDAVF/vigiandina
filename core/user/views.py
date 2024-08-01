@@ -48,7 +48,7 @@ class CreateViewUser(LoginRequiredMixin,PermisosMixins,CreateView):
     permission_required = ('user.view_user','user.create_user')
     login_url = reverse_lazy('login')
     model = User
-    form_class = User
+    form_class = FormUser
     template_name = 'user/create.html'
     success_url = reverse_lazy('user:user_list')
     url_redirect = success_url

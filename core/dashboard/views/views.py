@@ -121,7 +121,6 @@ class Dashboard(LoginRequiredMixin,TemplateView):
         total_personas = []
         context['cantidad_visitas'] = len(visitas)
         for value in visitas:
-            
             item = {}
             item['nombres'] = f"{value.nombre} {value.apellidos}"
             item['documento'] = value.dni
