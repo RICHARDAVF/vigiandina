@@ -11,6 +11,7 @@ from .views.equipos.views import*
 from .views.cargos.views import*
 from .views.views import PageNotFoundView
 from .views.unidad_trabajo.views import CreateViewUnidadTrabajo,ListViewUnidadTrabajo,UpdateViewUnidadTrabajo,DeleteViewUnidadTrabajo
+from .views.control_celepsa.views import CreateViewControlCelepsa
 handler404 = PageNotFoundView.as_view()
 app_name = 'erp'
 urlpatterns = [
@@ -78,6 +79,6 @@ urlpatterns = [
     path('unidad/trabajo/list/',ListViewUnidadTrabajo.as_view(),name='unidad_trabajo_list'),
     path('unidad/trabajo/update/<int:pk>/',UpdateViewUnidadTrabajo.as_view(),name='unidad_trabajo_update'),
     path('unidad/trabajo/delete/<int:pk>/',DeleteViewUnidadTrabajo.as_view(),name='unidad_trabajo_delete'),
-
-
+    #CONTROL CELEPSA
+    path("control/celepsa/add/",CreateViewControlCelepsa.as_view(),name="control_add"),
 ]

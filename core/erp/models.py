@@ -40,6 +40,7 @@ class Trabajadores(models.Model):
     cargo = models.ForeignKey(CargoTrabajador,on_delete=models.DO_NOTHING,verbose_name="Cargo del trabajador",null=True,blank=True)
     sctr = models.FileField(upload_to='sctr/',verbose_name="SCTR",blank=True,null=True)
     estado = models.BooleanField(default=True,verbose_name='Activo')
+    codigo_rfid = models.CharField(verbose_name="RFID",max_length=100,null=True,blank=True)
     history = HistoricalRecords()
     def toJSON(self):
         item = model_to_dict(self)
@@ -281,3 +282,14 @@ def add_automatic_t(sender, instance, created, **kwargs):
         Vehiculos.objects.create(trabajador=instance)
         AsignacionEV.objects.create(trabajador=instance)
 
+class ControlCelepsa(models.Model):
+    trabajador = models.ForeignKey(Trabajadores,on_delete=models.DO_NOTHING,verbose_name="Trabajador")
+    fecha = models.DateField(auto_now_add=True,verbose_name="Fecha")
+    hora_ingreso = models.TimeField(auto_now_add=True,verbose_name="Hora de ingreso")
+    hora_salida = models.TimeField(auto_now_add=False,verbose_name="Hora de salida")
+    class Meta:
+        verbose_name = "Control de entrada y salida"
+        verbose_name_plural = 'Control de entrada y salida'
+        db_table = 'control_celepsa'
+    def __str__(self):
+        return self.trabajador
