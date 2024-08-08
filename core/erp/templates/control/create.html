@@ -1,15 +1,42 @@
 {% extends 'layout.html' %}
 {% load static %}
 {% block head %}
+    <link rel="stylesheet" href="https://cdn.datatables.net/2.0.7/css/dataTables.bootstrap5.css"/>
+    <script src="https://cdn.datatables.net/2.0.7/js/dataTables.js"></script>
+
+    <script src="https://cdn.datatables.net/2.0.7/js/dataTables.bootstrap5.js"></script>
     <script src="{% static 'control/js/form.js' %}"></script>
 {% endblock head %}
 {% block content %}
-    <form action="." method="post">
+    <form id="create-form" action="." method="post">
         <input type="hidden" name="action" value="{{action}}">
         {% csrf_token %}
-        <input type="text" class="form-control form-control-sm" name="codigo_rfid" id="codigo_rfid">
+        <div class="group-input">
+            <label for="codigo_rfid">Codigo</label>
+            <input type="text" class="form-control form-control-sm" name="codigo_rfid" id="codigo_rfid">
+        </div>
     </form>
+    <div
+        class="table-responsive-sm mt-3"
+    >
+        <table
+            class="table table-sm table-hover table-borderless align-middle"
+            id="data-list"
+        >
+            <thead class="table-light">
+            </thead>
+            <tbody>
+                
+            </tbody>
+            <tfoot>
+                
+            </tfoot>
+        </table>
+    </div>
+    
 {% endblock content %}
 {% block javascript %}
-    
+    <script>
+          var data = JSON.parse('{{ list_data|escapejs }}')
+    </script>
 {% endblock javascript %}

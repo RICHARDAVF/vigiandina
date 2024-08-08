@@ -450,9 +450,7 @@ class FormAsis(ModelForm):
         model = Asistentes
         fields = "__all__"
 class FormIngSal(ModelForm):
-    
-    def __init__(self,*args,**kwargs):
-        super().__init__(*args,**kwargs)
+
     def save(self,commit=True):
         data = {}
         form = super()
@@ -466,7 +464,7 @@ class FormIngSal(ModelForm):
         return data
     class Meta:
         model = IngresoSalida
-        fields = ["trabajador","motivo","placa","usuario"]
+        fields = '__all__'
         widgets = {
             "trabajador":Select(attrs={
                 "class":'form-control select2',
@@ -483,7 +481,30 @@ class FormIngSal(ModelForm):
                 "required":False
             }),
             "usuario":HiddenInput(), 
+            "fecha_ingreso":DateInput(format='%Y-%m-%d',attrs={
+                "class":"form-control",
+                "type":'date',
+           
+            }),
+            "fecha_salida":DateInput(format='%Y-%m-%d',attrs={
+                "class":"form-control",
+                "type":'date'
+            }),
+            "hora_ingreso":TimeInput(attrs={
+                "class":"form-control",
+                "type":'time'
+            }),
+            "hora_salida":TimeInput(attrs={
+                "class":"form-control",
+                "type":'time'
+            }),
+            "n_parqueo":Select(attrs={
+                "class":'form-control select2',
+            }),
         }
+        
+    def __init__(self,*args,**kwargs):
+        super().__init__(*args,**kwargs)
 class FormEmpresa(ModelForm):
     def __init__(self,*args,**kwargs):
         super().__init__(*args,**kwargs)

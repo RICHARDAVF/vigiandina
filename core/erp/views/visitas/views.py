@@ -556,6 +556,11 @@ class AuditoriaVisitaView(LoginRequiredMixin,PermisosMixins,ListView):
     permission_required = 'erp.view_visitas'
     model  = Visitas
     template_name = 'visitas/auditoria.html'
+    def dispatch(self,request,*args,**kwargs):
+        if not request.user.is_superuser:
+            # Redirige a la página desde la que vino, o a una página de acceso denegado.
+            return redirect(request.META.get('HTTP_REFERER', '/'))
+        return super().dispatch(request,*args,**kwargs)
     def get_queryset(self):
         instance = Visitas.objects.get(id=self.kwargs['pk'])
         return instance.history.all()

@@ -5,10 +5,119 @@
     <link href="{% static 'lib/select/css/select2-bootstrap4.min.css' %}" rel="stylesheet"/>
     <script src="{% static 'lib/select/js/select2.min.js' %}"></script>
     <script src="{% static 'lib/select/js/i18n/es.js' %}"></script>
-    <script src="{% static 'ingre_salida/js/form.js' %}"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 {% endblock head_form %}
 {% block form %}
-{{form.as_p}}  
+{{form.usuario}}
+<div class="d-flex flex-row">
+    <div class="col-md-6">
+        <div class="mb-3">
+            <label for="id_trabajador">
+                {{ form.trabajador.label }}
+            </label>
+            {{ form.trabajador }}
+        </div>
+        <div class="mb-3">
+            <label for="id_motivo">
+                {{ form.motivo.label }}
+            </label>
+            {{ form.motivo }}
+        </div>
+        <div class="mb-3">
+            <label for="id_placa">
+                {{ form.placa.label }}
+            </label>
+            {{ form.placa }}
+        </div>
+        <div class="mb-3">
+            <label for="id_n_parqueo">
+                {{ form.n_parqueo.label }}
+            </label>
+            {{ form.n_parqueo }}
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="mb-3">
+            <label for="id_fecha_ingreso">
+                {{ form.fecha_ingreso.label }}
+            </label>
+            {{ form.fecha_ingreso }}
+        </div>
+        <div class="mb-3">
+            <label for="id_hora_ingreso">
+                {{ form.hora_ingreso.label }}
+            </label>
+            {{ form.hora_ingreso }}
+        </div>
+        <div class="mb-3">
+            <label for="id_fecha_salida">
+                {{ form.fecha_salida.label }}
+            </label>
+            {{ form.fecha_salida }}
+        </div>
+        <div class="mb-3">
+            <label for="id_hora_salida">
+                {{ form.hora_salida.label }}
+            </label>
+            {{ form.hora_salida }}
+        </div>
+    </div>
+</div>
+
+
 {% endblock form %}
 {% block javascript %}
+<script>
+    // $('#id_user').val('{{request.user}}')
+    // $(function(){
+    //     $('.select2').select2({
+    //         theme:'bootstrap4',
+    //         languaje:'es'
+    //     });
+    // });
+    flatpickr("#id_fecha_ingreso", {
+        minDate:"today",
+        // enableTime: false,
+        defaultDate: $("#id_fecha_ingreso").val() || "today",
+        dateFormat: "Y-m-d", 
+        locale: {
+            firstDayOfWeek: 1, 
+            weekdays: {
+                shorthand: ['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb'],
+                longhand: ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'],
+            },
+            months: {
+                shorthand: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'],
+                longhand: [
+                    'Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio',
+                    'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre',
+                ],
+            },
+        }
+    });
+    flatpickr("#id_fecha_salida", {
+        minDate:"today",
+        // enableTime: false,
+        defaultDate: $("#id_fecha_salida").val() || "",
+        dateFormat: "Y-m-d", 
+        locale: {
+            firstDayOfWeek: 1, 
+            weekdays: {
+                shorthand: ['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb'],
+                longhand: ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'],
+            },
+            months: {
+                shorthand: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'],
+                longhand: [
+                    'Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio',
+                    'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre',
+                ],
+            },
+        }
+    });
+    
+    </script>
+    <script src="{% static 'ingre_salida/js/form.js' %}"></script>
+
 {% endblock javascript %}

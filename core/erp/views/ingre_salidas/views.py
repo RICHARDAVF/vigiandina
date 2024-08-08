@@ -1,4 +1,5 @@
 from django.http import JsonResponse
+from django.shortcuts import redirect
 from django.urls import reverse_lazy
 from django.views.generic import CreateView,ListView,UpdateView,DeleteView
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -39,6 +40,8 @@ class CreateViewIngSal(LoginRequiredMixin,PermisosMixins,CreateView):
     def get_form(self, form_class= None):
         form =  super().get_form(form_class)
         form.fields['usuario'].initial = self.request.user
+        form.fields['hora_ingreso'].initial = timezone.now().time()
+        form.fields['fecha_ingreso'].initial = timezone.now().date().strftime('%Y-%m-%d')
         values = UserEmpresas.objects.filter(usuario=self.request.user).values_list("empresa")
         if self.request.user.is_superuser:
             pass
@@ -71,12 +74,12 @@ class ListViewIngSal(LoginRequiredMixin,PermisosMixins,ListView):
             action = request.POST['action']
             if action =="searchdata":
                 data = []
-                filter_superuser =  Q(fecha=fecha.strftime("%Y-%m-%d")) | Q(hora_salida__isnull=True)
-                filter_user = Q(usuario__empresa_id=request.user.empresa_id) & (Q(fecha=fecha.strftime("%Y-%m-%d"))| Q(hora_salida__isnull=True))
+                filter_superuser =  Q(fecha_ingreso=fecha.strftime("%Y-%m-%d")) | Q(hora_salida__isnull=True)
+                filter_user = Q(usuario__empresa_id=request.user.empresa_id) & (Q(fecha_ingreso=fecha.strftime("%Y-%m-%d"))| Q(hora_salida__isnull=True))
                 if request.user.is_superuser and (("desde" in request.POST and request.POST["desde"]!="") and ("hasta" in request.POST and request.POST["hasta"]!="")):
-                    filter_superuser = Q(fecha__gte=request.POST["desde"]) & Q(fecha__lte=request.POST["hasta"])
+                    filter_superuser = Q(fecha_ingreso__gte=request.POST["desde"]) & Q(fecha_ingreso__lte=request.POST["hasta"])
                 elif request.user.is_superuser==False and (("desde" in request.POST and request.POST["desde"]!="") and ("hasta" in request.POST and request.POST["hasta"]!="")):
-                    filter_user = Q(usuario__empresa_id=request.user.empresa_id) & Q(fecha__gte=request.POST["desde"]) & Q(fecha__lte=request.POST["hasta"])
+                    filter_user = Q(usuario__empresa_id=request.user.empresa_id) & Q(fecha_ingreso__gte=request.POST["desde"]) & Q(fecha_ingreso__lte=request.POST["hasta"])
                 if request.user.is_superuser:
                     instance = IngresoSalida.objects.filter(filter_superuser)
                 else:
@@ -87,14 +90,18 @@ class ListViewIngSal(LoginRequiredMixin,PermisosMixins,ListView):
                         item["n_parqueo"] = value.n_parqueo.numero
                     item['documento'] = value.trabajador.documento
                     item['nombres'] = f"{value.trabajador.nombre}   {value.trabajador.apellidos}"
-                    item['fecha'] = value.fecha.strftime('%Y-%m-%d')
-                    item['hora_ingreso'] = value.hora_ingreso.strftime('%H:%M:%S')
+                    item['fecha_ingreso'] = value.fecha_ingreso
+                    item['fecha_salida'] = value.fecha_salida
+                    item['hora_ingreso'] = value.hora_ingreso
+                    item['hora_salida'] = value.hora_salida
                     data.append(item)
+         
             elif action == 'confirm_hora_salida':
                 instance = IngresoSalida.objects.get(Q(id=request.POST['id']) & Q(hora_salida__isnull=True))
                 if instance.n_parqueo != None :
                     Parqueo.objects.filter(id=instance.n_parqueo_id).update(estado=True)
                 instance.hora_salida = timezone.now().strftime('%H:%M:%S')
+                instance.fecha_salida = timezone.now().strftime('%Y-%m-%d')
                 instance.save()
             elif action == "search_trabajador":
                 trabajadores = Trabajadores.objects.filter(
@@ -127,6 +134,15 @@ class ListViewIngSal(LoginRequiredMixin,PermisosMixins,ListView):
         except Exception as e:
             data['error'] = f"Ocurrio un error {str(e)}" 
         return JsonResponse(data,safe=False)
+    def valid_datetime(self,date):
+        if date is None:
+            return date
+        value = None
+        try:
+            value = date.strftime('%Y-%m-%d')
+        except:
+            value = date.strftime('%H:%M:%S')
+        return value
     def get_context_data(self, **kwargs) :
         context = super().get_context_data(**kwargs)
         context['title'] = "Listado de ingresos y salidas"
@@ -143,10 +159,14 @@ class UpdateViewIngSal(LoginRequiredMixin,PermisosMixins,UpdateView):
     url_redirect = success_url
     def dispatch(self,request,*args,**kwargs):
         self.object = self.get_object()
+        # if not request.user.is_superuser:
+        #     # Redirige a la página desde la que vino, o a una página de acceso denegado.
+        #     return redirect(request.META.get('HTTP_REFERER', '/'))
         return super().dispatch(request,*args,**kwargs)
     def post(self,request,*args,**kwargs):
         data = {}
         try:
+            
             action = request.POST['action']
             if action == 'edit':
                 form = self.get_form()
@@ -160,6 +180,7 @@ class UpdateViewIngSal(LoginRequiredMixin,PermisosMixins,UpdateView):
         form =  super().get_form(form_class)
         form.fields['usuario'].initial = self.request.user
         form.fields['trabajador'].queryset = Trabajadores.objects.filter(estado=1)
+        form.fields['fecha_ingreso'].initial = self.get_object().fecha_ingreso.strftime('%Y-%m-%d')
         return form
     def get_context_data(self,**kwargs):
         context = super().get_context_data(**kwargs)
@@ -193,4 +214,21 @@ class DeleteViewIngSal(LoginRequiredMixin,PermisosMixins,DeleteView):
         context['title'] = 'Eliminación de una Visita'
         context['Entidad'] = 'Visitas'
         context['list_url'] = self.success_url
+        return context
+class AuditoriaIngSalView(LoginRequiredMixin,PermisosMixins,ListView):
+    login_url = reverse_lazy('login')
+    permission_required = 'erp.view_ingresosalida'
+    model = IngresoSalida
+    template_name = 'ingre_salida/auditoria.html'
+    def dispatch(self,request,*args,**kwargs):
+        if not request.user.is_superuser:
+            # Redirige a la página desde la que vino, o a una página de acceso denegado.
+            return redirect(request.META.get('HTTP_REFERER', '/'))
+        return super().dispatch(request,*args,**kwargs)
+    def get_queryset(self):
+        instance = IngresoSalida.objects.get(id=self.kwargs['pk'])
+        return instance.history.all()
+    def get_context_data(self,**kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = 'Auditoria de un ingreso y salida'
         return context

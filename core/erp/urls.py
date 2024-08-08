@@ -3,7 +3,7 @@ from .views.visitas.views import*
 from .views.salas.views import*
 from .views.parqueo.views import*
 from .views.trabajadores.views import*
-from .views.ingre_salidas.views import*
+from .views.ingre_salidas.views import CreateViewIngSal,ListViewIngSal,UpdateViewIngSal,DeleteViewIngSal,AuditoriaIngSalView
 from .views.empresas.views import*
 from .views.unidad.views import*
 from .views.puesto.views import*
@@ -74,6 +74,8 @@ urlpatterns = [
     path('ingsal/add/',CreateViewIngSal.as_view(),name='ingsal_create'),
     path('ingsal/edit/<int:pk>/',UpdateViewIngSal.as_view(),name='ingsal_update'),
     path('ingsal/delete/<int:pk>/',DeleteViewIngSal.as_view(),name='ingsal_delete'),
+    path('ingsal/audi/<int:pk>/',AuditoriaIngSalView.as_view(),name="ingsal_audi"),
+
     #UNIDADES DE TRABAJO
     path('unidad/trabajo/add/',CreateViewUnidadTrabajo.as_view(),name='unidad_trabajo_create'),
     path('unidad/trabajo/list/',ListViewUnidadTrabajo.as_view(),name='unidad_trabajo_list'),

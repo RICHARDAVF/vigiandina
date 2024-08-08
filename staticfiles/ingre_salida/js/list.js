@@ -5,17 +5,16 @@ $(function(){
         language: {
             url: '//cdn.datatables.net/plug-ins/1.13.6/i18n/es-ES.json',
         },
-        responsive:false,
-        autoWidth:false,
-       
-        deferRender:true,
-        dom:'Qfrtip',
         "order": [[0, 'desc']],
+        autoWidth:false,
+        scrollX:true,
+        destroy:true,
+        deferRender:true,
         lengthMenu: [
             [ 10, 25, 50, -1 ],
             [ '10 filas', '25 filas', '50 filas', 'Todo' ]
         ],
-       
+        dom:'Qfrtip',
         conditions:{
             num:{
                 'MultipleOf':{
@@ -53,8 +52,9 @@ $(function(){
             {"data":"id"},
             {"data":"documento"},
             {"data":"nombres"},
-            {"data":"fecha"},
+            {"data":"fecha_ingreso"},
             {"data":"hora_ingreso"},
+            {"data":"fecha_salida"},
             {"data":"hora_salida"},
             {"data":"placa"},
             {"data":"n_parqueo"},
@@ -71,16 +71,9 @@ $(function(){
                     return `<div style="width:250px;">${date}</div>`;
                 }
             },
+ 
             {
-                targets:[3],
-                class:'rext-center',
-                render:function(date,type,row){
-                    
-                    return `<div style="width:100px;">${date}</div>`;
-                }
-            },
-            {
-                targets:[5],
+                targets:[6],
                 class:'rext-center',
                 render:function(date,type,row){
                     var hora_salida  = date

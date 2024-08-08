@@ -95,6 +95,14 @@ $(function () {
                 }
             },
             {
+                targets:[-3],
+                class:'text-center',
+                render:function(data,type,row){
+                  
+                    return `<div style='width:200px;' ><p class="larg-text">${data}</p></div>`
+                }
+            },
+            {
                 targets:[9],
                 class:'text-center',
                 render:function(data,type,row){

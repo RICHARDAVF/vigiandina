@@ -41,8 +41,10 @@ $(document).on('change','#fecha_hora',function(){
 $(document).on("click", "#btn-report", function () {
     var desde = $("#desde").val();
     var hasta = $("#hasta").val();
-    if(desde=="" && hasta==""){
-      return
+    var empresa = $("#empresa").val()
+    var tipo = $('#tipo-report').val()
+    if(desde=="" || hasta=="" || empresa=='' || tipo==''){
+      return alert("Complete los todos los campos")
     }
     fetch("/dashboard/pdf/reporte-1/", {
       method: "POST",
@@ -53,12 +55,15 @@ $(document).on("click", "#btn-report", function () {
         action: "report",
         desde: desde,
         hasta: hasta,
+        empresa:empresa,
+        tipo:tipo
       }),
     })
       .then(response => {
         if (response.ok) {
           // Check for response content type (ensure it's PDF)
           if (response.headers.get("Content-Type")?.includes("application/pdf")) {
+            
             return response.blob(); // Get the PDF blob
           } else {
             throw new Error("Unexpected response content type");

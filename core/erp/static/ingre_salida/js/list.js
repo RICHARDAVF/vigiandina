@@ -5,17 +5,16 @@ $(function(){
         language: {
             url: '//cdn.datatables.net/plug-ins/1.13.6/i18n/es-ES.json',
         },
-        responsive:false,
-        autoWidth:false,
-       
-        deferRender:true,
-        dom:'Qfrtip',
         "order": [[0, 'desc']],
+        autoWidth:false,
+        scrollX:true,
+        destroy:true,
+        deferRender:true,
         lengthMenu: [
             [ 10, 25, 50, -1 ],
             [ '10 filas', '25 filas', '50 filas', 'Todo' ]
         ],
-       
+        dom:'Qfrtip',
         conditions:{
             num:{
                 'MultipleOf':{
@@ -53,8 +52,9 @@ $(function(){
             {"data":"id"},
             {"data":"documento"},
             {"data":"nombres"},
-            {"data":"fecha"},
+            {"data":"fecha_ingreso"},
             {"data":"hora_ingreso"},
+            {"data":"fecha_salida"},
             {"data":"hora_salida"},
             {"data":"placa"},
             {"data":"n_parqueo"},
@@ -71,9 +71,16 @@ $(function(){
                     return `<div style="width:250px;">${date}</div>`;
                 }
             },
- 
             {
-                targets:[5],
+                targets:[3],
+                class:'text-center',
+                render:function(date,type,row){
+                    console.log(date)
+                    return date
+                }
+            },
+            {
+                targets:[6],
                 class:'rext-center',
                 render:function(date,type,row){
                     var hora_salida  = date
@@ -98,13 +105,14 @@ $(function(){
                 targets:[-1],
                 class:'rext-center',
                 render:function(date,type,row){
-                    if(row.hora_salida==null){
+              
 
-                        var buttons = '<div class="d-flex justify-content-center"><a href="/erp/ingsal/edit/' + row.id + '/" class="btn btn-warning btn-sm btn-flat"><i class="fas fa-edit"></i></a> ';
-                        buttons += '<a href="/erp/ingsal/delete/' + row.id + '/" type="button" class="btn btn-danger btn-sm btn-flat"><i class="fas fa-trash-alt"></i></a></row>';
-                        return buttons;
-                    }
-                    return '-------'
+                    var buttons = '<div class="d-flex justify-content-center"><a href="/erp/ingsal/edit/' + row.id + '/" class="btn btn-warning btn-sm btn-flat"><i class="fas fa-edit"></i></a> ';
+                    buttons += '<a href="/erp/ingsal/delete/' + row.id + '/" type="button" class="btn btn-danger btn-sm btn-flat"><i class="fas fa-trash-alt"></i></a></row>';
+                    buttons+='<a href="/erp/ingsal/audi/'+row.id+'/" type="button" class="btn btn-primary btn-sm"><i class="fas fa-search"></i></a></div>';
+                    
+                    return buttons;
+                   
                 }
             },
         ],

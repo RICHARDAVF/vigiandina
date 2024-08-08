@@ -5,6 +5,7 @@ $(function () {
         $('#btn-cancel').css('display', 'none')
     }
     $('#id_motivo').val('LABORAR')
+
     $('.select2').select2({
         theme: 'bootstrap4',
         // tags:true,

@@ -40,7 +40,7 @@ class Trabajadores(models.Model):
     cargo = models.ForeignKey(CargoTrabajador,on_delete=models.DO_NOTHING,verbose_name="Cargo del trabajador",null=True,blank=True)
     sctr = models.FileField(upload_to='sctr/',verbose_name="SCTR",blank=True,null=True)
     estado = models.BooleanField(default=True,verbose_name='Activo')
-    codigo_rfid = models.CharField(verbose_name="RFID",max_length=100,null=True,blank=True)
+    # codigo_rfid = models.CharField(verbose_name="RFID",max_length=100,null=True,blank=True)
     history = HistoricalRecords()
     def toJSON(self):
         item = model_to_dict(self)
@@ -136,9 +136,10 @@ class AsignacionEV(models.Model):#ASIGNACION DE EQUIPO VEHICULAR
 class IngresoSalida(models.Model):
     trabajador = models.ForeignKey(Trabajadores,on_delete=models.DO_NOTHING,verbose_name="Trabajador")
     usuario = models.ForeignKey(User,on_delete=models.DO_NOTHING)
-    fecha = models.DateField(auto_now_add=True,verbose_name='Fecha',null=True,blank=True)
-    hora_ingreso = models.TimeField(auto_now_add=True,verbose_name="Hora de salida",null=True,blank=True)
-    hora_salida = models.TimeField(verbose_name="Hora de salida",null=True,blank=True)
+    fecha_ingreso = models.DateField(auto_created=True,verbose_name='Fecha de ingreso',null=True,blank=True)
+    fecha_salida = models.DateField(auto_created=False,verbose_name='Fecha de salida',null=True,blank=True)
+    hora_ingreso = models.TimeField(auto_created=True,verbose_name="Hora de ingreso",null=True,blank=True)
+    hora_salida = models.TimeField(auto_created=False,verbose_name="Hora de salida",null=True,blank=True)
     placa = models.CharField(max_length=10,verbose_name="Placa del vehiculo",null=True,blank=True)
     n_parqueo = models.ForeignKey(Parqueo, on_delete=models.DO_NOTHING, verbose_name="Numero de parqueo",null=True,blank=True)
     motivo = models.CharField(max_length=200,verbose_name="Motivo del ingreso o salida",null=True,blank=True)
@@ -286,7 +287,7 @@ class ControlCelepsa(models.Model):
     trabajador = models.ForeignKey(Trabajadores,on_delete=models.DO_NOTHING,verbose_name="Trabajador")
     fecha = models.DateField(auto_now_add=True,verbose_name="Fecha")
     hora_ingreso = models.TimeField(auto_now_add=True,verbose_name="Hora de ingreso")
-    hora_salida = models.TimeField(auto_now_add=False,verbose_name="Hora de salida")
+    hora_salida = models.TimeField(auto_now_add=False,verbose_name="Hora de salida",null=True,blank=True)
     class Meta:
         verbose_name = "Control de entrada y salida"
         verbose_name_plural = 'Control de entrada y salida'

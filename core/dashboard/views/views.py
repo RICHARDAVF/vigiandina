@@ -19,7 +19,7 @@ from .notification import Notification
 from django.conf import settings
 import os
 from pandas import read_csv,to_datetime,DataFrame
-from core.user.models import UserEmpresas,Empresa
+from core.user.models import UserEmpresas,Empresa,UserEmpresas
 # Create your views here.
 
 class PageNotFoundView(View):
@@ -75,6 +75,7 @@ class Dashboard(LoginRequiredMixin,TemplateView):
         if self.request.user.is_superuser:
             horas = Visitas.objects.filter(estado=3).annotate(hora=ExtractHour('h_inicio'),empresa_nombre=F('p_visita__empresa__abreviacion')).values('hora','empresa_nombre').annotate(total=Count('id')).order_by()
         else:
+           
             horas = Visitas.objects.filter(Q(estado=3) &
                                        Q(user__empresa_id=self.request.user.empresa_id)).annotate(hora=ExtractHour('h_inicio'),empresa_nombre=F('p_visita__empresa__abreviacion')).values('hora','empresa_nombre').annotate(total=Count('id')).order_by()
         datos = {}
