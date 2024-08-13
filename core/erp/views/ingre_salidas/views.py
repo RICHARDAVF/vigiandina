@@ -92,7 +92,7 @@ class ListViewIngSal(LoginRequiredMixin,PermisosMixins,ListView):
                     item['nombres'] = f"{value.trabajador.nombre}   {value.trabajador.apellidos}"
                     item['fecha_ingreso'] = value.fecha_ingreso
                     item['fecha_salida'] = value.fecha_salida
-                    item['hora_ingreso'] = value.hora_ingreso
+                    item['hora_ingreso'] = value.hora_ingreso.strftime('%H:%M:%S')
                     item['hora_salida'] = value.hora_salida
                     data.append(item)
          
