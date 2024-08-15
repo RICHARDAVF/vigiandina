@@ -58,21 +58,20 @@ $(function () {
             {"data": "names"},//2
             {"data": "fecha"},//3
             {"data": "h_inicio"},//4
-            {"data": "h_termino"},//5
-            {"data":"h_llegada"},//6
-            {"data": "h_salida"},//7
-            {"data": "dni"},//8
-            {"data": "id"},//9
-            {"data": "empresa"},//10
-            {"data": "cargo"},//11
-            {'data': "motivo"},//12
-            {'data': "sala"},//13
-            {'data': "sctr_salud"},//14
-            {'data': "p_visita"},//15
-            {'data': "documentos"},//16
+            {"data":"fecha_salida"},//5
+            {"data": "h_salida"},//6
+            {"data": "dni"},//7
+            {"data": "id"},//8
+            {"data": "empresa"},//9
+            {"data": "cargo"},//10
+            {'data': "motivo"},//11
+            {'data': "sala"},//12
+            {'data': "sctr_salud"},//13
+            {'data': "p_visita"},//14
+            {'data': "documentos"},//15
+            {'data': "id"},//16
             {'data': "id"},//17
             {'data': "id"},//18
-            {'data': "id"},//19
         ],
         headerCallback: function (thead, data, start, end, display) {
             // Aplicar el fondo al encabezado de las tres primeras columnas
@@ -85,7 +84,7 @@ $(function () {
                 render:function(data,type,row){
                     var opt = ''
                     if(row.estado==1){
-                        opt = `<div style="width:150px;display: flex; align-items: center; height: 50px;">
+                        opt = `<div style="display: flex; align-items: center;">
                         <strong class="bg-success" style="font-size:11px;border-radius:5px; padding:5px;">PROGRAMADO</strong>
                         <input class="btn btn-danger btn-sm" id="anular" type="button" value="ANULAR" style="font-size:11px;border-radius:5px; padding:5px;"/>
                     </div>`
@@ -111,33 +110,30 @@ $(function () {
                     return '<div style="width:250px;font-size:12px; font-weight: bold;">'+row.names+'</div>'
                 }
             },
+            {class:"text-center",targets:[3],render:function(data,type,row){
+                return `<strong>${data}</strong>`
+            }},
+            {class:"text-center",targets:[4],render:function(data,type,row){
+                return `<strong>${data}</strong>`
+            }},
             {
                 targets:[6],
                 class:'text-center',
                 render:function(data,type,row){
-                    var hora = '<input type="button" value="Confirmar" id="hora_llegada" class="btn btn-secondary btn-sm">'
-                    if(row.h_llegada!==null){
-                        hora = '<strong style="font-weight:bold;">'+row.h_llegada+'</strong>'
+                    var hora = '<input type="button" value="Confirmar" id="h_salida" class="btn btn-secondary btn-sm">'
+                    if(row.h_salida!==null){
+                        hora = '<strong">'+data+'</strong>'
                     }
                     return hora
                 }
             },
            
-            {
-                targets:[7],
-                class:'text-center',
-                render:function(data,type,row){
-                    if(row.h_salida===null & row.h_llegada!=null){
-                        return '<input class="btn btn-secondary btn-sm" value="MARCAR" type="button" id="h_salida"/>'
-                    }
-                    return row.h_salida
-                }
-            },
+
              
             {
                
                 class:'text-center',
-                targets:[9],
+                targets:[8],
                 render:function(data,type,row){
                     if(row.estado==0){
                         return '<strong>Anulado</strong>'
@@ -149,7 +145,7 @@ $(function () {
             {
                
                 class:'text-center',
-                targets:[10],
+                targets:[9],
                 render:function(data,type,row){
                     var cargo = (row.cargo!=null)?row.cargo:"";
                     return '<div style="width:200px;"><strong style="width:font-size:13px;">'+cargo+'</strong></div>'
@@ -158,7 +154,7 @@ $(function () {
             {
                
                 class:'text-center',
-                targets:[11],
+                targets:[10],
                 render:function(data,type,row){
                     return '<div style="width:200px;"><strong style="width:font-size:13px;">'+row.empresa+'</strong></div>'
                 }
@@ -166,14 +162,14 @@ $(function () {
            
            
             {
-                targets:[12],
+                targets:[11],
                 class:'text-center',
                 render:function(data,type,row){
                     return '<div style="width:200px;"><strong style="font-size:13px;"">'+row.motivo+'</strong></div>'
                 }
             },
             {
-                targets:[14],
+                targets:[13],
                 class:'text-center',
                 render:function(data,type,row){
                   
@@ -181,7 +177,7 @@ $(function () {
                 }
             },
             {
-                targets:[15],
+                targets:[14],
                 class:'text-center',
                 render:function(data,type,row){
                   
@@ -190,7 +186,7 @@ $(function () {
             },
            
             {
-                targets:[17],
+                targets:[16],
                 class:'text-center',
                 render:function(data,type,row){
                     if(row.estado==0){
@@ -200,7 +196,7 @@ $(function () {
                 }
             },
             {
-                targets:[18],
+                targets:[17],
                 class:'text-center',
                 render:function(data,type,row){
                     
@@ -208,7 +204,7 @@ $(function () {
                 }
             },
             {
-                targets:[19],
+                targets:[18],
                 class:'text-center',
                 render:function(data,type,row){
                     if(row.estado==0){

@@ -181,6 +181,7 @@ class Visitas(models.Model):
     empresa = models.CharField(max_length=150,verbose_name="Empresa",null=True,blank=True)
     cargo = models.CharField(max_length=50,verbose_name="Cargo",null=True,blank=True)
     fecha = models.DateField(auto_now=False,verbose_name="Fecha")
+    fecha_salida = models.DateField(auto_created=False,verbose_name="Fecha de salida",null=True,blank=True)
     h_inicio = models.TimeField(auto_now=False,verbose_name="Hora de inicio")
     h_termino = models.TimeField(auto_now=False,verbose_name="Hora de Finalizacion",null=True,blank=True)
     h_llegada = models.TimeField(auto_now=False,verbose_name="Hora de llegada",null=True,blank=True)

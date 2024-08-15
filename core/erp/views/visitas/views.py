@@ -183,6 +183,7 @@ class ListViewVisita(LoginRequiredMixin,PermisosMixins,ListView):
             elif action =='h_final':
                 instance = Visitas.objects.get(id=request.POST['id'])
                 instance.h_salida = timezone.now().strftime('%H:%M:%S')
+                instance.fecha_salida = timezone.now().strftime("%Y-%m-%d")
                 sala = instance.sala_id
                 if sala is not None:
                     self.habilitar_sala(sala)
@@ -203,7 +204,7 @@ class ListViewVisita(LoginRequiredMixin,PermisosMixins,ListView):
                 data['parking']=parqueos
             elif action=="h_salida":
                 instance = Visitas.objects.get(id=request.POST['id'])
-            
+                instance.fecha_salida = timezone.now().strftime("%Y-%m-%d")
                 hora = timezone.now().strftime("%H:%M:%S")
                 instance.h_salida = hora
                 if instance.h_termino is None:
