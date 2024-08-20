@@ -16,90 +16,104 @@
         </li>
     </ul>
     <ul class="navbar-nav ml-auto">
-       
+
         {% if request.user.groups.all %}
-            <li class="nav-item dropdown">
-                <a id="dropdownSubMenu1" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
-                   class="nav-link{% if request.user.groups.all.count > 1 %} dropdown-toggle{% endif %}">{{ request.session.group }}</a>
-                {% if request.user.groups.all.count > 1 %}
-                    <ul aria-labelledby="dropdownSubMenu1" class="dropdown-menu border-0 shadow"
-                        style="left: 0px; right: inherit;">
-                        {% for g in request.user.groups.all %}
-                            {% if g.id != request.session.group.id %}
-                                <li><a href="{% url 'user:user_change_group' g.id %}"
-                                       class="dropdown-item">{{ g.name }} </a></li>
-                            {% endif %}
-                        {% endfor %}
-                    </ul>
+        <li class="nav-item dropdown">
+            <a id="dropdownSubMenu1" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
+                class="nav-link{% if request.user.groups.all.count > 1 %} dropdown-toggle{% endif %}">{{
+                request.session.group }}</a>
+            {% if request.user.groups.all.count > 1 %}
+            <ul aria-labelledby="dropdownSubMenu1" class="dropdown-menu border-0 shadow"
+                style="left: 0px; right: inherit;">
+                {% for g in request.user.groups.all %}
+                {% if g.id != request.session.group.id %}
+                <li><a href="{% url 'user:user_change_group' g.id %}" class="dropdown-item">{{ g.name }} </a></li>
                 {% endif %}
-            </li>
+                {% endfor %}
+            </ul>
+            {% endif %}
+        </li>
         {% endif %}
-        <li class="nav-item d-flex dropdown"  >
-            <a class="nav-link"  id="dropdownSubMenu2"   >
+        <li class="nav-item d-flex dropdown">
+            <a class="nav-link" id="dropdownSubMenu2">
                 <i class="fas fa-bell" aria-hidden="true"></i>
-                <span id="canti" class="badge bg-danger" style="position: absolute;top: 0;right: 0;transform: translate(10%,-10%);"></span>
+                <span id="canti" class="badge bg-danger"
+                    style="position: absolute;top: 0;right: 0;transform: translate(10%,-10%);"></span>
             </a>
-            <a class="nav-link"  id="salir" >
-                <i class="fas fa-power-off" aria-hidden="true"></i>
-            </a>
+            <form  id="logout-form">
+                {% csrf_token %}
+                <a class="nav-link" id="salir">
+                    <i class="fas fa-power-off"></i> 
+                </a>
+            </form>
+            
+            
         </li>
     </ul>
 </nav>
 <script>
     function mostrarHoraFecha() {
-    const ahora = new Date();
-    const diaSemana = ahora.toLocaleString('es-ES', { weekday: 'long' });
-    const dia = ahora.toLocaleString('es-ES', { day: 'numeric' });
-    const mes = ahora.toLocaleString('es-ES', { month: 'long' });
-    const ano = ahora.toLocaleString('es-ES', { year: 'numeric' });
-    const hora = ahora.toLocaleString('es-ES', { hour: 'numeric', minute: 'numeric', second: 'numeric', hour12: false });
+        const ahora = new Date();
+        const diaSemana = ahora.toLocaleString('es-ES', { weekday: 'long' });
+        const dia = ahora.toLocaleString('es-ES', { day: 'numeric' });
+        const mes = ahora.toLocaleString('es-ES', { month: 'long' });
+        const ano = ahora.toLocaleString('es-ES', { year: 'numeric' });
+        const hora = ahora.toLocaleString('es-ES', { hour: 'numeric', minute: 'numeric', second: 'numeric', hour12: false });
 
-    const fechaHora = `${diaSemana}, ${dia} de ${mes} de ${ano}, ${hora}`;
-    document.getElementById('fecha-hora').textContent = fechaHora;
-}
+        const fechaHora = `${diaSemana}, ${dia} de ${mes} de ${ano}, ${hora}`;
+        document.getElementById('fecha-hora').textContent = fechaHora;
+    }
 
-// Actualizar cada segundo (1000 ms)
+    // Actualizar cada segundo (1000 ms)
     setInterval(mostrarHoraFecha, 1000);
 
-// Mostrar la hora y fecha por primera vez al cargar la página
+    // Mostrar la hora y fecha por primera vez al cargar la página
     mostrarHoraFecha();
-    $(document).on('click','#salir',function(){
-    $.confirm({
-        theme: 'material',
-        title: 'Alerta',
-        icon: 'fas fa-info',
-        content: "¿Esta seguro que desea salir?",
-        columnClass: 'small',
-        typeAnimated: true,
-        cancelButtonClass: 'btn-primary',
-        draggable: true,
-        dragWindowBorder: false,
-        buttons:{
-            info:{
-                text:'Si',
-                btnClass:'btn-primary',
-                action:function(){
-                    $.ajax({
-                        url:'{% url "logout" %}',
-                        type:'GET',
-                        success:function(){
-                            window.location.href="{% url 'login' %}"
-                        },
-                        error:function(xhr, status, error){
-                            alert('Ocurrio un error: ',status,error)
-                        }
-                    })
+    $(document).ready(function(){
+        $('#salir').on("click",function(e){
+            event.preventDefault()
+            $.confirm({
+            theme: 'material',
+            title: 'Alerta',
+            icon: 'fas fa-info',
+            content: "¿Esta seguro que desea salir?",
+            columnClass: 'small',
+            typeAnimated: true,
+            cancelButtonClass: 'btn-primary',
+            draggable: true,
+            dragWindowBorder: false,
+            buttons: {
+                info: {
+                    text: 'Si',
+                    btnClass: 'btn-primary',
+                    action: function () {
+                        $.ajax({
+                            url: "{% url 'logout' %}",
+                            type: 'POST',
+                            data:{
+                                'csrfmiddlewaretoken':'{{ csrf_token }}'
+                            },
+                            success: function () {
+        
+                                window.location.href = "{% url 'login' %}"
+                            },
+                            error: function (xhr, status, error) {
+                                alert('Ocurrio un error: ' + status + error)
+                            }
+                        })
+                    }
+                },
+                danger: {
+                    text: 'No',
+                    btnClass: 'btn-red',
+                    action: function () {
+
+                    }
                 }
             },
-            danger:{
-                text:'No',
-                btnClass:'btn-red',
-                action:function(){
-
-                }
-            }
-        },
-    })
+            })
+        })
     })
     
+
 </script>

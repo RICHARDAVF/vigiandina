@@ -1,4 +1,5 @@
-from django.http import HttpResponseRedirect, JsonResponse
+from django.http import HttpRequest, HttpResponseRedirect, JsonResponse
+from django.http.response import HttpResponse as HttpResponse
 from django.shortcuts import render
 from django.contrib.auth.views import LoginView,LogoutView
 from django.urls import reverse_lazy
