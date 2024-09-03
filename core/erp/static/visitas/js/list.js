@@ -297,8 +297,8 @@ $(function () {
             var selectOptions = $(`
                 <div class='form-group mb-0 d-flex mr-1'>
                     <label class='mr-1' for='options'>Usuario:</label>
-                    <select id="options" class="form-control form-control-sm" >
-                        <option value="opcion1">----------</option>
+                    <select id="options-users" class="form-control form-control-sm" >
+                        
                     </select>
                 </div>
              
@@ -314,6 +314,13 @@ $(function () {
             $('#data_filter').append(selectOptions);
             $('#dropdownMenuButton').on("click",function(){
            
+            })
+
+            var select = $("#options-users")
+            select.empty()
+            select.append(new Option("-------","-1"))
+            user_supervised.forEach(function(user){
+                select.append(new Option(user.value,user.id))
             })
         }
     });

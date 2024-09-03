@@ -38,9 +38,9 @@
 
 {% block javascript %}
    
-   <!-- <script>
-    var user_supervised = JSON.parse('{{ user_supervised|escape }}')
-    console.log(user_supervised)
-   </script>     -->
+   <script>
+    var user_supervised = JSON.parse('{{ user_supervised|safe}}')
+    
+   </script>    
 
 {% endblock %}

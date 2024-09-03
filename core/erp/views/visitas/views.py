@@ -16,6 +16,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from datetime import date,time
 from django.utils import timezone
 from datetime import datetime
+import json
 # Create your views here.
 class CreateViewVisita(LoginRequiredMixin,PermisosMixins,CreateView):
     login_url = reverse_lazy('login')
@@ -253,7 +254,7 @@ class ListViewVisita(LoginRequiredMixin,PermisosMixins,ListView):
         context['create_url'] = reverse_lazy('erp:visita_create')
         context['list_url'] = reverse_lazy('erp:visita_list')
         context['entidad'] = 'Visitas'
-        # context["user_supervised"] = self.get_user_supervised()
+        context["user_supervised"] = json.dumps(self.get_user_supervised())
         return context
     def get_user_supervised(self):
         if self.request.user.is_superuser:
@@ -274,7 +275,6 @@ class ListViewVisita(LoginRequiredMixin,PermisosMixins,ListView):
             ]  
         else:
             data = []
-
         return data
 class UpdateViewVisita(LoginRequiredMixin,PermisosMixins,UpdateView):
     permission_required = 'erp.change_visitas'
