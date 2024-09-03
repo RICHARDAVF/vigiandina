@@ -1,12 +1,12 @@
 {% extends 'list.html' %}
 {% load static %}
 {% block head_list %}
-    <script src="{% static 'unidad_trabajo/js/list.js' %}"></script>
+    <script src="{% static 'area_trabajo/js/list.js' %}"></script>
 {% endblock head_list %}
 {% block columnas %}
     <tr id="header-title">
         <th scope="col">ID</th>
-        <th scope="col">UNIDAD DE TRABAJO</th>
+        <th scope="col">AREA DE TRABAJO</th>
         <th scope="col">OPCIONES</th>
     </tr>
 {% endblock columnas %}
@@ -14,11 +14,11 @@
 {% for value in object_list %}
     <tr>
         <td>{{value.id}}</td>
-        <td>{{value.unidad}}</td>
+        <td>{{value.area}}</td>
         <td>
             <div class="d-flex justify-content-center">
-                <a href="{% url 'erp:unidad_trabajo_update' value.id %}" class="btn btn-warning btn-sm btn-flat" ><i class="fas fa-edit"></i></a>
-                <a href="{% url 'erp:unidad_trabajo_delete' value.id %}" class="btn btn-danger btn-sm btn-flat"><i class="fas fa-trash"></i></a>
+                <a href="{% url 'erp:area_trabajo_update' value.id %}" class="btn btn-warning btn-sm btn-flat" ><i class="fas fa-edit"></i></a>
+                <a href="{% url 'erp:area_trabajo_delete' value.id %}" class="btn btn-danger btn-sm btn-flat"><i class="fas fa-trash"></i></a>
 
             </div>
         </td>

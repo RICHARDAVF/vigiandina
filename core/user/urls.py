@@ -1,6 +1,6 @@
 from django.urls import path
 
-from core.user.views import *
+from core.user.views import ListViewUser,CreateViewUser,DeleteViewUser,UpdateViewUser,UserChangeGroup,UpdatePermissionsView,UserConfigView
 app_name = 'user'
 urlpatterns = [
     #USUARIO
@@ -11,6 +11,6 @@ urlpatterns = [
     path('usuario/change/group/<int:pk>/', UserChangeGroup.as_view(), name='user_change_group'),
     # path('usuario/perms/', SelectPermissionsView.as_view(), name='user_perms_create'),
     path('usuario/perms/<int:pk>/', UpdatePermissionsView.as_view(), name='user_perms_update'),
-
+    path("usuario/config/",UserConfigView.as_view(),name="user_config"),
     
 ]

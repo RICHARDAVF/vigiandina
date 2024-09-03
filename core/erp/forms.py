@@ -344,7 +344,7 @@ class FormCargo(ModelForm):
         model = CargoTrabajador 
         fields = '__all__'
         widgets = {
-            'unidad':Select(attrs={
+            'area':Select(attrs={
                 'class':'form-control select2'
            
             }),
@@ -398,6 +398,11 @@ class FormTrabajador(ModelForm):
             'empresa':Select(attrs={
                 'class':'form-control',
                 
+            }),
+            'area':Select(attrs={
+                'class':'form-control select2',
+                'required':True
+             
             }),
             'cargo':Select(attrs={
                 'class':'form-control select2',

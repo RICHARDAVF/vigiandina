@@ -4,7 +4,19 @@
     
 {% endblock head_form %}
 {% block form %}
-    {{form.as_p}}
+<div class="input-group">
+    <label>
+        <label for="id_area">{{form.area.label}}</label>
+        {{form.area}}
+    </label>
+</div>
+<div class="input-group">
+    <label>
+        <label for="id_cargo">{{form.cargo.label}}</label>
+        {{form.cargo}}
+    </label>
+</div>
+
 {% endblock form %}
 {% block javascript %}
     

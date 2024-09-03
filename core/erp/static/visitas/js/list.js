@@ -14,10 +14,10 @@ $(function () {
             [ '10 filas', '25 filas', '50 filas', 'Todo' ]
         ],
         dom:'Qfrtip',
-        fixedColumns:{
-            left:3,
-            // right:2
-        },
+        // fixedColumns:{
+        //     left:3,
+        //     // right:2
+        // },
         conditions:{
             num:{
                 'MultipleOf':{
@@ -138,7 +138,7 @@ $(function () {
                     if(row.estado==0){
                         return '<strong>Anulado</strong>'
                     }
-                   var date = (row.tipo==1)?`<input type='button' id='btnaddperson' class='btn btn-success btn-sm' value='Asistente.'/>`:'';
+                   var date = (row.tipo==1)?`<input type='button' id='btnaddperson' class="btn btn-primary btn-sm" value='Asistente'/>`:'';
                     return date
                 }
             },
@@ -156,7 +156,7 @@ $(function () {
                 class:'text-center',
                 targets:[10],
                 render:function(data,type,row){
-                    return '<div style="width:200px;"><strong style="width:font-size:13px;">'+row.empresa+'</strong></div>'
+                    return '<div style="width:200px;" class="text-truncate">'+row.empresa+'</div>'
                 }
             },
            
@@ -252,6 +252,7 @@ $(function () {
                             window.location.href = '/erp/ingsal/add/';
                         }
                     },
+                    
                     'copy',
                     'excel',
                     'csv',
@@ -278,11 +279,42 @@ $(function () {
 
            
             $exportButtonsContainer.insertBefore($('#data_wrapper .dataTables_filter'));
+           // Crear los campos "Desde" y "Hasta"
+            var desde = $(`
+                <div class="form-group mb-0 mr-1">
+                    <label for="desde" class="mr-1">Desde:</label>
+                    <input id="desde" name="desde" type="date" class="form-control form-control-sm" />
+                </div>
+            `);
 
-            var desde = $(`<label for="desde" class="ml-1">Desde </label><input id="desde" name="desde" type="date"  class="form-control form-control-sm" style="height:30px;" />`)
-            var hasta = $(`<label for="desde" class="ml-1">Hasta </label><input id="hasta" name="hasta" type="date"  class="form-control form-control-sm" style="height:30px;" />`)
-            $('#data_filter').append(desde)
-            $('#data_filter').append(hasta)
+            var hasta = $(`
+                <div class="form-group mb-0 mr-1">
+                    <label for="hasta" class="mr-1">Hasta:</label>
+                    <input id="hasta" name="hasta" type="date" class="form-control form-control-sm" />
+                </div>
+            `);
+
+            var selectOptions = $(`
+                <div class='form-group mb-0 d-flex mr-1'>
+                    <label class='mr-1' for='options'>Usuario:</label>
+                    <select id="options" class="form-control form-control-sm" >
+                        <option value="opcion1">----------</option>
+                    </select>
+                </div>
+             
+            `);
+
+
+
+            // Asegúrate de que el contenedor se alinee a la derecha dentro de '#data_filter'
+            $('#data_filter').addClass('d-flex justify-content-end');
+
+            $('#data_filter').append(desde);
+            $('#data_filter').append(hasta);
+            $('#data_filter').append(selectOptions);
+            $('#dropdownMenuButton').on("click",function(){
+           
+            })
         }
     });
    $(document).on("change","#hasta",function(){
@@ -569,56 +601,6 @@ $(function () {
         })
         
     })
-    // $(document).on('click',"#hora_final",function(){
-    //     var rowIndex = miTabla.row($(this).closest('tr')).index();
-    //     var id = miTabla.cell(rowIndex,0).data();
-    //     $.confirm({
-    //         theme: 'material',
-    //         title: 'Alerta',
-    //         icon: 'fas fa-info',
-    //         content: "¿Esta seguro de marcar la hora final?",
-    //         columnClass: 'small',
-    //         typeAnimated: true,
-    //         cancelButtonClass: 'btn-primary',
-    //         draggable: true,
-    //         dragWindowBorder: false,
-    //         buttons:{
-    //             info:{
-    //                 text:'Si',
-    //                 btnClass:'btn-primary',
-    //                 action:function(){
-    //                     $.ajax({
-    //                         type:'POST',
-    //                         url:window.location.pathname,
-    //                         dataType:'json',
-    //                         data:{
-    //                             "id":id,
-    //                             "action":"h_final",
-    //                         },
-    //                         success:function(data){
-    //                             window.location.reload()
-    //                             if(data.error){
-                                    
-    //                                 return alert(data.error)
-    //                             }
-    //                         },
-    //                         error:function(){
-    //                             alert("Hubo un error en la peticion")
-    //                         }
-    //                     })
-    //                 }
-    //             },
-    //             danger:{
-    //                 text:'No',
-    //                 btnClass:'btn-red',
-    //                 action:function(){
-
-    //                 }
-    //             }
-    //         }
-    //     })
-       
-    // })
     $(document).on("click","#addvehiculo",function(){
         $('body').append(contenidoModal);
         var rowIndex = miTabla.row($(this).closest('tr')).index();

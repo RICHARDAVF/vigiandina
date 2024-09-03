@@ -10,7 +10,7 @@ from .views.puesto.views import*
 from .views.equipos.views import*
 from .views.cargos.views import*
 from .views.views import PageNotFoundView
-from .views.unidad_trabajo.views import CreateViewUnidadTrabajo,ListViewUnidadTrabajo,UpdateViewUnidadTrabajo,DeleteViewUnidadTrabajo
+from .views.area_trabajo.views import CreateViewAreaTrabajo,ListViewAreaTrabajo,UpdateViewAreaTrabajo,DeleteViewAreaTrabajo
 from .views.control_celepsa.views import CreateViewControlCelepsa
 handler404 = PageNotFoundView.as_view()
 app_name = 'erp'
@@ -77,10 +77,10 @@ urlpatterns = [
     path('ingsal/audi/<int:pk>/',AuditoriaIngSalView.as_view(),name="ingsal_audi"),
 
     #UNIDADES DE TRABAJO
-    path('unidad/trabajo/add/',CreateViewUnidadTrabajo.as_view(),name='unidad_trabajo_create'),
-    path('unidad/trabajo/list/',ListViewUnidadTrabajo.as_view(),name='unidad_trabajo_list'),
-    path('unidad/trabajo/update/<int:pk>/',UpdateViewUnidadTrabajo.as_view(),name='unidad_trabajo_update'),
-    path('unidad/trabajo/delete/<int:pk>/',DeleteViewUnidadTrabajo.as_view(),name='unidad_trabajo_delete'),
+    path('area/trabajo/add/',CreateViewAreaTrabajo.as_view(),name='area_trabajo_create'),
+    path('area/trabajo/list/',ListViewAreaTrabajo.as_view(),name='area_trabajo_list'),
+    path('area/trabajo/update/<int:pk>/',UpdateViewAreaTrabajo.as_view(),name='area_trabajo_update'),
+    path('area/trabajo/delete/<int:pk>/',DeleteViewAreaTrabajo.as_view(),name='area_trabajo_delete'),
     #CONTROL CELEPSA
     path("control/celepsa/add/",CreateViewControlCelepsa.as_view(),name="control_add"),
 ]

@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from core.erp.models import CargoTrabajador,UnidadTrabajo,Trabajadores,Visitas,IngresoSalida
+from core.erp.models import CargoTrabajador,AreaTrabajo,Trabajadores,Visitas,IngresoSalida
 
 # Register your models here.
 class AdminCargoView(admin.ModelAdmin):
@@ -9,9 +9,9 @@ admin.site.register(CargoTrabajador, AdminCargoView)
 
 
 
-class AdminUnidadTrabajo(admin.ModelAdmin):
-    list_display = ('id','unidad')
-admin.site.register(UnidadTrabajo,AdminUnidadTrabajo)
+class AdminAreaTrabajo(admin.ModelAdmin):
+    list_display = ('id','area')
+admin.site.register(AreaTrabajo,AdminAreaTrabajo)
 
 class AdminTrabajador(admin.ModelAdmin):
     list_display = ('tipo','documento','nombre','apellidos','telefono','direccion','empresa','cargo','estado')

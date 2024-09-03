@@ -2,14 +2,14 @@ from django.db import models
 from django.contrib.auth.models import AbstractUser,BaseUserManager
 from django.forms import model_to_dict
 from crum import get_current_request
-from simple_history.models import HistoricalRecords
+
 from config.settings import MEDIA_URL, STATIC_URL
 class Empresa(models.Model):
     ruc = models.CharField(max_length=11,verbose_name="RUC",unique=True)
     razon_social = models.CharField(max_length=150,verbose_name="Razon social")
     direccion = models.CharField(max_length=150,verbose_name="Direccion",null=True,blank=True)
     abreviacion = models.CharField(max_length=10,verbose_name="Abreviacion",null=True,blank=True)
-    # history = HistoricalRecords()
+
     class Meta:
         verbose_name = 'empresa'
         verbose_name_plural = "empresas"
@@ -22,7 +22,7 @@ class Empresa(models.Model):
 class Unidad(models.Model):
     empresa = models.ForeignKey(Empresa,on_delete=models.DO_NOTHING,null=True,blank=True,verbose_name="Empresa")
     unidad = models.CharField(max_length=150,verbose_name="Unidad")
-    # history = HistoricalRecords()
+
 
     class Meta:
         verbose_name = "unidad"
@@ -30,7 +30,7 @@ class Unidad(models.Model):
         db_table = 'unidades'
     def toJSON(self):
         item = model_to_dict(self)
-        # item['empresa'] = self.empresa.id
+
         return item 
     def __str__(self) -> str:
         return str(self.unidad)
@@ -38,7 +38,7 @@ class Puesto(models.Model):
     unidad = models.ForeignKey(Unidad,on_delete=models.DO_NOTHING,verbose_name="Unidad")
     puesto = models.CharField(max_length=15,verbose_name="Puesto")
     direccion = models.CharField(max_length=150,verbose_name="Direccion")
-    # history = HistoricalRecords()
+
     class Meta:
         verbose_name = "puesto"
         verbose_name_plural = "puestos"
@@ -78,7 +78,7 @@ class User(AbstractUser):
     empresa = models.ForeignKey(Empresa,on_delete=models.DO_NOTHING,verbose_name="Empresa",null=True,blank=True)
     unidad = models.ForeignKey(Unidad,on_delete=models.DO_NOTHING,verbose_name='Unidad',null=True,blank=True)
     puesto = models.ForeignKey(Puesto,on_delete=models.DO_NOTHING,verbose_name='Puesto',null=True,blank=True)
-    # history = HistoricalRecords()
+    tipo_user = models.CharField(max_length=5,verbose_name="Tipo de usuario",choices=[("1","Administrador"),("2","Supervisor"),("3","Usuario")],default="3")
     objects = UserManager()
     def toJSON(self):
         item = model_to_dict(self, exclude=['password', 'user_permissions', 'last_login'])
@@ -103,7 +103,7 @@ class User(AbstractUser):
         except:
             pass
     def __str__(self):
-        return str(self.id)
+        return f"{self.username}"
 
     
 class UserEmpresas(models.Model):
@@ -121,3 +121,21 @@ class UserEmpresas(models.Model):
         return item
     def __str__(self) -> str:
         return f"{self.usuario.username}"
+class UserSupervisor(models.Model):
+    supervisor = models.ForeignKey(User, on_delete=models.DO_NOTHING, related_name='supervised_users', verbose_name="Supervisor")
+    supervised_user = models.ForeignKey(User, on_delete=models.DO_NOTHING, related_name='supervised_by', verbose_name="Supervisado")
+
+    class Meta:
+        verbose_name = "Usuario a cargo"
+        verbose_name = "Usuarios a cargo"
+        db_table = "users_supervisor"
+        constraints = [
+            models.UniqueConstraint(fields=["supervisor","supervised_user"],name="unique_supervisor_supervised_user")
+        ]
+    def toJSON(self):
+        item = model_to_dict(self)
+        item["supervisor"] = self.supervisor.username
+        item["supervised_user"] = self.supervised_user.username
+        return item
+    def __str__(self) -> str:
+        return f"{self.supervisor.username}->{self.supervised_user.username}"

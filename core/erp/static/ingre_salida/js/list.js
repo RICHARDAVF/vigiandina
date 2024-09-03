@@ -52,6 +52,7 @@ $(function(){
             {"data":"id"},
             {"data":"documento"},
             {"data":"nombres"},
+            {"data":"empresa"},
             {"data":"fecha_ingreso"},
             {"data":"hora_ingreso"},
             {"data":"fecha_salida"},
@@ -73,6 +74,14 @@ $(function(){
             },
             {
                 targets:[3],
+                class:'rext-center',
+                render:function(date,type,row){
+                    
+                    return `<div style="width:150px;" class="text-truncate">${date}</div>`;
+                }
+            },
+            {
+                targets:[4],
                 class:'text-center',
                 render:function(date,type,row){
                     console.log(date)
@@ -80,7 +89,7 @@ $(function(){
                 }
             },
             {
-                targets:[6],
+                targets:[7],
                 class:'rext-center',
                 render:function(date,type,row){
                     var hora_salida  = date

@@ -73,10 +73,8 @@ class ListViewTrabajador(LoginRequiredMixin,PermisosMixins,ListView):
             trabajadores:Trabajadores = Trabajadores.objects.filter(empresa_id=self.request.user.empresa_id)
         for value in trabajadores:
             item = value.toJSON()
-            item['cargo'] = value.cargo.cargo
             item['empresa'] = value.empresa.razon_social
             data.append(item)
-       
         return data
     def post(self, request, *args, **kwargs):
         data = {}

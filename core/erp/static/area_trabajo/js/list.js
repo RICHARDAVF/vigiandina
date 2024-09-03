@@ -15,7 +15,7 @@ $(function(){
                     {
                         text:'<i class="fas fa-plus"></i>Nuevo registro',
                         action:function(e,dt,node,conf){
-                            window.location.href = '/erp/unidad/trabajo/add/'
+                            window.location.href = '/erp/area/trabajo/add/'
                         }
                     },
                     'copy', 'excel', 'csv', 'pdf', 'print','pageLength'

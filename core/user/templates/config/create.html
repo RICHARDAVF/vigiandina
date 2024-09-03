@@ -1,0 +1,133 @@
+{% extends 'layout.html' %}
+{% block content %}
+<div class="row">
+    <div class="col-md-6">
+        <form id="form-user-supervisor">
+            <div class="container">
+                <div class="row">
+                    <!-- Campo de supervisor -->
+                     {% csrf_token %}
+                     <input type="hidden" name="action" id="action" value="add-1">
+                    <div class="form-group col-12 col-md-4 mb-2">
+                        <label for="id_supervisor">{{ form_user_supervisor.supervisor.label }}</label>
+                        {{ form_user_supervisor.supervisor }}
+                    </div>
+        
+                    <!-- Campo de usuario supervisado -->
+                    <div class="form-group col-12 col-md-4 mb-2">
+                        <label for="id_supervised_user">{{ form_user_supervisor.supervised_user.label }}</label>
+                        {{ form_user_supervisor.supervised_user }}
+                    </div>
+        
+                    <!-- Botón de guardar -->
+                    <div class="form-group col-12 col-md-4 mt-3">
+                        <button type="button" id="btn-user-supervisor" class="btn btn-primary btn-sm mt-3">
+                            GUARDAR
+                        </button>
+            
+                    </div>
+                </div>
+            </div>
+        </form>
+        <div
+            class="table-responsive"
+        >
+            <table
+                class="table"
+               
+            >
+                <thead>
+                    <tr  id="header-title">
+                        <th scope="col">ID</th>
+                        <th scope="col">Supervisor</th>
+                        <th scope="col">Supervisado</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for value in data_supervised %}
+                        <tr>
+                            <td>{{value.id}}</td>
+                            <td>{{value.supervisor}}</td>
+                            <td>{{value.supervised_user}}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        
+    </div>
+    <div class="col-md-6">
+        <form id="form-user-empresa">
+            <div class="container">
+                <div class="row">
+                    <!-- Campo de supervisor -->
+                     {% csrf_token %}
+                     <input type="hidden" name="action" id="action" value="add-2">
+                    <div class="form-group col-12 col-md-4 mb-2">
+                        <label for="id_usuario">{{ form_user_empresa.usuario.label }}</label>
+                        {{ form_user_empresa.usuario }}
+                    </div>
+        
+                    <!-- Campo de usuario supervisado -->
+                    <div class="form-group col-12 col-md-4 mb-2">
+                        <label for="id_empresa">{{ form_user_empresa.empresa.label }}</label>
+                        {{ form_user_empresa.empresa }}
+                    </div>
+        
+                    <!-- Botón de guardar -->
+                    <div class="form-group col-12 col-md-4 mt-3">
+                        <button type="button" id="btn-user-empresa" class="btn btn-primary btn-sm mt-3">
+                            GUARDAR
+                        </button>
+            
+                    </div>
+                </div>
+            </div>
+        </form>
+        <div
+            class="table-responsive"
+        >
+            <table
+                class="table"
+               
+            >
+                <thead>
+                    <tr  id="header-title">
+                        <th scope="col">ID</th>
+                        <th scope="col">Usuario</th>
+                        <th scope="col">Empresa asignada</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for value in data_user_empresa %}
+                        <tr>
+                            <td>{{value.id}}</td>
+                            <td>{{value.usuario}}</td>
+                            <td>{{value.empresa}}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<script>
+$("#btn-user-supervisor").on("click", function(e) {
+    e.preventDefault()
+    var parameters = new FormData(document.getElementById("form-user-supervisor"));
+    submit_with_ajax(window.location.pathname, "Notificación", "¿Está seguro de realizar la acción?", parameters, function() {
+        location.href = '{{ list_url }}';
+    });
+});
+
+    $("#btn-user-empresa").on("click",function(e){
+        e.preventDefault()
+        var parameters = new FormData(document.getElementById("form-user-empresa"))
+        submit_with_ajax(window.location.pathname,"Notificacion","¿Esta seguro de realizar la accion?",parameters,function(){
+            location.href = '{{ list_url }}';
+
+        })
+        
+    })
+</script>
+{% endblock content %}

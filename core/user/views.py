@@ -1,11 +1,11 @@
 from typing import Any
 from django.http import HttpResponseRedirect, JsonResponse
 from django.shortcuts import render
-from django.views.generic import ListView,CreateView,UpdateView,DeleteView,View
+from django.views.generic import ListView,CreateView,UpdateView,DeleteView,View,TemplateView
 from core.mixins import PermisosMixins
 from core.validation import Validation
-from core.user.forms import FormUser
-from core.user.models import User,Puesto,Unidad
+from core.user.forms import FormUser,FormUserSupervisor,FormUserEmpresa
+from core.user.models import User,Puesto,Unidad,UserSupervisor,Empresa,UserEmpresas
 from django.urls import reverse_lazy
 from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt
@@ -228,3 +228,68 @@ class UpdatePermissionsView(UpdateView):
         except:
             data['error'] = f'Error al registrar'
         return JsonResponse(data)
+class UserConfigView(TemplateView):
+    template_name = 'config/create.html'
+    success_url = reverse_lazy('user:user_config')
+    url_redirect = success_url
+    def post(self,request,*args,**kwargs):
+        data = {}
+        try:
+            action = request.POST["action"]
+            if action == "add-1":
+                instance = FormUserSupervisor(request.POST)
+                instance.save()
+            elif action=="add-2":
+                instance = FormUserEmpresa(request.POST)
+                instance.save()
+            else:
+                data["error"] = "No se ingreso una opcion"
+        except Exception as e:
+            data["error"] = f"Ocurrio un error :{str(e)}"
+        return JsonResponse(data,safe=False)
+    def get_context_data(self,**kwargs):
+        context = super().get_context_data(**kwargs)
+        context["title"] = "Configuracion"
+        context["form_user_supervisor"] = FormUserSupervisor
+        context["data_supervised"] = self.get_user_supervised()
+        context["form_user_empresa"] = FormUserEmpresa
+        context["data_user_empresa"] = self.get_user_empresas()
+        context["list_url"] = reverse_lazy("user:user_config")
+        return context
+    def get_user_supervised(self):
+        data = []
+        try:
+            res = UserSupervisor.objects.all()
+            data = [
+                {
+                    "id":value.id,
+                    "supervisor":value.supervisor,
+                    "supervised_user":value.supervised_user
+                } for value in res
+            ]
+        except Exception as e:
+            data = []
+        return data
+    def get_user_empresas(self):
+        data = []
+        if self.request.user.is_superuser:
+            values = UserEmpresas.objects.all()
+            data = [
+                {
+                    "id":value.id,
+                    "usuario":self.request.user.username,
+                    "empresa":value.empresa
+                } for value in values
+            ]
+        elif self.request.user.tipo=='2':
+            values = UserEmpresas.objects.filter(usuario=self.request.user.id)
+            data = [
+                {
+                    "id":value.id,
+                    "usuario":value.usuario,
+                    "empresa":value.empresa
+                } for value in values
+            ]
+        else:
+            data = []
+        return data

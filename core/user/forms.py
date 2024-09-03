@@ -1,7 +1,7 @@
-from django.forms import ModelForm
+from django.forms import ModelForm,Select
 from django import forms
 from .models import User
-from .models import Empresa,Unidad,Puesto
+from .models import Empresa,Unidad,Puesto,UserSupervisor,UserEmpresas
 from django.contrib.auth.models import Permission
 from django.db.models import Q
 class PermissionSelectionForm(forms.ModelForm):
@@ -148,4 +148,54 @@ class FormUser(ModelForm):
                 data['error'] = form.errors
         except Exception as e:
             data['e'] = str(e)
+        return data
+class FormUserSupervisor(ModelForm):
+    class Meta:
+        model = UserSupervisor
+        fields = '__all__'
+        widgets = {
+            "supervisor":Select(
+                attrs={
+                    "class":"form-control"
+                }
+            ),
+            "supervised_user":Select(
+                attrs={
+                    "class":"form-control"
+                }
+            ),
+        }
+    def save(self,commit=True):
+        data = {}
+        form= super()
+        try:
+            if form.is_valid():
+                form.save()
+            else:
+                data["error"] = form.errors
+        except Exception as e:
+            data["error"] = f"Ocurrio un error:{str(e)}"
+        return data
+class FormUserEmpresa(ModelForm):
+    class Meta:
+        model = UserEmpresas
+        fields = '__all__'
+        widgets = {
+            "usuario":Select(attrs={
+                "class":"form-control select2"
+            }),
+            "empresa":Select(attrs={
+                "class":"form-control select2"
+            })
+        }
+    def save(self,commit=True):
+        data = {}
+        form= super()
+        try:
+            if form.is_valid():
+                form.save()
+            else:
+                data["error"] = form.errors
+        except Exception as e:
+            data["error"] = f"Ocurrio un error:{str(e)}"
         return data

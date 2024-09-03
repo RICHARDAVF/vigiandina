@@ -55,7 +55,6 @@ class ListViewCargo(LoginRequiredMixin,PermisosMixins,ListView):
                 data = []
                 for value in CargoTrabajador.objects.all():
                     item = value.toJSON()
-                    # item['unidad'] = value.unidad.unidad if value.unidad!= None else ''
                     data.append(item)
              
             else:

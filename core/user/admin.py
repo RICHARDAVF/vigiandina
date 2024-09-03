@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import User,Empresa,Puesto,Unidad,UserEmpresas
+from .models import User,Empresa,Puesto,Unidad,UserEmpresas,UserSupervisor
 
 from django.contrib.auth.models import Permission
 from django.contrib.auth.admin import UserAdmin
@@ -31,3 +31,6 @@ admin.site.register(Permission, AdminPermission)
 class AdminUserEmpresa(admin.ModelAdmin):
     list_display = ('usuario','empresa')
 admin.site.register(UserEmpresas,AdminUserEmpresa)
+class AdminUserSupervisor(admin.ModelAdmin):
+    list_display = ("supervisor","supervised_user")
+admin.site.register(UserSupervisor,AdminUserSupervisor)

@@ -140,7 +140,7 @@
 {% endblock %}
 {% block javascript %}
     <script>
-        $('#id_user').val('{{request.user}}')
+        $('#id_user').val('{{request.user.id}}')
         $(function(){
             $('.select2').select2({
                 theme:'bootstrap4',

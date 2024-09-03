@@ -30,16 +30,16 @@ class ReporteControlAccesos(LoginRequiredMixin,View):
                 hasta = res.get("hasta")
                 empresa = res.get("empresa")
                 tipo = res.get("tipo")
-                values = [["Documento","Nombre","Apellidos","Fecha","Tipo"]]
+                values = [["Documento","Nombre","Empresa","Apellidos","Fecha","Tipo"]]
                 if int(tipo)==1:
                     data = Visitas.objects.filter(fecha__range=(desde,hasta), p_visita__empresa_id=int(empresa))
                     for value in data:
-                        a = [value.dni,value.nombre,value.apellidos,value.fecha,"VISITA"]
+                        a = [value.dni,value.nombre,value.empresa,value.apellidos,value.fecha,"VISITA"]
                         values.append(a)
                 else:
                     data = IngresoSalida.objects.filter(fecha_ingreso__range=(desde,hasta),trabajador__empresa_id=int(empresa))
                     for value in data:
-                        a = [value.trabajador.documento,value.trabajador.nombre,value.trabajador.apellidos,value.fecha_ingreso,"TRABAJADOR"]
+                        a = [value.trabajador.documento,value.trabajador.nombre,value.trabajador.empresa.razon_social,value.trabajador.apellidos,value.fecha_ingreso,"TRABAJADOR"]
                         values.append(a)
                 response = HttpResponse(content_type="application/pdf")
                 filename = f"{self.request.user.username}-reporte-control-accesos.pdf"

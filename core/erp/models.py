@@ -8,25 +8,30 @@ from datetime import date
 from core.user.models import Empresa,Unidad,Puesto
 from simple_history.models import HistoricalRecords
 # Create your models here.
-class UnidadTrabajo(models.Model):
-    unidad = models.CharField(max_length=100,verbose_name='Unidad de trabajo',unique=True)
+class AreaTrabajo(models.Model):
+    area = models.CharField(max_length=100,verbose_name='Area de trabajo',unique=True)
     class Meta:
-        verbose_name = 'Unidad de trabajo'
-        verbose_name_plural = 'Unidades de trabajo'
-        db_table = 'unidad_trabajo'
+        verbose_name = 'Area de trabajo'
+        verbose_name_plural = 'Areas de trabajo'
+        db_table = 'areas_trabajo'
     def toJSON(self):
         return model_to_dict(self)
     def __str__(self) -> str:
-        return self.unidad
+        return self.area
 class CargoTrabajador(models.Model):
     cargo = models.CharField(max_length=150,verbose_name="Cargo",unique=True)
-    # unidad = models.ForeignKey(UnidadTrabajo,on_delete=models.DO_NOTHING,verbose_name='Unidad de trabajo',blank=True,null=True)
+    area = models.ForeignKey(AreaTrabajo,on_delete=models.DO_NOTHING,verbose_name='Area de trabajo',blank=True,null=True)
     class Meta:
         verbose_name = "Cargo de Trabajador"
         verbose_name_plural = "Cargos de trabajadores"
         db_table = "cargo_trabajador"
+        constraints = [
+            models.UniqueConstraint(fields=["cargo","area"],name="unique_cargo_area")
+        ]
     def toJSON(self):
-        return model_to_dict(self)
+        item =  model_to_dict(self)
+        item["area"] = self.area.area if self.area else ''
+        return item
     def __str__(self):
         return self.cargo
 class Trabajadores(models.Model):
@@ -37,6 +42,7 @@ class Trabajadores(models.Model):
     telefono = models.PositiveIntegerField(verbose_name="Celular",null=True,blank=True)
     direccion = models.CharField(max_length=100,verbose_name="Direccion",null=True,blank=True)
     empresa = models.ForeignKey(Empresa,on_delete=models.DO_NOTHING,verbose_name="Empresa")
+    area = models.ForeignKey(AreaTrabajo,on_delete=models.DO_NOTHING,verbose_name="Area de trabajo")
     cargo = models.ForeignKey(CargoTrabajador,on_delete=models.DO_NOTHING,verbose_name="Cargo del trabajador",null=True,blank=True)
     sctr = models.FileField(upload_to='sctr/',verbose_name="SCTR",blank=True,null=True)
     estado = models.BooleanField(default=True,verbose_name='Activo')
@@ -45,6 +51,7 @@ class Trabajadores(models.Model):
     def toJSON(self):
         item = model_to_dict(self)
         item['sctr'] = self.get_file()
+        item["cargo"] = self.cargo.toJSON()
         return item
     class Meta:
         verbose_name = "Trabajador"
@@ -151,6 +158,7 @@ class IngresoSalida(models.Model):
         ordering = ['id']
     def toJSON(self):
         item = model_to_dict(self)
+        item["empresa"] = self.trabajador.empresa.razon_social
         return item
 class Salas(models.Model):
     sala = models.CharField(max_length=100,verbose_name="Sala",unique=True)

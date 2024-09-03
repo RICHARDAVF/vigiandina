@@ -1,17 +1,17 @@
-from core.erp.models import UnidadTrabajo
+from core.erp.models import AreaTrabajo
 from django.forms import ModelForm,TextInput
-class FormUnidadTrabajo(ModelForm):
+class FormAreaTrabajo(ModelForm):
     def __init__(self,*args,**kwargs):
         super().__init__(*args,**kwargs)
 
     class Meta:
-        model = UnidadTrabajo
+        model = AreaTrabajo
         fields = '__all__'
         widgets = {
-            'unidad':TextInput(
+            'area':TextInput(
                 attrs={
                     'class':'form-control',
-                    'placeholder':'Nombre de la unidad de trabajo'
+                    'placeholder':'Nombre de la area de trabajo'
                 }
             )
         }

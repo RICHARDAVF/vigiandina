@@ -39,10 +39,10 @@
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a href="{% url 'erp:unidad_trabajo_list' %}" class="nav-link">
+                        <a href="{% url 'erp:area_trabajo_list' %}" class="nav-link">
                             <i class="nav-icon fas fa-sitemap text-white"></i>
                             <p class="text-white">
-                                Unidades de trabajo
+                                Areas de trabajo
                             </p>
                         </a>
                     </li>
@@ -138,6 +138,16 @@
                         </p>
                     </a>
                 </li>
+                {% if request.user.is_superuser %}     
+                    <li class="nav-item">
+                        <a href="{% url 'user:user_config' %}" class="nav-link">
+                            <i class="nav-icon fas fa-cog text-white"></i>
+                            <p class="text-white">
+                                Configuracion
+                            </p>
+                        </a>
+                    </li>
+                {% endif %}
             </ul>
         </nav>
     </div>

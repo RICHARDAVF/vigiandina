@@ -46,7 +46,7 @@ $(function () {
         columns: [
             {"data": "id"},
             {"data": "cargo"},
-            // {"data": "unidad"},
+            {"data": "area"},
             {"data": "id"},
 
         ],

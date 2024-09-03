@@ -5,7 +5,6 @@ $(function () {
             url: 'https://cdn.datatables.net/plug-ins/1.13.6/i18n/es-ES.json',
         },
         "order": [[0, 'desc']],
-        // responsive: true,
         autoWidth: false,
         scrollX:true,
         destroy: true,
@@ -54,7 +53,8 @@ $(function () {
             {"data": "documento"},
             {"data": "nombre"},
             {"data": "apellidos"},
-            {"data": "cargo"},
+            {"data": "cargo.cargo"},
+            {"data": "cargo.area"},
             {"data": "empresa"},
             {"data": "telefono"},
             {"data": "direccion"},
@@ -79,6 +79,20 @@ $(function () {
                 }
             },
             {
+                targets:[3],
+                class:"text-center",
+                render:function(data,type,row){
+                    return '<div style="width:100px;">'+data+'</div>'
+                }
+            },
+            {
+                targets:[4],
+                class:"text-center",
+                render:function(data,type,row){
+                    return '<div style="width:150px;">'+data+'</div>'
+                }
+            },
+            {
                 targets:[5],
                 class:'text-center',
                 render:function(data,type,row){
@@ -95,15 +109,25 @@ $(function () {
                 }
             },
             {
-                targets:[-3],
+                targets:[7],
                 class:'text-center',
                 render:function(data,type,row){
                   
-                    return `<div style='width:200px;' ><p class="larg-text">${data}</p></div>`
+                    return `<div style='width:150px;' ><p class="larg-text">${data}</p></div>`
                 }
             },
             {
-                targets:[9],
+                targets:[-3],
+                class:'text-center',
+                render:function(data,type,row){
+                    if(data!=null){
+                        return `<div class='text-truncate' style='width:200px;'>${data}</div>`
+                    }
+                    return ''
+                }
+            },
+            {
+                targets:[-2],
                 class:'text-center',
                 render:function(data,type,row){
                     return `${ (row.estado)?'<i class="fas fa-check-circle fa-2x rounded-circle text-success"></i>':'<i class="fas fa-times-circle fa-2x rounded-circle text-danger"></i>'}`

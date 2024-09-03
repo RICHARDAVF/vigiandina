@@ -3,10 +3,11 @@ from django.http import JsonResponse
 from django.shortcuts import redirect, render
 from django.views.generic import CreateView,ListView,DeleteView,UpdateView,View
 from core.mixins import PermisosMixins
-from core.user.models import UserEmpresas
+from core.user.models import UserEmpresas,User
 from core.validation import Validation
 from ...forms import FormVisitas,FormDelivery
 from ...models import Salas,Parqueo, Trabajadores,Visitas,Asistentes
+from core.user.models import UserSupervisor
 from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt
 from django.urls import reverse_lazy
@@ -38,8 +39,8 @@ class CreateViewVisita(LoginRequiredMixin,PermisosMixins,CreateView):
                     raise ValueError("No se marco hora de salida para esta visita")
                 state,msg = self.validacion()
                 if not state:
-                    data['error'] = msg
-                    return JsonResponse(data)
+                    # data['error'] = msg
+                    raise ValueError(msg)
                 form = self.get_form()
                 data = form.save()
         
@@ -138,25 +139,24 @@ class ListViewVisita(LoginRequiredMixin,PermisosMixins,ListView):
            
             if action == 'searchdata':
                 desde,hasta,state = self.validate_date()
+        
                 data = []
                 try:
-                    
                     if request.user.is_superuser and state:
-                        visitas = Visitas.objects.filter(fecha__gte=desde,fecha__lte=hasta)
+                        visitas = Visitas.objects.filter(fecha__gte=desde,fecha_salida__lte=hasta)
                     elif not request.user.is_superuser and state:
-                        visitas = Visitas.objects.filter(user__empresa_id=self.request.user.empresa_id,fecha__gte=desde,fecha__lte=hasta)
+                        visitas = Visitas.objects.filter(user__empresa_id=self.request.user.empresa_id,fecha__gte=desde,fecha_salida__lte=hasta)
                     else:
                         if request.user.is_superuser:
-                            visitas = Visitas.objects.filter(fecha=timezone.now().strftime("%Y-%m-%d"))
+                            visitas = Visitas.objects.filter(Q(fecha=timezone.now().strftime("%Y-%m-%d")) | Q(h_salida__isnull=True))
                         else:
-                            visitas = Visitas.objects.filter(user__empresa_id=self.request.user.empresa_id,fecha=timezone.now().strftime("%Y-%m-%d"))
+                            visitas = Visitas.objects.filter(Q(user__empresa_id=self.request.user.empresa_id) & Q(fecha=timezone.now().strftime("%Y-%m-%d")) | Q(h_salida__isnull=True))
                     for value in visitas:
                         item = value.toJSON()   
                         
                         item['p_visita'] = f"{value.p_visita.nombre} {value.p_visita.apellidos}"
                         data.append(item)
                 except Exception as e:
-                  
                     data = {}
                     data['error'] = str(e)
             elif action =="addperson":
@@ -253,7 +253,29 @@ class ListViewVisita(LoginRequiredMixin,PermisosMixins,ListView):
         context['create_url'] = reverse_lazy('erp:visita_create')
         context['list_url'] = reverse_lazy('erp:visita_list')
         context['entidad'] = 'Visitas'
+        # context["user_supervised"] = self.get_user_supervised()
         return context
+    def get_user_supervised(self):
+        if self.request.user.is_superuser:
+            values = User.objects.all()
+            data = [
+                {
+                    "id":value.id,
+                    "value":value.username
+                } for value in values
+            ]  
+        elif self.request.user.tipo=='2':
+            values = UserSupervisor.objects.filter(supevisor=self.request.user.id)
+            data = [
+                {
+                    "id":value.supervised_user.id,
+                    "value":value.supervised_user.username
+                } for value in values
+            ]  
+        else:
+            data = []
+
+        return data
 class UpdateViewVisita(LoginRequiredMixin,PermisosMixins,UpdateView):
     permission_required = 'erp.change_visitas'
     login_url = reverse_lazy('login')
@@ -283,10 +305,6 @@ class UpdateViewVisita(LoginRequiredMixin,PermisosMixins,UpdateView):
 
                 except:
                     pass
-                # if request.POST['h_termino']!='':
-                #     instance = Salas.objects.get(sala=sala)
-                #     instance.estado = 0
-                #     instance.save()
                 try:
                     int(request.POST['n_parqueo'])
                     instance = Parqueo.objects.get(id=request.POST['n_parqueo'])
@@ -317,7 +335,7 @@ class UpdateViewVisita(LoginRequiredMixin,PermisosMixins,UpdateView):
                 data['error'] = 'No ha ingresado a ninguna opción'
         except Exception as e:
             data['error'] = str(e)
-        return JsonResponse(data)
+        return JsonResponse(data,safe=False)
 
     def get_form(self, form_class=None):
         form = super().get_form(form_class)
@@ -418,7 +436,6 @@ class CreateViewDelivery(LoginRequiredMixin,PermisosMixins,CreateView):
                 documento = request.POST["documento"]
                 try:
                     value = Visitas.objects.filter(documento_empresa=documento).first()
-                    print(value)
                     data = {"empresa":value.empresa}
                 except Visitas.DoesNotExist:
                     tipo = "dni" if len(documento)==8 else "ruc"
