@@ -71,7 +71,7 @@ class FormUser(ModelForm):
         super().__init__(*args,**kwargs)
     class Meta:
         model = User
-        fields = ['first_name','last_name','email','username','password','image','is_superuser','groups','dni',"empresa","unidad","puesto"]
+        fields = ['first_name','last_name','email','username','password','image','is_superuser','groups','dni',"empresa","unidad","puesto",'tipo_user']
         widgets = {
             'dni':forms.TextInput(
                 attrs={
@@ -80,6 +80,9 @@ class FormUser(ModelForm):
                     'type':'number'
                 }
             ),
+            "tipo_user":forms.Select(attrs={
+                "class":"form-control"
+            }),
             'first_name' : forms.TextInput(
                 attrs={
                     'placeholder':'Ingrese sus nombres',
