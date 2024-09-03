@@ -17,5 +17,11 @@ class AdminTrabajador(admin.ModelAdmin):
     list_display = ('tipo','documento','nombre','apellidos','telefono','direccion','empresa','cargo','estado')
     search_fields = ("nombre","empresa__razon_social")
 admin.site.register(Trabajadores,AdminTrabajador)
-admin.site.register(Visitas)
-admin.site.register(IngresoSalida)
+class AdminVisitas(admin.ModelAdmin):
+    list_display = ('id','user','dni','nombre','apellidos','empresa')
+    search_fields = ('user','dni','nombre','id')
+admin.site.register(Visitas,AdminVisitas)
+class AdminIngresoSalida(admin.ModelAdmin):
+    list_display = ('id','usuario','trabajador','fecha_ingreso','hora_ingreso','fecha_salida','hora_salida')
+    search_fields = ('id','usuario','travajador')
+admin.site.register(IngresoSalida,AdminIngresoSalida)
