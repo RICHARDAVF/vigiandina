@@ -18,10 +18,10 @@ class AdminTrabajador(admin.ModelAdmin):
     search_fields = ("nombre","empresa__razon_social")
 admin.site.register(Trabajadores,AdminTrabajador)
 class AdminVisitas(admin.ModelAdmin):
-    list_display = ('id','user','dni','nombre','apellidos','empresa')
-    search_fields = ('user','dni','nombre','id')
+    list_display = ('id','user__username','dni','nombre','apellidos','empresa')
+    search_fields = ('user__username','dni','nombre','id')
 admin.site.register(Visitas,AdminVisitas)
 class AdminIngresoSalida(admin.ModelAdmin):
-    list_display = ('id','usuario','trabajador','fecha_ingreso','hora_ingreso','fecha_salida','hora_salida')
-    search_fields = ('id','usuario','travajador')
+    list_display = ('id','usuario__username','trabajador','fecha_ingreso','hora_ingreso','fecha_salida','hora_salida')
+    search_fields = ('id','usuario__username','trabajador')
 admin.site.register(IngresoSalida,AdminIngresoSalida)
