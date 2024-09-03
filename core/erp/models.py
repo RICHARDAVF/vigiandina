@@ -47,7 +47,7 @@ class Trabajadores(models.Model):
     sctr = models.FileField(upload_to='sctr/',verbose_name="SCTR",blank=True,null=True)
     estado = models.BooleanField(default=True,verbose_name='Activo')
     # codigo_rfid = models.CharField(verbose_name="RFID",max_length=100,null=True,blank=True)
-    history = HistoricalRecords()
+    # history = HistoricalRecords()
     def toJSON(self):
         item = model_to_dict(self)
         item['sctr'] = self.get_file()
