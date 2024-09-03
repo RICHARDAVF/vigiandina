@@ -149,9 +149,9 @@ class ListViewVisita(LoginRequiredMixin,PermisosMixins,ListView):
                         visitas = Visitas.objects.filter(user__empresa_id=self.request.user.empresa_id,fecha__gte=desde,fecha_salida__lte=hasta)
                     else:
                         if request.user.is_superuser:
-                            visitas = Visitas.objects.filter(Q(fecha=timezone.now().strftime("%Y-%m-%d")) | Q(h_salida__isnull=True))
+                            visitas = Visitas.objects.filter(fecha=timezone.now().strftime("%Y-%m-%d") )
                         else:
-                            visitas = Visitas.objects.filter(Q(user__empresa_id=self.request.user.empresa_id) & Q(fecha=timezone.now().strftime("%Y-%m-%d")) | Q(h_salida__isnull=True))
+                            visitas = Visitas.objects.filter(user__empresa_id=self.request.user.empresa_id  ,fecha=timezone.now().strftime("%Y-%m-%d") )
                     for value in visitas:
                         item = value.toJSON()   
                         
