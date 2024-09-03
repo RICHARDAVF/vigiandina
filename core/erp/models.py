@@ -42,7 +42,7 @@ class Trabajadores(models.Model):
     telefono = models.PositiveIntegerField(verbose_name="Celular",null=True,blank=True)
     direccion = models.CharField(max_length=100,verbose_name="Direccion",null=True,blank=True)
     empresa = models.ForeignKey(Empresa,on_delete=models.DO_NOTHING,verbose_name="Empresa")
-    area = models.ForeignKey(AreaTrabajo,on_delete=models.DO_NOTHING,verbose_name="Area de trabajo")
+    area = models.ForeignKey(AreaTrabajo,on_delete=models.DO_NOTHING,verbose_name="Area de trabajo",null=True,blank=True)
     cargo = models.ForeignKey(CargoTrabajador,on_delete=models.DO_NOTHING,verbose_name="Cargo del trabajador",null=True,blank=True)
     sctr = models.FileField(upload_to='sctr/',verbose_name="SCTR",blank=True,null=True)
     estado = models.BooleanField(default=True,verbose_name='Activo')
@@ -117,7 +117,7 @@ class AsignacionEPPS(models.Model):
 
 
 
-        
+
         return item
     class Meta:
         verbose_name = "Asignacion de EPPS"
