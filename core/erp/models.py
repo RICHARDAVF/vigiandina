@@ -114,6 +114,10 @@ class AsignacionEPPS(models.Model):
     def toJSON(self):
         item = model_to_dict(self)
         item['trabajador'] = self.trabajador.id
+
+
+
+        
         return item
     class Meta:
         verbose_name = "Asignacion de EPPS"
