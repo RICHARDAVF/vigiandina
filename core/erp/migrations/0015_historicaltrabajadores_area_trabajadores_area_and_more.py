@@ -11,11 +11,11 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        # migrations.AddField(
-        #     model_name='historicaltrabajadores',
-        #     name='area',
-        #     field=models.ForeignKey(blank=True, db_constraint=False, null=True, on_delete=django.db.models.deletion.DO_NOTHING, related_name='+', to='erp.areatrabajo', verbose_name='Area de trabajo'),
-        # ),
+        migrations.AddField(
+            model_name='historicaltrabajadores',
+            name='area',
+            field=models.ForeignKey(blank=True, db_constraint=False, null=True, on_delete=django.db.models.deletion.DO_NOTHING, related_name='+', to='erp.areatrabajo', verbose_name='Area de trabajo'),
+        ),
         migrations.AddField(
             model_name='trabajadores',
             name='area',
