@@ -11,19 +11,19 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.AddField(
-            model_name='historicaltrabajadores',
-            name='area',
-            field=models.ForeignKey(blank=True, db_constraint=False, null=True, on_delete=django.db.models.deletion.DO_NOTHING, related_name='+', to='erp.areatrabajo', verbose_name='Area de trabajo'),
-        ),
+        # migrations.AddField(
+        #     model_name='historicaltrabajadores',
+        #     name='area',
+        #     field=models.ForeignKey(blank=True, db_constraint=False, null=True, on_delete=django.db.models.deletion.DO_NOTHING, related_name='+', to='erp.areatrabajo', verbose_name='Area de trabajo'),
+        # ),
         migrations.AddField(
             model_name='trabajadores',
             name='area',
             field=models.ForeignKey(default=1, on_delete=django.db.models.deletion.DO_NOTHING, to='erp.areatrabajo', verbose_name='Area de trabajo'),
             preserve_default=False,
         ),
-        # migrations.AddConstraint(
-        #     model_name='cargotrabajador',
-        #     constraint=models.UniqueConstraint(fields=('cargo', 'area'), name='unique_cargo_area'),
-        # ),
+        migrations.AddConstraint(
+            model_name='cargotrabajador',
+            constraint=models.UniqueConstraint(fields=('cargo', 'area'), name='unique_cargo_area'),
+        ),
     ]
