@@ -128,25 +128,32 @@ class ListViewVisita(LoginRequiredMixin,PermisosMixins,ListView):
         instace_sala.estado = 0
         instace_sala.save()
     def validate_date(self):
-        if not "desde" in self.request.POST or not "hasta" in self.request.POST:
+        try:
+            desde = self.request.POST["desde"]
+            hasta = self.request.POST["hasta"]
+            if desde!='' and hasta!='':
+                return [desde,hasta,True]
+            else: 
+                raise
+        except Exception as e:
+            print(str(e))
             return [timezone.now().strftime("%Y-%m-%d"),timezone.now().strftime("%Y-%m-%d"),False]
-        return [self.request.POST["desde"],self.request.POST["hasta"],True]
     def post(self, request, *args, **kwargs):
         data = {}
 
 
         try:
             action = request.POST['action']
-           
             if action == 'searchdata':
                 desde,hasta,state = self.validate_date()
-        
+
                 data = []
                 try:
                     if request.user.is_superuser and state:
                         visitas = Visitas.objects.filter(fecha__gte=desde,fecha_salida__lte=hasta)
                     elif not request.user.is_superuser and state:
                         visitas = Visitas.objects.filter(user__empresa_id=self.request.user.empresa_id,fecha__gte=desde,fecha_salida__lte=hasta)
+                    
                     else:
                         if request.user.is_superuser:
                             visitas = Visitas.objects.filter(Q(fecha=timezone.now().strftime("%Y-%m-%d")) | Q(h_salida__isnull=True),estado__in=["1","2","3"] )
@@ -154,10 +161,13 @@ class ListViewVisita(LoginRequiredMixin,PermisosMixins,ListView):
                             visitas = Visitas.objects.filter(
                                                             Q(fecha=timezone.now().strftime("%Y-%m-%d")) | Q(h_salida__isnull=True),
                                                             user__empresa_id=self.request.user.empresa_id,estado__in=["1","2","3"]
-                                                        )
+                                                    )
                     for value in visitas:
                         item = value.toJSON()   
-                        
+                        if int(request.POST["user"])!=-1 and item.user==int(request.POST['user']):
+                            item['p_visita'] = f"{value.p_visita.nombre} {value.p_visita.apellidos}"
+                            data.append(item)
+                            continue
                         item['p_visita'] = f"{value.p_visita.nombre} {value.p_visita.apellidos}"
                         data.append(item)
                 except Exception as e:

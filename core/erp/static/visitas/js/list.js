@@ -48,6 +48,7 @@ $(function () {
                 d.action = 'searchdata'
                 d.desde = $("#desde").val()
                 d.hasta = $("#hasta").val()
+                d.user = $("#options-users").val()
 
             },
             dataSrc: ""
@@ -312,15 +313,21 @@ $(function () {
             $('#data_filter').append(desde);
             $('#data_filter').append(hasta);
             $('#data_filter').append(selectOptions);
-            $('#dropdownMenuButton').on("click",function(){
            
-            })
 
             var select = $("#options-users")
             select.empty()
             select.append(new Option("-------","-1"))
             user_supervised.forEach(function(user){
                 select.append(new Option(user.value,user.id))
+            })
+            $("#options-users").change(function(){
+                var user_id = $(this).val()
+      
+                if(user_id!='-1'){
+                    miTabla.ajax.reload()
+                }
+                
             })
         }
     });

@@ -401,12 +401,12 @@ class FormTrabajador(ModelForm):
             }),
             'area':Select(attrs={
                 'class':'form-control select2',
-                'required':True
+                'required':False
              
             }),
             'cargo':Select(attrs={
                 'class':'form-control select2',
-                'required':True
+                'required':False
              
             }),
 
