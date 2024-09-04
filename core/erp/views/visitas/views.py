@@ -29,7 +29,7 @@ class CreateViewVisita(LoginRequiredMixin,PermisosMixins,CreateView):
     def dispatch(self, request, *args, **kwargs):
         return super().dispatch(request, *args, **kwargs)
     def valid_register(self):
-        res = Visitas.objects.filter(dni=self.request.POST["dni"],h_salida__isnull=True)
+        res = Visitas.objects.filter(dni=self.request.POST["dni"],h_salida__isnull=True,estado__in=['1','2','3'])
         return res.exists() 
     def post(self, request, *args, **kwargs) :
         data = {}
@@ -136,12 +136,19 @@ class ListViewVisita(LoginRequiredMixin,PermisosMixins,ListView):
             else: 
                 raise
         except Exception as e:
-            print(str(e))
             return [timezone.now().strftime("%Y-%m-%d"),timezone.now().strftime("%Y-%m-%d"),False]
+    def validate_user(self):
+        res = -1
+        try:
+            if int(self.request.POST['user'])!=-1:
+                res = int(self.request.POST['user'])
+        except:
+            res = -1
+        return res
     def post(self, request, *args, **kwargs):
         data = {}
-
-
+        self.user = None
+        
         try:
             action = request.POST['action']
             if action == 'searchdata':
@@ -162,12 +169,11 @@ class ListViewVisita(LoginRequiredMixin,PermisosMixins,ListView):
                                                             Q(fecha=timezone.now().strftime("%Y-%m-%d")) | Q(h_salida__isnull=True),
                                                             user__empresa_id=self.request.user.empresa_id,estado__in=["1","2","3"]
                                                     )
+                    self.user = self.validate_user()
+                    if self.user!=-1:
+                        visitas = list(filter(lambda item:item.user.id==self.user,visitas))
                     for value in visitas:
-                        item = value.toJSON()   
-                        if int(request.POST["user"])!=-1 and item.user==int(request.POST['user']):
-                            item['p_visita'] = f"{value.p_visita.nombre} {value.p_visita.apellidos}"
-                            data.append(item)
-                            continue
+                        item = value.toJSON() 
                         item['p_visita'] = f"{value.p_visita.nombre} {value.p_visita.apellidos}"
                         data.append(item)
                 except Exception as e:

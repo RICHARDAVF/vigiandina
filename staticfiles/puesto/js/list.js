@@ -18,6 +18,7 @@ $(function(){
                             window.location.href = '/erp/puesto/add/'
                         }
                     },
+                
                     'copy', 'excel', 'csv', 'pdf', 'print','pageLength'
                 ],
 
@@ -25,7 +26,7 @@ $(function(){
             });
 
             // Crear un contenedor para los botones de exportación
-            var $exportButtonsContainer = $('<div class="export-buttons-container"></div>');
+            var $exportButtonsContainer = $(`<div class="export-buttons-container"></div>`);
             table.buttons().container().appendTo($exportButtonsContainer);
 
             // Agregar el contenedor de botones antes del input de búsqueda

@@ -14,10 +14,10 @@ $(function () {
             [ '10 filas', '25 filas', '50 filas', 'Todo' ]
         ],
         dom:'Qfrtip',
-        fixedColumns:{
-            left:3,
-            // right:2
-        },
+        // fixedColumns:{
+        //     left:3,
+        //     // right:2
+        // },
         conditions:{
             num:{
                 'MultipleOf':{
@@ -48,6 +48,7 @@ $(function () {
                 d.action = 'searchdata'
                 d.desde = $("#desde").val()
                 d.hasta = $("#hasta").val()
+                d.user = $("#options-users").val()
 
             },
             dataSrc: ""
@@ -58,21 +59,20 @@ $(function () {
             {"data": "names"},//2
             {"data": "fecha"},//3
             {"data": "h_inicio"},//4
-            {"data": "h_termino"},//5
-            {"data":"h_llegada"},//6
-            {"data": "h_salida"},//7
-            {"data": "dni"},//8
-            {"data": "id"},//9
-            {"data": "empresa"},//10
-            {"data": "cargo"},//11
-            {'data': "motivo"},//12
-            {'data': "sala"},//13
-            {'data': "sctr_salud"},//14
-            {'data': "p_visita"},//15
-            {'data': "documentos"},//16
+            {"data":"fecha_salida"},//5
+            {"data": "h_salida"},//6
+            {"data": "dni"},//7
+            {"data": "id"},//8
+            {"data": "empresa"},//9
+            {"data": "cargo"},//10
+            {'data': "motivo"},//11
+            {'data': "sala"},//12
+            {'data': "sctr_salud"},//13
+            {'data': "p_visita"},//14
+            {'data': "documentos"},//15
+            {'data': "id"},//16
             {'data': "id"},//17
             {'data': "id"},//18
-            {'data': "id"},//19
         ],
         headerCallback: function (thead, data, start, end, display) {
             // Aplicar el fondo al encabezado de las tres primeras columnas
@@ -85,7 +85,7 @@ $(function () {
                 render:function(data,type,row){
                     var opt = ''
                     if(row.estado==1){
-                        opt = `<div style="width:150px;display: flex; align-items: center; height: 50px;">
+                        opt = `<div style="display: flex; align-items: center;">
                         <strong class="bg-success" style="font-size:11px;border-radius:5px; padding:5px;">PROGRAMADO</strong>
                         <input class="btn btn-danger btn-sm" id="anular" type="button" value="ANULAR" style="font-size:11px;border-radius:5px; padding:5px;"/>
                     </div>`
@@ -111,45 +111,42 @@ $(function () {
                     return '<div style="width:250px;font-size:12px; font-weight: bold;">'+row.names+'</div>'
                 }
             },
+            {class:"text-center",targets:[3],render:function(data,type,row){
+                return `<strong>${data}</strong>`
+            }},
+            {class:"text-center",targets:[4],render:function(data,type,row){
+                return `<strong>${data}</strong>`
+            }},
             {
                 targets:[6],
                 class:'text-center',
                 render:function(data,type,row){
-                    var hora = '<input type="button" value="Confirmar" id="hora_llegada" class="btn btn-secondary btn-sm">'
-                    if(row.h_llegada!==null){
-                        hora = '<strong style="font-weight:bold;">'+row.h_llegada+'</strong>'
+                    var hora = '<input type="button" value="Confirmar" id="h_salida" class="btn btn-secondary btn-sm">'
+                    if(row.h_salida!==null){
+                        hora = '<strong">'+data+'</strong>'
                     }
                     return hora
                 }
             },
            
-            {
-                targets:[7],
-                class:'text-center',
-                render:function(data,type,row){
-                    if(row.h_salida===null & row.h_llegada!=null){
-                        return '<input class="btn btn-secondary btn-sm" value="MARCAR" type="button" id="h_salida"/>'
-                    }
-                    return row.h_salida
-                }
-            },
+
              
             {
                
                 class:'text-center',
-                targets:[9],
+                targets:[8],
                 render:function(data,type,row){
                     if(row.estado==0){
                         return '<strong>Anulado</strong>'
                     }
-                   var date = (row.tipo==1)?`<input type='button' id='btnaddperson' class='btn btn-success btn-sm' value='Asistente.'/>`:'';
+                   var date = (row.tipo==1)?`<input type='button' id='btnaddperson' class="btn btn-primary btn-sm" value='Asistente'/>`:'';
                     return date
                 }
             },
             {
                
                 class:'text-center',
-                targets:[10],
+                targets:[9],
                 render:function(data,type,row){
                     var cargo = (row.cargo!=null)?row.cargo:"";
                     return '<div style="width:200px;"><strong style="width:font-size:13px;">'+cargo+'</strong></div>'
@@ -158,22 +155,22 @@ $(function () {
             {
                
                 class:'text-center',
-                targets:[11],
+                targets:[10],
                 render:function(data,type,row){
-                    return '<div style="width:200px;"><strong style="width:font-size:13px;">'+row.empresa+'</strong></div>'
+                    return '<div style="width:200px;" class="text-truncate">'+row.empresa+'</div>'
                 }
             },
            
            
             {
-                targets:[12],
+                targets:[11],
                 class:'text-center',
                 render:function(data,type,row){
                     return '<div style="width:200px;"><strong style="font-size:13px;"">'+row.motivo+'</strong></div>'
                 }
             },
             {
-                targets:[14],
+                targets:[13],
                 class:'text-center',
                 render:function(data,type,row){
                   
@@ -181,7 +178,7 @@ $(function () {
                 }
             },
             {
-                targets:[15],
+                targets:[14],
                 class:'text-center',
                 render:function(data,type,row){
                   
@@ -190,7 +187,7 @@ $(function () {
             },
            
             {
-                targets:[17],
+                targets:[16],
                 class:'text-center',
                 render:function(data,type,row){
                     if(row.estado==0){
@@ -200,7 +197,7 @@ $(function () {
                 }
             },
             {
-                targets:[18],
+                targets:[17],
                 class:'text-center',
                 render:function(data,type,row){
                     
@@ -208,7 +205,7 @@ $(function () {
                 }
             },
             {
-                targets:[19],
+                targets:[18],
                 class:'text-center',
                 render:function(data,type,row){
                     if(row.estado==0){
@@ -256,6 +253,7 @@ $(function () {
                             window.location.href = '/erp/ingsal/add/';
                         }
                     },
+                    
                     'copy',
                     'excel',
                     'csv',
@@ -282,11 +280,55 @@ $(function () {
 
            
             $exportButtonsContainer.insertBefore($('#data_wrapper .dataTables_filter'));
+           // Crear los campos "Desde" y "Hasta"
+            var desde = $(`
+                <div class="form-group mb-0 mr-1">
+                    <label for="desde" class="mr-1">Desde:</label>
+                    <input id="desde" name="desde" type="date" class="form-control form-control-sm" />
+                </div>
+            `);
 
-            var desde = $(`<label for="desde" class="ml-1">Desde </label><input id="desde" name="desde" type="date"  class="form-control form-control-sm" style="height:30px;" />`)
-            var hasta = $(`<label for="desde" class="ml-1">Hasta </label><input id="hasta" name="hasta" type="date"  class="form-control form-control-sm" style="height:30px;" />`)
-            $('#data_filter').append(desde)
-            $('#data_filter').append(hasta)
+            var hasta = $(`
+                <div class="form-group mb-0 mr-1">
+                    <label for="hasta" class="mr-1">Hasta:</label>
+                    <input id="hasta" name="hasta" type="date" class="form-control form-control-sm" />
+                </div>
+            `);
+
+            var selectOptions = $(`
+                <div class='form-group mb-0 d-flex mr-1'>
+                    <label class='mr-1' for='options'>Usuario:</label>
+                    <select id="options-users" class="form-control form-control-sm" >
+                        
+                    </select>
+                </div>
+             
+            `);
+
+
+
+            // Asegúrate de que el contenedor se alinee a la derecha dentro de '#data_filter'
+            $('#data_filter').addClass('d-flex justify-content-end');
+
+            $('#data_filter').append(desde);
+            $('#data_filter').append(hasta);
+            $('#data_filter').append(selectOptions);
+           
+
+            var select = $("#options-users")
+            select.empty()
+            select.append(new Option("-------","-1"))
+            user_supervised.forEach(function(user){
+                select.append(new Option(user.value,user.id))
+            })
+            $("#options-users").change(function(){
+                var user_id = $(this).val()
+      
+                if(user_id!='-1'){
+                    miTabla.ajax.reload()
+                }
+                
+            })
         }
     });
    $(document).on("change","#hasta",function(){
@@ -573,56 +615,6 @@ $(function () {
         })
         
     })
-    // $(document).on('click',"#hora_final",function(){
-    //     var rowIndex = miTabla.row($(this).closest('tr')).index();
-    //     var id = miTabla.cell(rowIndex,0).data();
-    //     $.confirm({
-    //         theme: 'material',
-    //         title: 'Alerta',
-    //         icon: 'fas fa-info',
-    //         content: "¿Esta seguro de marcar la hora final?",
-    //         columnClass: 'small',
-    //         typeAnimated: true,
-    //         cancelButtonClass: 'btn-primary',
-    //         draggable: true,
-    //         dragWindowBorder: false,
-    //         buttons:{
-    //             info:{
-    //                 text:'Si',
-    //                 btnClass:'btn-primary',
-    //                 action:function(){
-    //                     $.ajax({
-    //                         type:'POST',
-    //                         url:window.location.pathname,
-    //                         dataType:'json',
-    //                         data:{
-    //                             "id":id,
-    //                             "action":"h_final",
-    //                         },
-    //                         success:function(data){
-    //                             window.location.reload()
-    //                             if(data.error){
-                                    
-    //                                 return alert(data.error)
-    //                             }
-    //                         },
-    //                         error:function(){
-    //                             alert("Hubo un error en la peticion")
-    //                         }
-    //                     })
-    //                 }
-    //             },
-    //             danger:{
-    //                 text:'No',
-    //                 btnClass:'btn-red',
-    //                 action:function(){
-
-    //                 }
-    //             }
-    //         }
-    //     })
-       
-    // })
     $(document).on("click","#addvehiculo",function(){
         $('body').append(contenidoModal);
         var rowIndex = miTabla.row($(this).closest('tr')).index();

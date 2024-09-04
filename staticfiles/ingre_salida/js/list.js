@@ -52,6 +52,7 @@ $(function(){
             {"data":"id"},
             {"data":"documento"},
             {"data":"nombres"},
+            {"data":"empresa"},
             {"data":"fecha_ingreso"},
             {"data":"hora_ingreso"},
             {"data":"fecha_salida"},
@@ -71,9 +72,24 @@ $(function(){
                     return `<div style="width:250px;">${date}</div>`;
                 }
             },
- 
             {
-                targets:[6],
+                targets:[3],
+                class:'rext-center',
+                render:function(date,type,row){
+                    
+                    return `<div style="width:150px;" class="text-truncate">${date}</div>`;
+                }
+            },
+            {
+                targets:[4],
+                class:'text-center',
+                render:function(date,type,row){
+                    console.log(date)
+                    return date
+                }
+            },
+            {
+                targets:[7],
                 class:'rext-center',
                 render:function(date,type,row){
                     var hora_salida  = date
@@ -98,13 +114,14 @@ $(function(){
                 targets:[-1],
                 class:'rext-center',
                 render:function(date,type,row){
-                    if(row.hora_salida==null){
+              
 
-                        var buttons = '<div class="d-flex justify-content-center"><a href="/erp/ingsal/edit/' + row.id + '/" class="btn btn-warning btn-sm btn-flat"><i class="fas fa-edit"></i></a> ';
-                        buttons += '<a href="/erp/ingsal/delete/' + row.id + '/" type="button" class="btn btn-danger btn-sm btn-flat"><i class="fas fa-trash-alt"></i></a></row>';
-                        return buttons;
-                    }
-                    return '-------'
+                    var buttons = '<div class="d-flex justify-content-center"><a href="/erp/ingsal/edit/' + row.id + '/" class="btn btn-warning btn-sm btn-flat"><i class="fas fa-edit"></i></a> ';
+                    buttons += '<a href="/erp/ingsal/delete/' + row.id + '/" type="button" class="btn btn-danger btn-sm btn-flat"><i class="fas fa-trash-alt"></i></a></row>';
+                    buttons+='<a href="/erp/ingsal/audi/'+row.id+'/" type="button" class="btn btn-primary btn-sm"><i class="fas fa-search"></i></a></div>';
+                    
+                    return buttons;
+                   
                 }
             },
         ],

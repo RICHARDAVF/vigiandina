@@ -14,10 +14,7 @@ $(function () {
             [ '10 filas', '25 filas', '50 filas', 'Todo' ]
         ],
         dom:'Qfrtip',
-        // fixedColumns:{
-        //     left:3,
-        //     // right:2
-        // },
+
         conditions:{
             num:{
                 'MultipleOf':{
