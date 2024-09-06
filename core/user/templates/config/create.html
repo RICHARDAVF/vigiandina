@@ -1,4 +1,18 @@
 {% extends 'layout.html' %}
+{% load static %}
+{% block head %}
+    <link rel="stylesheet" href="https://cdn.datatables.net/2.0.7/css/dataTables.bootstrap5.css"/>
+    <script src="https://cdn.datatables.net/2.0.7/js/dataTables.js"></script>
+    <script src="https://cdn.datatables.net/2.0.7/js/dataTables.bootstrap5.js"></script>
+    <script src="https://cdn.datatables.net/buttons/3.0.2/js/dataTables.buttons.js"></script>
+    <script src="https://cdn.datatables.net/buttons/3.0.2/js/buttons.bootstrap5.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/pdfmake.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js"></script>
+    <script src="https://cdn.datatables.net/buttons/3.0.2/js/buttons.html5.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/3.0.2/js/buttons.print.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/3.0.2/js/buttons.colVis.min.js"></script>
+{% endblock head %}
 {% block content %}
 <div class="row">
     <div class="col-md-6">
@@ -34,6 +48,7 @@
         >
             <table
                 class="table"
+                id="user-supervisor"
                
             >
                 <thead>
@@ -89,7 +104,7 @@
         >
             <table
                 class="table"
-               
+                id="user-empresa"
             >
                 <thead>
                     <tr  id="header-title">
@@ -129,5 +144,30 @@ $("#btn-user-supervisor").on("click", function(e) {
         })
         
     })
+    new DataTable("#user-empresa",{
+        autoWidth:false,
+        language:{
+                url:"{% static '/lib/datatables/spain.json' %}"
+            },
+        "order": [[0, 'desc']],
+        lengthMenu: [
+                [ 10, 25, 50, -1 ],
+                [ '10 filas', '25 filas', '50 filas', 'Todo' ]
+            ],
+
+    })
+    new DataTable("#user-supervisor",{
+        autoWidth:false,
+        language:{
+                url:"{% static '/lib/datatables/spain.json' %}"
+            },
+        "order": [[0, 'desc']],
+        lengthMenu: [
+                [ 10, 25, 50, -1 ],
+                [ '10 filas', '25 filas', '50 filas', 'Todo' ]
+            ],
+
+    }
+    )
 </script>
 {% endblock content %}

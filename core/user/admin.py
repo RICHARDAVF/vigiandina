@@ -29,7 +29,8 @@ class AdminPermission(admin.ModelAdmin):
     search_fields = ('name', 'content_type__app_label', 'codename')
 admin.site.register(Permission, AdminPermission)
 class AdminUserEmpresa(admin.ModelAdmin):
-    list_display = ('usuario','empresa')
+    list_display = ('usuario__username','empresa')
+    search_fields = ('usuario_username','empresa')
 admin.site.register(UserEmpresas,AdminUserEmpresa)
 class AdminUserSupervisor(admin.ModelAdmin):
     list_display = ("supervisor","supervised_user")
