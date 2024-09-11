@@ -20,7 +20,7 @@ class AreaTrabajo(models.Model):
         return self.area
 class CargoTrabajador(models.Model):
     cargo = models.CharField(max_length=150,verbose_name="Cargo",unique=True)
-    area = models.ForeignKey(AreaTrabajo,on_delete=models.DO_NOTHING,verbose_name='Area de trabajo',blank=True,null=True)
+    area = models.ForeignKey(AreaTrabajo,on_delete=models.DO_NOTHING,verbose_name='Area de trabajo')
     class Meta:
         verbose_name = "Cargo de Trabajador"
         verbose_name_plural = "Cargos de trabajadores"
@@ -30,7 +30,7 @@ class CargoTrabajador(models.Model):
         ]
     def toJSON(self):
         item =  model_to_dict(self)
-        item["area"] = self.area.area if self.area else ''
+        item["area"] = self.area.area
         return item
     def __str__(self):
         return self.cargo
@@ -42,16 +42,18 @@ class Trabajadores(models.Model):
     telefono = models.PositiveIntegerField(verbose_name="Celular",null=True,blank=True)
     direccion = models.CharField(max_length=100,verbose_name="Direccion",null=True,blank=True)
     empresa = models.ForeignKey(Empresa,on_delete=models.DO_NOTHING,verbose_name="Empresa")
-    area = models.ForeignKey(AreaTrabajo,on_delete=models.DO_NOTHING,verbose_name="Area de trabajo",null=True,blank=True)
-    cargo = models.ForeignKey(CargoTrabajador,on_delete=models.DO_NOTHING,verbose_name="Cargo del trabajador",null=True,blank=True)
+    area = models.ForeignKey(AreaTrabajo,on_delete=models.DO_NOTHING,verbose_name="Area de trabajo")
+    cargo = models.ForeignKey(CargoTrabajador,on_delete=models.DO_NOTHING,verbose_name="Cargo del trabajador")
     sctr = models.FileField(upload_to='sctr/',verbose_name="SCTR",blank=True,null=True)
     estado = models.BooleanField(default=True,verbose_name='Activo')
     # codigo_rfid = models.CharField(verbose_name="RFID",max_length=100,null=True,blank=True)
-    # history = HistoricalRecords()
+    history = HistoricalRecords()
     def toJSON(self):
         item = model_to_dict(self)
+        item["cargo"] = self.cargo.cargo
+        item["area"] = self.area.area
         item['sctr'] = self.get_file()
-        item["cargo"] = self.cargo.toJSON()
+
         return item
     class Meta:
         verbose_name = "Trabajador"
@@ -114,10 +116,6 @@ class AsignacionEPPS(models.Model):
     def toJSON(self):
         item = model_to_dict(self)
         item['trabajador'] = self.trabajador.id
-
-
-
-
         return item
     class Meta:
         verbose_name = "Asignacion de EPPS"

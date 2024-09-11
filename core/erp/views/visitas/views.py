@@ -284,7 +284,7 @@ class ListViewVisita(LoginRequiredMixin,PermisosMixins,ListView):
                     "value":value.username
                 } for value in values
             ]  
-        elif self.request.user.tipo=='2':
+        elif self.request.user.tipo_user=='2':
             values = UserSupervisor.objects.filter(supevisor=self.request.user.id)
             data = [
                 {

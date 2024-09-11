@@ -11,28 +11,28 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.RemoveField(
-            model_name='historicaltrabajadores',
-            name='cargo',
-        ),
-        migrations.RemoveField(
-            model_name='historicaltrabajadores',
-            name='empresa',
-        ),
-        migrations.RemoveField(
-            model_name='historicaltrabajadores',
-            name='history_user',
-        ),
-        migrations.AddField(
-            model_name='trabajadores',
-            name='area',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.DO_NOTHING, to='erp.areatrabajo', verbose_name='Area de trabajo'),
-        ),
-        migrations.AddConstraint(
-            model_name='cargotrabajador',
-            constraint=models.UniqueConstraint(fields=('cargo', 'area'), name='unique_cargo_area'),
-        ),
-        migrations.DeleteModel(
-            name='HistoricalTrabajadores',
-        ),
+        # migrations.RemoveField(
+        #     model_name='historicaltrabajadores',
+        #     name='cargo',
+        # ),
+        # migrations.RemoveField(
+        #     model_name='historicaltrabajadores',
+        #     name='empresa',
+        # ),
+        # migrations.RemoveField(
+        #     model_name='historicaltrabajadores',
+        #     name='history_user',
+        # ),
+        # migrations.AddField(
+        #     model_name='trabajadores',
+        #     name='area',
+        #     field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.DO_NOTHING, to='erp.areatrabajo', verbose_name='Area de trabajo'),
+        # ),
+        # migrations.AddConstraint(
+        #     model_name='cargotrabajador',
+        #     constraint=models.UniqueConstraint(fields=('cargo', 'area'), name='unique_cargo_area'),
+        # ),
+        # migrations.DeleteModel(
+        #     name='HistoricalTrabajadores',
+        # ),
     ]
