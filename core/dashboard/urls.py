@@ -6,6 +6,6 @@ app_name = 'dashboard'
 urlpatterns = [
     # Otras URLs de tu aplicación
     path('report/', Dashboard.as_view(), name='dash_report'),
-    path('pdf/reporte-1/', ReporteControlAccesos.as_view(), name='reporte_control_accesos'),
+    # path('pdf/reporte-1/', ReporteControlAccesos.as_view(), name='reporte_control_accesos'),
     path('data/movil/', ShowAppMovil.as_view(), name='list_data_movil'),
 ]
