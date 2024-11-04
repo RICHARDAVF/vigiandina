@@ -26,6 +26,14 @@ class PageNotFoundView(View):
     template_name = 'dashboard/404.html'
     def get(self, request, *args, **kwargs):
         return render(request, self.template_name, status=404)
+class Dashboard1(LoginRequiredMixin,TemplateView):
+    login_url = reverse_lazy('login')
+    template_name = 'dashboard/dashboard1.html'
+    def get_context_data(self, **kwargs):
+        context =  super().get_context_data(**kwargs)
+        context['title'] = 'Dashboard'
+        context['entidad'] = 'Dashboard'
+        return context
 
 class Dashboard(LoginRequiredMixin,TemplateView):
     login_url = reverse_lazy('login')
