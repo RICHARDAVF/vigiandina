@@ -5,11 +5,12 @@
 {% endblock head_list %}
 {% block columnas %}
 <tr id="header-title">
-    <th style="width: 5%;">ID</th>
-    <th style="width: 10%;">RUC</th>
-    <th style="width: 35%;">EMPRESA</th>
-    <th style="width: 35%;">DIRECCION</th>
-    <th style="width: 15%;">OPCIONES</th>
+    <th >ID</th>
+    <th >RUC</th>
+    <th >EMPRESA</th>
+    <th >ABRE.</th>
+    <th >DIRECCION</th>
+    <th >OPCIONES</th>
 </tr>
 {% endblock columnas %}
 {% block filas %}
@@ -18,6 +19,7 @@
         <td  scope="row">{{empresa.id}}</td>
         <td>{{empresa.ruc}}</td>
         <td>{{empresa.razon_social}}</td>
+        <td>{{empresa.abreviacion}}</td>
         <td>{{empresa.direccion}}</td>
         <td>
             <div class="d-flex justify-content-center">

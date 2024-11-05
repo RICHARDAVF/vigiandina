@@ -87,17 +87,16 @@ class Dashboard(LoginRequiredMixin,TemplateView):
             horas = Visitas.objects.filter(Q(estado=3) &
                                        Q(user__empresa_id=self.request.user.empresa_id)).annotate(hora=ExtractHour('h_inicio'),empresa_nombre=F('p_visita__empresa__abreviacion')).values('hora','empresa_nombre').annotate(total=Count('id')).order_by()
         datos = {}
-       
         hours = list(range(24))
         for values in horas:
             if values["empresa_nombre"] in datos:
                 total = datos[values["empresa_nombre"]]["total"]
-                total[values["hora"]+1]= values["total"]
+                total[values["hora"]]= values["total"]
                 datos[values["empresa_nombre"]]["total"]= total
             else:
                 total = [0]*24
                 hor_ = hours
-                total[values["hora"]+1] = values["total"]
+                total[values["hora"]] = values["total"]
                 datos[values["empresa_nombre"]] = {"total":total,"hora":hor_}
 
 
